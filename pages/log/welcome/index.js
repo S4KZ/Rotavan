@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'red'
     },
     image: {
         height: 350,
