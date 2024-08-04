@@ -2,6 +2,7 @@ import React, { useRef, useMemo } from "react";
 import { Image, StyleSheet, Text, View, ScrollView, Button } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import GoogleMapsScreen from "../../../src/screens/maps";
 
 const mapIcon = require("../../../assets/icons/mapa.png");
 const Icon = require("../../../assets/icons/clock.png");
@@ -12,7 +13,8 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Image source={mapIcon} style={styles.map} />
+      <GoogleMapsScreen/>
+      {/* <Image source={mapIcon} style={styles.map} />
 
       <GestureHandlerRootView style={StyleSheet.absoluteFillObject}>
         <BottomSheet
@@ -36,7 +38,7 @@ export default function Home() {
             </View>
         
         </BottomSheet>
-      </GestureHandlerRootView>
+      </GestureHandlerRootView> */}
     </View>
   );
 }
