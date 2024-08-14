@@ -12,38 +12,28 @@ const ilusEqui = require("../../../assets/icons/ilustra-Equipes.png")// o icone
 function EquipesTela() { // aonde vai trabalhar o visual
     const navigation = useNavigation();
     return (
-        <View style={styles.container}>
-            <ScrollView>
-            <SafeAreaView >
-                <View >
+
+        <ScrollView>
+            <SafeAreaView style={styles.container}>
                 <Image source={ilusEqui} style={styles.ilustra} />
-
-                    <View style={styles.row}>
-                        <View style={styles.column}>
-                            <Text style={styles.title}>Turma da manhã</Text>
-                            <Text style={styles.subtitle}>Horário da chegada:  7:20h</Text>
-                            <Text style={styles.subtitle}>Horário da saída:   15:30h</Text>
-                            <Text style={styles.subtitle2}>Local: Escola Maria Julia, Rua José Alves, 450</Text>
-                        </View>
-                    </View>
-
+                <View style={styles.row}>
+                        <Text style={styles.title}>Turma da manhã</Text>
+                        <Text style={styles.subtitle}>Horário da chegada:  7:20h</Text>
+                        <Text style={styles.subtitle}>Horário da saída:   15:30h</Text>
+                        <Text style={styles.subtitle}>Local: Escola Maria Julia, Rua José Alves, 450</Text>
                 </View>
 
-                <View style={styles.box2}>
 
+
+                <View style={styles.box}>
                     <TouchableOpacity style={styles.item}>
                         <Icon name="users" size={35} color="#1A478A" style={styles.icon} />
                         <Text style={styles.title}>Sua equipe</Text>
                     </TouchableOpacity>
-
                     <View style={styles.row2}>
-                        <View style={styles.container}>
-
-                            <View style={styles.column}>
                                 <Text style={styles.label}>  Usuário                   Email</Text>
-
                                 <TouchableOpacity >
-                                    <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
+                                    <Text style={styles.info}>Isabelle Vidal   isinha@gmail.com</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity >
                                     <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
@@ -63,29 +53,14 @@ function EquipesTela() { // aonde vai trabalhar o visual
                                 <TouchableOpacity >
                                     <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
                                 </TouchableOpacity>
-
-
-
-
-
-
-
-                            </View>
-
                         </View>
-                    </View>
+
                 </View>
-
-
-                </SafeAreaView>
-            </ScrollView>
-
-
-
-            <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('Menu')}>
-                <Text style={styles.texto}>Editar Equipes</Text>
-            </TouchableOpacity>
-        </View>
+                <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('Menu')}>
+                    <Text style={styles.texto}>Editar Equipes</Text>
+                </TouchableOpacity>
+            </SafeAreaView>
+        </ScrollView>
     );
 }
 
@@ -94,16 +69,16 @@ function Menu() { // menuzao
     return (
         <View style={styles.container}>
             <ScrollView>
-            <SafeAreaView >
-          
-            <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Adicionar')} >
-                <Text style={styles.text}>Adicionar integrante</Text>
-            </TouchableOpacity>
+                <SafeAreaView >
 
-            <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Excluir')} >
-                <Text style={styles.text}>Excluir integrante</Text>
-            </TouchableOpacity>
-            </SafeAreaView>
+                    <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Adicionar')} >
+                        <Text style={styles.text}>Adicionar integrante</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Excluir')} >
+                        <Text style={styles.text}>Excluir integrante</Text>
+                    </TouchableOpacity>
+                </SafeAreaView>
             </ScrollView>
             <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('EquipesTela')} >
                 <Text style={styles.texto}>Voltar para Equipes</Text>
@@ -140,10 +115,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#ffff'
+        backgroundColor: '#ffff',
+
     },
-   
-    
 
     ilustra: { //estilização da imagem
         flex: 1,
@@ -164,36 +138,16 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 10,
     },
+
     icon: {
         marginRight: 10,
     },
 
-
     box: {
-        //estilização
-        backgroundColor: "#F4F4F4",
-        padding: 20,
-        width: "93%",
-        height: 430,
-        top: 10, //margin top
-        borderRadius: 15,
-        //posicionamento dos componentes 
-        alignItems: "center",
-        //colocar sombras
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-        marginBottom: 40,
-    },
-
-    box2: {
         //estilização
         backgroundColor: "#FAFAFA",
         padding: 20,
         width: "88%",
-        height: 500,
         top: 10, //margin top
         borderRadius: 15,
         //posicionamento dos componentes 
@@ -205,47 +159,35 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
         marginBottom: 50,
-        marginHorizontal:10,
+        marginHorizontal: 10,
     },
-
 
 
     row: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
         //assim n precisando fazer um milhão de margin pra alinhar certo
         display: "flex",
-        flexDirection: "row",
-
-        //estilização
-        padding: 18,
+        flexDirection: "column",
+        padding: 30,
         borderRadius: 15,
-        top: 10,
         width: "88%",
-        height: 210,
-
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 15 },
         shadowOpacity: 0.2,
         shadowRadius: 5,
-        shadowSpread: 5,
-        elevation: 25,
+        elevation: 5,
         marginBottom: 40,
-        marginHorizontal:10,
     },
 
     row2: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
         //assim n precisando fazer um milhão de margin pra alinhar certo
         display: "flex",
-        flexDirection: "row",
-
+        flexDirection: "column",
         //estilização
         padding: 20,
         borderRadius: 15,
         top: 5,
         width: "100%",
-        height: 315,//margin top
-
-
         //colocar sombras
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
@@ -253,7 +195,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 5,
         shadowSpread: 5,
-        elevation: 25,
+        elevation: 5,
     },
 
 
@@ -261,7 +203,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         color: '#F6B628',
         fontWeight: "bold",
-        padding: 15,
+        padding: 10,
         textAlign: 'center',
 
     },
@@ -289,14 +231,6 @@ const styles = StyleSheet.create({
         top: 10,
 
     },
-    column: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'left',
-        paddingHorizontal: 10,
-
-    },
-
     label: {
         fontSize: 18,
         fontWeight: 'bold',

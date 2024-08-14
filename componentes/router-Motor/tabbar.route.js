@@ -30,15 +30,15 @@ export default function TabButton(){
         headerShown: false,
         tabBarStyle: {
           position: 'absolute',
-          bottom: 10,
-          left: 7,
-          right: 7,
+          bottom: 0,
+          left: 0,
+          right: 0,
           borderRadius: 4,
           height: 80,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.75,
-          shadowRadius: 5,
+          shadowOffset: { width: 4, height: 2 },
+          shadowOpacity: 0.95,
+          shadowRadius: 7,
         }
       }}
     >
@@ -76,14 +76,14 @@ export default function TabButton(){
             if(focused){
               return(
                 <View style={styles.box}>
-                  <Image source={EquipeIconY} style={styles.img} name="equipe"/>
+                  <Image source={EquipeIconY} style={styles.imgg} name="equipe"/>
                   <Text style={styles.txtFocus}>EQUIPES</Text>
                 </View>
               );
             }
             return(
               <View style={styles.box}>
-                <Image source={EquipeIcon} style={styles.img} name="equipe"/>
+                <Image source={EquipeIcon} style={styles.imgg} name="equipe"/>
                 <Text style={styles.txt}>EQUIPES</Text>
               </View>
             );
@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   img: {
-    width: 24,
-    height: 24,
+    width: 28,
+    height: 26,
   },
   txt: {
     fontSize: 12,
@@ -175,4 +175,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
   },
+  imgg: {
+    width: 45,
+    height: 25,
+  },
+
 });

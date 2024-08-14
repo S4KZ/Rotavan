@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
+  
   txt:{
     color: '#021C58',
     left: 10,
