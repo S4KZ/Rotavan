@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, SafeAreaView } from 'react-native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import {  useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -53,6 +53,7 @@ function EquipesTela() { // aonde vai trabalhar o visual
                                 <TouchableOpacity >
                                     <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
                                 </TouchableOpacity>
+                                
                         </View>
 
                 </View>

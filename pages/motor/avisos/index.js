@@ -1,48 +1,41 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Enviar from './enviar';
 
 
-export default function Screen1() {
+
+function Tela() {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
 
 
       <ScrollView>
-        {/* <SafeAreaView style={styles.container} > */}
+
 
         <View style={styles.container}>
           <View style={styles.box}>
             <Text style={styles.title}>Enviar novo aviso</Text>
             <View style={styles.row2}>
-              <View style={styles.column}>
 
+              <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Enviar')}>
+                <Icon name="file-text-o" size={35} color="#1A478A" style={styles.icon} />
+                <Text style={styles.subtitle}>Digite aqui</Text>
+              </TouchableOpacity>
 
-                <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Enviar')}>
-                  <Icon name="file-text-o" size={35} color="#1A478A" style={styles.icon} />
-                  <Text style={styles.subtitle}>Digite aqui</Text>
-                </TouchableOpacity>
-
-
-              </View>
             </View>
-
           </View>
 
 
 
           <View style={styles.box2}>
-
             <Text style={styles.title}>Já enviados </Text>
             <View style={styles.row}>
-              <View style={styles.column}>
-
+          
                 <TouchableOpacity style={styles.item}>
                   <Icon name="exclamation-circle" size={35} color="#1A478A" style={styles.icon} />
                   <Text style={styles.subtitle}>Atenção com os horários! </Text>
@@ -53,31 +46,30 @@ export default function Screen1() {
                 <Text style={styles.paragraphh}>Motorista Rodrigo</Text>
                 <Text style={styles.paragraphh}>08/05/2024 - 19:11h </Text>
 
-              </View>
             </View>
 
             <View style={styles.row}>
-              <View style={styles.column}>
-
+            
                 <TouchableOpacity style={styles.item}>
                   <Icon name="times" size={35} color="#1A478A" style={styles.icon} />
                   <Text style={styles.subtitle}>Não haverá van amanhã</Text>
                 </TouchableOpacity>
-
 
                 <Text style={styles.paragraph}>A
                   van apresentou um problema de motor, já foi levada para
                   o concerto porém só ficará pronta amanhã no período da tarde!</Text>
                 <Text style={styles.paragraphh}>Motorista Rodrigo</Text>
                 <Text style={styles.paragraphh}>08/05/2024 - 19:11h </Text>
-              </View>
             </View>
+            
+
+
 
           </View>
 
 
         </View>
-        {/* </SafeAreaView> */}
+
       </ScrollView>
 
 
@@ -85,6 +77,28 @@ export default function Screen1() {
   )
 };
 
+export default function EnviarNav() {
+  const Stack = createNativeStackNavigator();
+  return (
+    <Stack.Navigator>
+
+
+      <Stack.Screen
+        name='Tela'
+        component={Tela}
+      options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name='Enviar'
+        component={Enviar}
+         options={{ headerShown: false }}
+      />
+
+
+    </Stack.Navigator>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -92,50 +106,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffff'
-  },
-  titlee: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#1A478A',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 8,
-    height: 40,
-    width: 350,
-  },
-  button: {
-    marginTop: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: 'blue',
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  botaoConf: {
-    width: 250, // largura do botão quadrado
-    height: 50, // altura do botão quadrado
-    backgroundColor: '#1A478A', // cor de fundo do botão
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginHorizontal: 25, // bordas arredondadas
-    //colocar sombras
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 15 },
-    shadowOpacity: 0.8,
-    shadowRadius: 4,
-    elevation: 5,
-    marginTop: 2,
-    marginBottom: 120,
   },
 
   title: { // estilização do text
@@ -156,9 +126,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
 
-
   subtitle: { // estilização do subtext
-
     fontSize: 18,
     color: '#1A478A',
     fontWeight: "bold",
@@ -175,7 +143,6 @@ const styles = StyleSheet.create({
   },
 
   paragraphh: {
-
     fontSize: 12,
     color: '#1A478A',
     fontWeight: "bold",
@@ -187,8 +154,8 @@ const styles = StyleSheet.create({
     //estilização
     backgroundColor: "#FAFAFA",
     padding: 20,
-    width: "93%",
-    height: 290,
+    width: "95%",
+    height: 250,
     top: 40, //margin top
     borderRadius: 15,
     //posicionamento dos componentes 
@@ -206,7 +173,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAFAFA",
     padding: 10,
     width: "95%",
-    height: 650,
+    height: 700,
     top: 70, //margin top
     borderRadius: 15,
     //posicionamento dos componentes 
@@ -220,17 +187,16 @@ const styles = StyleSheet.create({
     marginBottom: 200,
   },
 
-  row: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
-    //assim n precisando fazer um milhão de margin pra alinhar certo
+  row: { 
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
 
     //estilização
     padding: 20,
     borderRadius: 15,
     top: 20,
-    width: "105%",
-    height: 250,//margin top
+    width: "95%",
+    height: 280,//margin top
 
     //colocar sombras
     backgroundColor: '#FFFFFF',
@@ -238,14 +204,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 15 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    shadowSpread: 5,
-    elevation: 25,
+    elevation: 10,
     marginBottom: 20,
   },
-  row2: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
-    //assim n precisando fazer um milhão de margin pra alinhar certo
+  row2: { 
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
 
     //estilização
     padding: 20,
@@ -259,18 +223,11 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 15 },
     shadowOpacity: 0.2,
-
-
     shadowRadius: 5,
     shadowSpread: 5,
-    elevation: 25,
+    elevation: 10,
   },
-  texto: {
-    color: '#F6B628', // cor do texto
-    fontSize: 18, // tamanho do texto
-    fontWeight: 'bold', // negrito do texto
-  }
-
+ 
 
 });
 

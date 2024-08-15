@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
 
   },
 
-
   ilustra: { //estilização da imagem
     flex: 1,
     width: 290, // largura desejada da imagem

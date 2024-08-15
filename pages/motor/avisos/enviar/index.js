@@ -22,11 +22,38 @@ export default function Enviar() {
     );
 }
 
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffff'}
+    backgroundColor: '#ffff'},
+
+  input: {
+    borderWidth: 1,
+    borderColor: '#1A478A',
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 8,
+    height: 40,
+    width: 350,
+  },
+ title: { // estilização do text
+    fontSize: 25,
+    color: '#FAB428',
+    fontWeight: "bold",
+    marginTop: 20,
+  },
+
+
+
+
+
+
+
+
+
   }
   );
