@@ -3,18 +3,21 @@ import * as React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
+
 import TabButton from './tabbar.route';
 import Ajuda from '../../pages/motor/ajuda';
 import Perfil from '../../pages/motor/perfil';
+import Sair from '../../pages/log/Sair';
 
+import Ionicons from '@expo/vector-icons/Ionicons';
 const AjudaIcon = require('../../assets/icons/icon-ajuda.png');
 const HomeIcon = require('../../assets/icons/icon-home-azul.png');
 const ProfileIcon = require('../../assets/icons/profile.png');
 
 const Drawer = createDrawerNavigator();
 
-export default function DrawerTab(){
-  return(
+export default function DrawerTab() {
+  return (
     <Drawer.Navigator
       screenOptions={{
         title: '',
@@ -24,32 +27,45 @@ export default function DrawerTab(){
         drawerIcon: () => {
           return (
             <View style={styles.box}>
-              <Image source={HomeIcon} style={styles.img} name="home"/>
+              <Image source={HomeIcon} style={styles.img} name="home" />
               <Text style={styles.txt}>Home</Text>
             </View>
           );
         }
-      }}/>
+      }} />
       <Drawer.Screen name='Perfil' component={Perfil} options={{
         drawerIcon: () => {
           return (
             <View style={styles.box}>
-              <Image source={ProfileIcon} style={styles.img} name="perfil"/>
+              <Image source={ProfileIcon} style={styles.img} name="perfil" />
               <Text style={styles.txt}>Perfil</Text>
             </View>
           );
         }
-      }}/>
+      }} />
       <Drawer.Screen name='Ajuda' component={Ajuda} options={{
         drawerIcon: () => {
           return (
             <View style={styles.box}>
-              <Image source={AjudaIcon} style={styles.img} name="ajuda"/>
+              <Image source={AjudaIcon} style={styles.img} name="ajuda" />
               <Text style={styles.txt}>Ajuda</Text>
             </View>
           );
         }
-      }}/>
+      }} />
+
+      <Drawer.Screen name='Sair' component={Sair} options={{
+        drawerIcon: () => {
+          return (
+            <View style={styles.box}>
+              <Ionicons name="exit" size={24} color="black" />
+              <Text style={styles.txt}>Sair</Text>
+            </View>
+          );
+        }
+      }} />
+
+
     </Drawer.Navigator>
   );
 }
@@ -64,8 +80,8 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
-  
-  txt:{
+
+  txt: {
     color: '#021C58',
     left: 10,
   },

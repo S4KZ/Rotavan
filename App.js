@@ -11,6 +11,7 @@ import RouterMotor from './componentes/router-Motor/index';
 
 import Login from "./pages/log/login";
 import Cadastro from "./pages/log/cadastro";
+import Sair from "./pages/log/Sair";
 
 const icon = require('./assets/icons/Login-cuate.png');
 
@@ -61,6 +62,8 @@ export default function App(){
                 <Stack.Screen name="RouterUser" component={RouterUser}  
                 options={{ headerShown: false }}
                 />
+
+              
 
               
             </Stack.Navigator>
