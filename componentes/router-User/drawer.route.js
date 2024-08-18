@@ -24,7 +24,7 @@ export default function DrawerTab(){
                     title: ''
                 }
             }>
-                <Drawer.Screen name='Home' component={TabButton} options={
+                <Drawer.Screen name='home' component={TabButton} options={
                     {   
                         drawerIcon: () => {
                         return(

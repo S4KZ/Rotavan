@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Image, Text, View, StyleSheet, TouchableOpacity, TextInput, Navigation } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { Image, Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 
 const icon = require('../../../assets/icons/Login-rafiki.png');
 
@@ -10,13 +10,23 @@ export default function Login() {
   const navigation = useNavigation();
 
   const handleLogin = () => {
+    let routeName;
     if (email === 'user' && password === '123') {
-      navigation.navigate('RouterUser');
+      routeName = 'RouterUser';
     } else if (email === 'moto' && password === '123') {
-      navigation.navigate('RouterMotor');
+      routeName = 'RouterMotor';
     } else {
       alert('Credenciais inválidas');
+      return;
     }
+
+    // Reseta a navegação e navega para a tela do usuário ou motorista
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: routeName }],
+      })
+    );
   };
 
   return (
@@ -62,65 +72,62 @@ export default function Login() {
   );
 }
 
-
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    box: {
-        padding: 30,
-        borderRadius: 50,
-        backgroundColor: '#fff',
-        shadowColor: '#000',
-        shadowOffset: { width: 15, height: 15 },
-        shadowOpacity: 0.7,
-        shadowRadius: 5,
-        shadowSpread: 5,
-        elevation: 15,
-    },
-    image: {
-        height: 250,
-        width: 270,
-    },
-    text: {
-        fontSize: 20,
-        fontVariant: 'bold',
-        fontWeight: 'bold',
-    },
-    text2: {
-        fontSize: 17,
-        fontVariant: 'bold',
-        fontWeight: 'bold',
-        color: '#1a6d97',
-        textDecorationLine: 'underline'
-    },
-    button: {
-        padding: 10,
-        borderRadius: 20,
-        width: 250,
-        backgroundColor: '#1A478A',
-        margin: 10
-    },
-    buttonText: {
-        color: '#F6B628',
-        textAlign: 'center',
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    form: {
-        padding: 10
-    },
-    textInput: {
-        height: 40,
-        borderColor: '#CCCCCC',
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-        fontSize: 18,
-        color: '#333',
-    },
+  container: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  box: {
+    padding: 30,
+    borderRadius: 50,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 15, height: 15 },
+    shadowOpacity: 0.7,
+    shadowRadius: 5,
+    shadowSpread: 5,
+    elevation: 15,
+  },
+  image: {
+    height: 250,
+    width: 270,
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  text2: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#1a6d97',
+    textDecorationLine: 'underline'
+  },
+  button: {
+    padding: 10,
+    borderRadius: 20,
+    width: 250,
+    backgroundColor: '#1A478A',
+    margin: 10
+  },
+  buttonText: {
+    color: '#F6B628',
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  form: {
+    padding: 10
+  },
+  textInput: {
+    height: 40,
+    borderColor: '#CCCCCC',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    fontSize: 18,
+    color: '#333',
+  },
 });
