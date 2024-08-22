@@ -15,7 +15,9 @@ function EquipesTela() { // aonde vai trabalhar o visual
 
         <ScrollView>
             <SafeAreaView style={styles.container}>
+               
                 <Image source={ilusEqui} style={styles.ilustra} />
+                 <View style={styles.box3 }>
                 <View style={styles.row}>
                         <Text style={styles.title}>Turma da manhã</Text>
                         <Text style={styles.subtitle}>Horário da chegada:  7:20h</Text>
@@ -56,10 +58,13 @@ function EquipesTela() { // aonde vai trabalhar o visual
                                 
                         </View>
 
-                </View>
-                <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('Menu')}>
+                           <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('Menu')}>
                     <Text style={styles.texto}>Editar Equipes</Text>
                 </TouchableOpacity>
+
+                </View>
+             
+                  </View>
             </SafeAreaView>
         </ScrollView>
     );
@@ -119,6 +124,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffff',
 
     },
+    box3: {
+    flexDirection:'column',
+    padding: 40,
+    maxHeight:1200,
+    borderRadius: 10,
+    backgroundColor: '#FAFAFA',
+    shadowColor: '#000',
+    shadowOffset: { width:0, height:10 },
+    shadowRadius: 1.3,
+    elevation: 20,
+    marginBottom:30,
+    
+  },
 
     ilustra: { //estilização da imagem
         flex: 1,
@@ -135,7 +153,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: '#fafafa',
+        backgroundColor: '#fFF',
         borderRadius: 5,
         marginBottom: 10,
     },
@@ -146,11 +164,14 @@ const styles = StyleSheet.create({
 
     box: {
         //estilização
-        backgroundColor: "#FAFAFA",
+        backgroundColor: "#FFF",
         padding: 20,
-        width: "88%",
+        minWidth:320,
+        maxwidth: 500,
+        minHeight:200,
+        maxHeight:450,
         top: 10, //margin top
-        borderRadius: 15,
+        borderRadius: 10,
         //posicionamento dos componentes 
         alignItems: "center",
         //colocar sombras
@@ -161,44 +182,23 @@ const styles = StyleSheet.create({
         elevation: 5,
         marginBottom: 50,
         marginHorizontal: 10,
+
     },
 
 
-    row: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
-        //assim n precisando fazer um milhão de margin pra alinhar certo
-        display: "flex",
-        flexDirection: "column",
-        padding: 30,
-        borderRadius: 15,
-        width: "88%",
-        backgroundColor: '#FFFFFF',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 15 },
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-        elevation: 5,
-        marginBottom: 40,
-    },
-
-    row2: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
-        //assim n precisando fazer um milhão de margin pra alinhar certo
-        display: "flex",
-        flexDirection: "column",
-        //estilização
+    row: { 
         padding: 20,
         borderRadius: 15,
-        top: 5,
-        width: "100%",
-        //colocar sombras
+        minWidth: 100,
+        maxwidth:300,
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 15 },
         shadowOpacity: 0.2,
         shadowRadius: 5,
-        shadowSpread: 5,
         elevation: 5,
+        marginBottom: 30,
     },
-
 
     title: { // estilização do text
         fontSize: 24,
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
 
     texto: {
         color: '#F6B628', // cor do texto
-        fontSize: 18, // tamanho do texto
+        fontSize: 15, // tamanho do texto
         fontWeight: 'bold', // negrito do texto
     },
 

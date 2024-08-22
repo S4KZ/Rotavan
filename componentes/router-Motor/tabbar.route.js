@@ -30,11 +30,9 @@ export default function TabButton(){
         headerShown: false,
         tabBarStyle: {
           position: 'absolute',
-          bottom: 10,
-          left: 7,
-          right: 7,
+        
           borderRadius: 4,
-          height: 80,
+          height: 90,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.75,

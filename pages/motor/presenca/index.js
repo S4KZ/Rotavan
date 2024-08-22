@@ -11,6 +11,7 @@ export default function Equipes() {
       <SafeAreaView style={styles.container}>
         <Image source={ilusEqui} style={styles.ilustra} />
 
+<View style={styles.box3}>
         <View style={styles.box}>
           <Text style={styles.title}>Veja quem vai hoje na ida</Text>
           <View style={styles.row}>
@@ -82,7 +83,7 @@ export default function Equipes() {
         </TouchableOpacity>
 
 
-
+   </View>
 
 
 
@@ -95,9 +96,10 @@ export default function Equipes() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffff',
+  
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#FFFF',
 
   },
 
@@ -112,14 +114,28 @@ const styles = StyleSheet.create({
 
   },
 
+   box3: {
+    flexDirection:'column',
+    padding: 40,
+    minHeight:1000,
+    maxHeight:1300,
+    borderRadius: 10,
+    backgroundColor: '#FAFAFA',
+    shadowColor: '#000',
+    shadowOffset: { width:0, height:10 },
+    shadowRadius: 1.3,
+    elevation: 20,
+    
+  },
   box: {
     //estilização
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FFF",
     padding: 20,
-    width: "90%",
-    height: 490,
+    minwidth: "70%",
+    maxnwidth: "90%",
+    maxHeightheight: 400,
     top: 10, //margin top
-    borderRadius: 15,
+    borderRadius: 10,
     //posicionamento dos componentes 
     alignItems: "center",
     //colocar sombras
@@ -131,26 +147,19 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
 
-
   row: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
     //assim n precisando fazer um milhão de margin pra alinhar certo
     display: "flex",
     flexDirection: "row",
     //estilização
     padding: 20,
-    borderRadius: 15,
+    borderRadius: 10,
     top: 10,
     width: "100%",
     //colocar sombras
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 15 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowSpread: 5,
-    elevation: 5,
+    backgroundColor: '#FAFAFA',
+ 
   },
-
 
   title: { // estilização do text
     fontSize: 22,
@@ -160,9 +169,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
 
   },
-
   subtitle: { // estilização do subtext
-
     fontSize: 15,
     color: '#1A478A',
     fontWeight: "bold",
@@ -171,18 +178,10 @@ const styles = StyleSheet.create({
   },
 
   subtitle2: { // estilização do subtext
-
     fontSize: 15,
     color: '#1A478A',
     fontWeight: "bold",
     textAlign: 'center',
-
-  },
-  column: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'left',
-    paddingHorizontal: 10,
 
   },
 
@@ -223,6 +222,5 @@ const styles = StyleSheet.create({
     fontSize: 20, // tamanho do texto
     fontWeight: 'bold', // negrito do texto
   }
-
 
 });

@@ -11,6 +11,7 @@ export default function Cadastro() {
         <View style={styles.box}>
 
           <View style={styles.selectContainer}>
+            
             <Picker
               style={styles.pickerBox}
               selectedValue={tipoUsuario}
@@ -72,11 +73,11 @@ const styles = {
     alignItems: 'center',
 
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   box: {
     padding: 30,
-    borderRadius: 50,
+    borderRadius: 10,
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: { width: 15, height: 15 },
@@ -103,7 +104,7 @@ const styles = {
   },
   button: {
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 10,
     width: 250,
     backgroundColor: '#1A478A',
     margin: 10
@@ -136,7 +137,7 @@ const styles = {
   pickerBox: {
     borderColor: '#021C58',
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
     fontSize: 16,
@@ -144,7 +145,7 @@ const styles = {
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOpacity: 0.2,
-    shadowRadius: 2,
+    shadowRadius: 5,
     elevation: 2,
   },
 };

@@ -47,8 +47,6 @@ export default function Equipe() {
         </View>
 
 
-
-
       
 
     </SafeAreaView>
@@ -84,7 +82,7 @@ const styles = StyleSheet.create({
     width: "93%",
     height: 590,
     top: 40, //margin top
-    borderRadius: 15,
+    borderRadius: 10,
     //posicionamento dos componentes 
     alignItems: "center",
     //colocar sombras

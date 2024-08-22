@@ -31,9 +31,10 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.box}>
         <Image source={icon} style={styles.image} />
 
+      <View style={styles.box}>
+      
         <View style={styles.form}>
           <Text style={styles.text}>Email</Text>
           <TextInput
@@ -78,17 +79,18 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
   },
   box: {
-    padding: 30,
-    borderRadius: 50,
+    padding: 40,
+    top:40,
+    height: 450,
+    borderRadius: 10,
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOffset: { width: 15, height: 15 },
-    shadowOpacity: 0.7,
-    shadowRadius: 5,
-    shadowSpread: 5,
-    elevation: 15,
+    shadowOffset: { width:0, height:10 },
+    shadowRadius: 1.3,
+    elevation: 20,
   },
   image: {
     height: 250,
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 10,
     width: 250,
     backgroundColor: '#1A478A',
     margin: 10
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: '#CCCCCC',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 10,
     fontSize: 18,

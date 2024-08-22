@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     },
     button: {
         padding: 10,
-        borderRadius: 20,
+        borderRadius: 10,
         width: 250,
         backgroundColor: '#1A478A',
         margin: 10
@@ -61,5 +61,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 24,
         fontWeight: 'bold',
+     
     }
 });

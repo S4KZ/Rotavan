@@ -7,19 +7,16 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Enviar from './enviar';
 
 
-
 function Tela() {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
 
-
       <ScrollView>
 
-
         <View style={styles.container}>
-          <View style={styles.box}>
-            <Text style={styles.title}>Enviar novo aviso</Text>
+       
+            <Text style={styles.title}>Avisos</Text>
             <View style={styles.row2}>
 
               <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Enviar')}>
@@ -28,7 +25,7 @@ function Tela() {
               </TouchableOpacity>
 
             </View>
-          </View>
+       
 
 
 
@@ -152,12 +149,12 @@ const styles = StyleSheet.create({
 
   box: {
     //estilização
-    backgroundColor: "#FAFAFA",
-    padding: 20,
-    width: "95%",
+    backgroundColor: "#b1d1ff",
+    padding: 30,
+    width: "93%",
     height: 250,
     top: 40, //margin top
-    borderRadius: 15,
+    borderRadius: 10,
     //posicionamento dos componentes 
     alignItems: "center",
     //colocar sombras
@@ -193,7 +190,7 @@ const styles = StyleSheet.create({
 
     //estilização
     padding: 20,
-    borderRadius: 15,
+    borderRadius: 10,
     top: 20,
     width: "95%",
     height: 280,//margin top
@@ -204,7 +201,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 15 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    elevation: 10,
+    elevation: 5,
     marginBottom: 20,
   },
   row2: { 
@@ -213,9 +210,9 @@ const styles = StyleSheet.create({
 
     //estilização
     padding: 20,
-    borderRadius: 15,
+    borderRadius: 10,
     top: 20,
-    width: "98%",
+    width: "94%",
     height: 120,//margin top
 
     //colocar sombras
