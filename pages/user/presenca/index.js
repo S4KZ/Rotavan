@@ -13,8 +13,9 @@ export default function Presenca() {
    
       <ScrollView>
         <SafeAreaView style={styles.container}  >
-    <View >
+
         <Image source={ilusConfi} style={styles.ilustra} /> 
+        <View style={styles.box3}>
           <Text style={styles.title}>Confirme sua Presença na ida</Text>
 
   
@@ -71,10 +72,21 @@ const styles = StyleSheet.create({
     width: 350, // largura desejada da imagem
     height: 350, // altura desejada da imagem
     resizeMode: 'contain', // ajuste de escala da imagem
-    // position: 'absolute'  ,     // posicionamento absoluto
-    top: 20, // ajusta a posição verticalmente
-
-
+  },
+  box3: {
+    flexDirection:'column',
+    padding: 40,
+    maxHeight:1000,
+    minHeight:600,
+    borderRadius: 10,
+    backgroundColor: '#FFF',
+    shadowColor: '#000',
+    shadowOffset: { width:0, height:10 },
+    shadowRadius: 1.3,
+    elevation: 25,
+    marginBottom:30,
+    top:20,
+    
   },
 
   title:{ // estilização do text

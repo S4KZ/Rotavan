@@ -13,7 +13,7 @@ export default function Avisos() {
     
     <View  style={styles.container}> 
      
-      <View style={styles.box}> 
+      
       <Text style={styles.title}>Pendentes</Text>
            <View style={styles.row}> 
               <View style={styles.column}>
@@ -24,13 +24,13 @@ export default function Avisos() {
                  <Text style={styles.paragraphh}>Motorista Rodrigo</Text>
                  <Text style={styles.paragraphh}>08/05/2024 - 19:11h </Text>
               </View>
-            </View>
+      
           
         </View>
 
 
 
-        <View style={styles.box2}> 
+     
       <Text style={styles.title}>Já vizualizados</Text>
            <View style={styles.row}> 
               <View style={styles.column}>
@@ -39,7 +39,7 @@ export default function Avisos() {
                 se atentem aos horários pois isso prejudica e atrasa sua chegada. </Text>
                  <Text style={styles.paragraphh}>Motorista Rodrigo</Text>
                  <Text style={styles.paragraphh}>08/05/2024 - 19:11h </Text>
-              </View>
+        
             </View>
           </View>
 
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffff',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom:200,
+  
   },
 
   title:{ // estilização do text
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#333',
     lineHeight: 20,
-    textAlign: 'justify',
+    textAlign: 'center',
     marginVertical: 15,
     fontWeight: "bold",
   },
@@ -103,9 +103,10 @@ const styles = StyleSheet.create({
       backgroundColor: "#F4F4F4",
       padding: 20,
       width: "93%",
-      height: 320,
+      minHeight:320,
+      maxheight: 390,
       top: 40, //margin top
-      borderRadius: 15,
+      borderRadius: 10,
       //posicionamento dos componentes 
       alignItems: "center",
       //colocar sombras
@@ -120,10 +121,12 @@ const styles = StyleSheet.create({
       //estilização
       backgroundColor: "#F4F4F4",
       padding: 20,
+      minHeight:320,
+      maxheight: 390,
       width: "93%",
       height: 320,
       top: 70, //margin top
-      borderRadius: 15,
+      borderRadius: 10,
       //posicionamento dos componentes 
       alignItems: "center",
       //colocar sombras
@@ -137,34 +140,26 @@ const styles = StyleSheet.create({
     row: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
       //assim n precisando fazer um milhão de margin pra alinhar certo
       display: "flex",
-      flexDirection: "row",
+      flexDirection: "column",
 
+      marginBottom:60,
       //estilização
       padding: 20,
       borderRadius: 15,
       top: 20, 
-      width: "98%",
-      height: 195,//margin top
-      
-      //colocar sombras
-  backgroundColor: '#FFFFFF', 
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 15 },
-  shadowOpacity: 0.2,
-  shadowRadius: 5,
-  shadowSpread: 5,
-  elevation: 25,
-    }
-
-
-
-
-
-
-
-
-
-
-
+      minHeight:200,
+      maxheight: 300,
+      minwidth: 100,
+      maxWidth:350,
+ 
+    //colocar sombras
+      backgroundColor: '#FFFFFF', 
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 15 },
+      shadowOpacity: 0.2,
+      shadowRadius: 5,
+      shadowSpread: 5,
+      elevation: 15,
+}
 
 });

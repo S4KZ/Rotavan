@@ -71,11 +71,11 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-
-    marginTop: 20,
+    backgroundColor: '#fff',
     marginBottom: 10,
   },
   box: {
+    top:20,
     padding: 30,
     borderRadius: 10,
     backgroundColor: '#fff',
@@ -85,6 +85,7 @@ const styles = {
     shadowRadius: 5,
     shadowSpread: 5,
     elevation: 15,
+    marginBottom: 20,
   },
   image: {
     height: 250,

@@ -15,7 +15,7 @@ export default function Equipes() {
         <View style={styles.box}>
           <Text style={styles.title}>Veja quem vai hoje na ida</Text>
           <View style={styles.row}>
-            <View style={styles.container}>
+           
                 <Text style={styles.label}> Usuário                    Horário</Text>
                 <TouchableOpacity >
                   <Text style={styles.info}>Isabelle Vidal                    6:35</Text>
@@ -40,14 +40,13 @@ export default function Equipes() {
                 <TouchableOpacity >
                   <Text style={styles.info}>Maria Júlia                        7:10</Text>
                 </TouchableOpacity>
-              </View>
+          
             </View>
           </View>
 
         <View style={styles.box}>
           <Text style={styles.title}>Veja quem vai voltar hoje</Text>
           <View style={styles.row}>
-            <View style={styles.container}>
                 <Text style={styles.label}> Usuário                    Horário</Text>
                 <TouchableOpacity >
                   <Text style={styles.info}>Isabelle Vidal                    6:35</Text>
@@ -72,7 +71,7 @@ export default function Equipes() {
                 <TouchableOpacity >
                   <Text style={styles.info}>Maria Júlia                        7:10</Text>
                 </TouchableOpacity>
-              </View>
+           
             </View>
           </View>
 
@@ -118,9 +117,9 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     padding: 40,
     minHeight:1000,
-    maxHeight:1300,
+    maxHeight:1100,
     borderRadius: 10,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#FFF',
     shadowColor: '#000',
     shadowOffset: { width:0, height:10 },
     shadowRadius: 1.3,
@@ -147,10 +146,9 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
 
-  row: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
-    //assim n precisando fazer um milhão de margin pra alinhar certo
+  row: { 
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     //estilização
     padding: 20,
     borderRadius: 10,

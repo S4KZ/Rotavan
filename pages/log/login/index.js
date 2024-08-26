@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Image, Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 
-const icon = require('../../../assets/icons/Login-rafiki.png');
+const icon = require('../../../assets/icons/Login-rafikii.png');
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -84,11 +84,14 @@ const styles = StyleSheet.create({
   box: {
     padding: 40,
     top:40,
-    height: 450,
+    maxWidth:800,
+    minWidth:400,
+    height: 500,
+    maxHeight:600,
     borderRadius: 10,
-    backgroundColor: '#fff',
+    backgroundColor:'#fff',
     shadowColor: '#000',
-    shadowOffset: { width:0, height:10 },
+    shadowOffset:{ width:0, height:10 },
     shadowRadius: 1.3,
     elevation: 20,
   },
@@ -109,9 +112,14 @@ const styles = StyleSheet.create({
   button: {
     padding: 10,
     borderRadius: 10,
-    width: 250,
+    width: 280,
     backgroundColor: '#1A478A',
-    margin: 10
+    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  
+
+
   },
   buttonText: {
     color: '#F6B628',

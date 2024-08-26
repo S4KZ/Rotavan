@@ -4,7 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+
 import Enviar from './enviar';
+
+
 
 
 function Tela() {
@@ -27,14 +30,12 @@ function Tela() {
             </View>
        
 
-
-
-          <View style={styles.box2}>
+         
             <Text style={styles.title}>Já enviados </Text>
-            <View style={styles.row}>
+            <View style={styles.row2}>
           
                 <TouchableOpacity style={styles.item}>
-                  <Icon name="exclamation-circle" size={35} color="#1A478A" style={styles.icon} />
+                  <Icon name="exclamation-circle" size={28} color="#1A478A" style={styles.icon} />
                   <Text style={styles.subtitle}>Atenção com os horários! </Text>
                 </TouchableOpacity>
 
@@ -48,7 +49,7 @@ function Tela() {
             <View style={styles.row}>
             
                 <TouchableOpacity style={styles.item}>
-                  <Icon name="times" size={35} color="#1A478A" style={styles.icon} />
+                  <Icon name="times" size={28} color="#1A478A" style={styles.icon} />
                   <Text style={styles.subtitle}>Não haverá van amanhã</Text>
                 </TouchableOpacity>
 
@@ -62,7 +63,6 @@ function Tela() {
 
 
 
-          </View>
 
 
         </View>
@@ -110,12 +110,13 @@ const styles = StyleSheet.create({
     color: '#FAB428',
     fontWeight: "bold",
     marginTop: 20,
+    fontFamily:'Kanit_400Regular',
   },
 
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    padding: 18,
     backgroundColor: '#fff',
     borderRadius: 5,
   },
@@ -147,44 +148,7 @@ const styles = StyleSheet.create({
 
   },
 
-  box: {
-    //estilização
-    backgroundColor: "#b1d1ff",
-    padding: 30,
-    width: "93%",
-    height: 250,
-    top: 40, //margin top
-    borderRadius: 10,
-    //posicionamento dos componentes 
-    alignItems: "center",
-    //colocar sombras
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-
-  box2: {
-    //estilização
-    backgroundColor: "#FAFAFA",
-    padding: 10,
-    width: "95%",
-    height: 700,
-    top: 70, //margin top
-    borderRadius: 15,
-    //posicionamento dos componentes 
-    alignItems: "center",
-    //colocar sombras
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    marginBottom: 200,
-  },
-
-  row: { 
+  row: {
     display: "flex",
     flexDirection: "column",
 
@@ -193,27 +157,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     top: 20,
     width: "95%",
-    height: 280,//margin top
-
-    //colocar sombras
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 15 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
-    marginBottom: 20,
-  },
-  row2: { 
-    display: "flex",
-    flexDirection: "column",
-
-    //estilização
-    padding: 20,
-    borderRadius: 10,
-    top: 20,
-    width: "94%",
-    height: 120,//margin top
+    minheight: 120,
+    maxHeight:250,
 
     //colocar sombras
     backgroundColor: '#FFFFFF',
@@ -223,6 +168,29 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowSpread: 5,
     elevation: 10,
+    marginBottom:150,
+},
+  row2: { 
+    display: "flex",
+    flexDirection: "column",
+
+    //estilização
+    padding: 20,
+    borderRadius: 10,
+    top: 20,
+    width: "95%",
+    minheight: 120,
+    maxHeight:250,
+
+    //colocar sombras
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 15 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    shadowSpread: 5,
+    elevation: 10,
+    marginBottom:30,
   },
  
 

@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#ffff',
+        backgroundColor:'#ffff',
 
     },
     box3: {
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     padding: 40,
     maxHeight:1200,
     borderRadius: 10,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#FFF',
     shadowColor: '#000',
     shadowOffset: { width:0, height:10 },
     shadowRadius: 1.3,
@@ -185,10 +185,9 @@ const styles = StyleSheet.create({
 
     },
 
-
     row: { 
         padding: 20,
-        borderRadius: 15,
+        borderRadius: 10,
         minWidth: 100,
         maxwidth:300,
         backgroundColor: '#FFFFFF',
@@ -209,14 +208,8 @@ const styles = StyleSheet.create({
 
     },
 
-    titleContainer: {
-        flex: 1, // Ocupa todo o espaço disponível
-        alignItems: 'center', // Alinha o texto centralizado
-    },
-
-    subtitle: { // estilização do subtext
-
-        fontSize: 18,
+    subtitle: { 
+        fontSize: 16,
         color: '#1A478A',
         fontWeight: "bold",
         textAlign: 'left',
@@ -286,12 +279,12 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
 
+
     texto: {
         color: '#F6B628', // cor do texto
         fontSize: 15, // tamanho do texto
         fontWeight: 'bold', // negrito do texto
     },
-
     text: {
         color: '#1A478A', // cor do texto
         fontSize: 18, // tamanho do texto

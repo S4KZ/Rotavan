@@ -17,7 +17,7 @@ export default function Equipe() {
       <Image source={ilusEqui} style={styles.ilustra} />
 
 
-      <View style={styles.box}> 
+      <View style={styles.box3}> 
     
            <View style={styles.row}> 
               <View style={styles.column}>
@@ -74,30 +74,25 @@ const styles = StyleSheet.create({
     marginBottom:10,
 
   },
-
-  box: {
-    //estilização
-    backgroundColor: "#F4F4F4",
-    padding: 20,
-    width: "93%",
-    height: 590,
-    top: 40, //margin top
+  box3: {
+    flexDirection:'column',
+    padding: 40,
+    maxHeight:1000,
+    minHeight:650,
     borderRadius: 10,
-    //posicionamento dos componentes 
-    alignItems: "center",
-    //colocar sombras
+    backgroundColor: '#FFF',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    marginBottom:200,
+    shadowOffset: { width:0, height:10 },
+    shadowRadius: 1.3,
+    elevation: 20,
+    marginBottom:30,
+    
   },
 
   row: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
     //assim n precisando fazer um milhão de margin pra alinhar certo
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
 
     //estilização
     padding: 20,
@@ -113,7 +108,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     shadowSpread: 5,
-    elevation: 25,
+    elevation: 15,
       },
 
       row2: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
@@ -136,7 +131,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 5,
         shadowSpread: 5,
-        elevation: 25,
+        elevation: 15,
           },
     
 

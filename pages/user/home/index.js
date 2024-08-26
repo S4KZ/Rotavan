@@ -8,7 +8,7 @@ const localIcon = require("../../../assets/icons/local.png");
 
 export default function Home() {
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["20%", "80%"], []);
+  const snapPoints = useMemo(() => ["20%", "50%"], []);
 
   return (
     <View style={styles.container}>
