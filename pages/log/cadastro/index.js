@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal,StyleSheet, button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+
 
 export default function Cadastro() {
   const [tipoUsuario, setTipoUsuario] = useState('passageiro');
@@ -8,9 +9,14 @@ export default function Cadastro() {
   return (
     <ScrollView>
       <View style={styles.container}>
+        
         <View style={styles.box}>
+ 
+  
+        <Text style={styles.title}>Cadastro</Text>
 
-          <View style={styles.selectContainer}>
+
+          {/* <View style={styles.selectContainer}>
             
             <Picker
               style={styles.pickerBox}
@@ -20,36 +26,36 @@ export default function Cadastro() {
               <Picker.Item label="Passageiro" value="passageiro" />
               <Picker.Item label="Motorista" value="motorista" />
             </Picker>
-          </View>
+          </View> */}
 
           <View style={styles.form}>
             <Text style={styles.text}>Nome Completo</Text>
-            <TextInput style={styles.textInput} placeholder="Nome Completo" />
+            <TextInput style={styles.textInput} placeholder=" Digite seu nome completo" />
           </View>
 
-          <View style={styles.form}>
+          {/* <View style={styles.form}>
             <Text style={styles.text}>Data de Nascimento</Text>
             <TextInput style={styles.textInput} placeholder="DD/MM/YYYY" />
-          </View>
+          </View> */}
 
-          <View style={styles.form}>
+          {/* <View style={styles.form}>
             <Text style={styles.text}>Celular</Text>
             <TextInput style={styles.textInput} placeholder="Celular" />
-          </View>
+          </View> */}
 
           <View style={styles.form}>
-            <Text style={styles.text}>Gmail</Text>
-            <TextInput style={styles.textInput} placeholder="Gmail" />
+            <Text style={styles.text}>Email</Text>
+            <TextInput style={styles.textInput} placeholder="Digite seu email"/>
           </View>
 
           <View style={styles.form}>
             <Text style={styles.text}>Senha</Text>
-            <TextInput style={styles.textInput} placeholder="Senha" secureTextEntry={true} />
+            <TextInput style={styles.textInput} placeholder="Digite sua senha" secureTextEntry={true} />
           </View>
 
           <View style={styles.form}>
             <Text style={styles.text}>Confirmar Senha</Text>
-            <TextInput style={styles.textInput} placeholder="Confirmar Senha" secureTextEntry={true} />
+            <TextInput style={styles.textInput} placeholder="Confirme sua senha " secureTextEntry={true} />
           </View>
 
           <View style={styles.form}>
@@ -75,7 +81,7 @@ const styles = {
     marginBottom: 10,
   },
   box: {
-    top:20,
+    top:90,
     padding: 30,
     borderRadius: 10,
     backgroundColor: '#fff',
@@ -85,7 +91,22 @@ const styles = {
     shadowRadius: 5,
     shadowSpread: 5,
     elevation: 15,
-    marginBottom: 20,
+    marginBottom: 200,
+    width:400,
+  },
+
+  box2: {
+    top:10,
+    padding: 30,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 15, height: 15 },
+    shadowOpacity: 0.7,
+    shadowRadius: 5,
+    shadowSpread: 5,
+    elevation: 15,
+    marginBottom: 200,
   },
   image: {
     height: 250,
@@ -123,12 +144,23 @@ const styles = {
     height: 40,
     borderColor: '#CCCCCC',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 7,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    fontSize: 18,
+    fontSize: 16,
     color: '#333',
   },
+
+  title: { // estilização do text
+    fontSize: 28,
+    color: '#F6B628',
+    right:80,
+    padding: 10,
+    textAlign: 'center',
+    fontVariant: 'bold',
+    fontWeight: 'bold',
+
+},
 
   selectContainer: {
     padding: 10,

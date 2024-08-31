@@ -1,165 +1,223 @@
-import * as React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
+import React, { createContext, useState, useContext } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, Switch, StyleSheet, Alert } 
+from 'react-native';
 
-const ilusEqui = require("../../../assets/icons/ilustra-equipe.png")// o icone 
+const ThemeContext = createContext();
 
+const ThemeProvider = ({ children }) => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-export default function Equipe() {
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
-
-
-    <ScrollView>
-    <SafeAreaView style={styles.container}>
-      
-     
-      <Image source={ilusEqui} style={styles.ilustra} />
-
-
-      <View style={styles.box3}> 
-    
-           <View style={styles.row}> 
-              <View style={styles.column}>
-              <Text style={styles.title}>Você pertence a essa van</Text>
-              <Text style={styles.subtitle}>Motorista: Rodrigo</Text>
-              <Text style={styles.subtitle}>Número:200</Text>
-              </View>
-            </View>
-
-            <View style={styles.row2}> 
-              <View style={styles.column}>
-              <Text style={styles.title}>Você pertence a essa van</Text>
-              <Text style={styles.subtitle2}>Aluno: Isabelle Vidal   123344899</Text>
-              <Text style={styles.subtitle2}>Aluno: Isabelle Vidal   123344899</Text>
-              <Text style={styles.subtitle2}>Aluno: Isabelle Vidal   123344899</Text>
-              <Text style={styles.subtitle2}>Aluno: Isabelle Vidal   123344899</Text>
-              <Text style={styles.subtitle2}>Aluno: Isabelle Vidal   123344899</Text>
-              <Text style={styles.subtitle2}>Aluno: Isabelle Vidal   123344899</Text>
-              <Text style={styles.subtitle2}>Aluno: Isabelle Vidal   123344899</Text>
-              <Text style={styles.subtitle2}>Aluno: Isabelle Vidal   123344899</Text>
-
-        
-
-              </View>
-            </View>
-            
-        </View>
-
-
-      
-
-    </SafeAreaView>
-    </ScrollView>
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
   );
-}
+};
+
+const useTheme = () => useContext(ThemeContext);
+
+const UserProfileScreen = () => {
+  const { isDarkMode, toggleTheme } = useTheme();
+  const [name, setName] = useState('João Silva');
+  const [email, setEmail] = useState('joao.silva@example.com');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newName, setNewName] = useState(name);
+  const [newEmail, setNewEmail] = useState(email);
+  const [newPassword, setNewPassword] = useState('');
+  const [newConfirmPassword, setNewConfirmPassword] = useState('');
+  const [profileImage, setProfileImage] = useState('https://via.placeholder.com/150');
+  const [editing, setEditing] = useState(false);
+
+  const handleSaveProfile = () => {
+    if (newPassword !== newConfirmPassword) {
+      Alert.alert('As senhas não coincidem. Por favor, verifique.');
+      return;
+    }
+
+    setName(newName);
+    setEmail(newEmail);
+    setPassword(newPassword);
+    setEditing(false);
+    Alert.alert('Perfil atualizado com sucesso!');
+  };
+
+  const handleChoosePhoto = () => {
+    // Lógica para escolher uma nova foto de perfil
+    Alert.alert('Escolher foto do perfil');
+  };
+
+  return (
+    <View style={[styles.container, isDarkMode && styles.darkContainer]}>
+      <TouchableOpacity style={styles.profileImageContainer} onPress={handleChoosePhoto}>
+        <Image source={{ uri: profileImage }} style={styles.profileImage} />
+      </TouchableOpacity>
+
+      {editing ? (
+        <View>
+          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>Novo Nome:</Text>
+          <TextInput
+            style={[styles.input, isDarkMode && styles.darkInput]}
+            value={newName}
+            onChangeText={setNewName}
+            placeholder="Digite seu novo nome"
+            placeholderTextColor={isDarkMode ? "#ccc" : "#888"}
+          />
+
+          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>Novo E-mail:</Text>
+          <TextInput
+            style={[styles.input, isDarkMode && styles.darkInput]}
+            value={newEmail}
+            onChangeText={setNewEmail}
+            placeholder="Digite seu novo e-mail"
+            keyboardType="email-address"
+            placeholderTextColor={isDarkMode ? "#ccc" : "#888"}
+          />
+
+          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>Nova Senha:</Text>
+          <TextInput
+            style={[styles.input, isDarkMode && styles.darkInput]}
+            value={newPassword}
+            onChangeText={setNewPassword}
+            placeholder="Digite sua nova senha"
+            secureTextEntry={true}
+            placeholderTextColor={isDarkMode ? "#ccc" : "#888"}
+          />
+
+          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>Confirmar Nova Senha:</Text>
+          <TextInput
+            style={[styles.input, isDarkMode && styles.darkInput]}
+            value={newConfirmPassword}
+            onChangeText={setNewConfirmPassword}
+            placeholder="Confirme sua nova senha"
+            secureTextEntry={true}
+            placeholderTextColor={isDarkMode ? "#ccc" : "#888"}
+          />
+
+          <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
+            <Text style={styles.saveButtonText}>Salvar Perfil</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View>
+          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>Nome:</Text>
+          <Text style={[styles.text, isDarkMode && styles.darkText]}>{name}</Text>
+
+          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>E-mail:</Text>
+          <Text style={[styles.text, isDarkMode && styles.darkText]}>{email}</Text>
+
+          <TouchableOpacity style={styles.editButton} onPress={() => setEditing(true)}>
+            <Text style={styles.editButtonText}>Editar Perfil</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      <View style={styles.setting}>
+        <Text style={[styles.settingText, isDarkMode && styles.darkSettingText]}>Modo Escuro</Text>
+        <Switch value={isDarkMode} onValueChange={toggleTheme} />
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    
-  },
-
-  
-  ilustra: { //estilização da imagem
-    flex: 1,
-    width: 290, // largura desejada da imagem
-    height: 290, // altura desejada da imagem
-    resizeMode: 'contain', // ajuste de escala da imagem
-    // position: 'absolute'  ,     // posicionamento absoluto
-    top: 10, // ajusta a posição verticalmente
-    marginBottom:10,
-
-  },
-  box3: {
-    flexDirection:'column',
-    padding: 40,
-    maxHeight:1000,
-    minHeight:650,
-    borderRadius: 10,
-    backgroundColor: '#FFF',
-    shadowColor: '#000',
-    shadowOffset: { width:0, height:10 },
-    shadowRadius: 1.3,
-    elevation: 20,
-    marginBottom:30,
-    
-  },
-
-  row: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
-    //assim n precisando fazer um milhão de margin pra alinhar certo
-    display: "flex",
-    flexDirection: "column",
-
-    //estilização
     padding: 20,
-    borderRadius: 15,
-    top: 20, 
-    width: "98%",
-    height: 150,//margin top
-    
-        //colocar sombras
-    backgroundColor: '#FFFFFF', 
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 15 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowSpread: 5,
-    elevation: 15,
-      },
-
-      row2: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
-        //assim n precisando fazer um milhão de margin pra alinhar certo
-        display: "flex",
-        flexDirection: "row",
-    
-        //estilização
-        padding: 20,
-        borderRadius: 15,
-        top: 40, 
-        width: "98%",
-        height: 300,//margin top
-
-        
-            //colocar sombras
-        backgroundColor: '#FFFFFF', 
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 15 },
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-        shadowSpread: 5,
-        elevation: 15,
-          },
-    
-
-  title:{ // estilização do text
-    fontSize: 20,
-    color: '#F6B628',
-    fontWeight: "bold",
-    padding: 20, 
-    textAlign: 'center'
-   
+    backgroundColor: '#fff',
   },
-
-  subtitle:{ // estilização do subtext
-   
-    fontSize: 15,
-    color: '#1A478A',
-    fontWeight: "bold",
-    textAlign: 'left',
-
+  darkContainer: {
+    backgroundColor: '#333',
   },
-
-  subtitle2:{ // estilização do subtext
-   
-    fontSize: 15,
-    color: '#1A478A',
-    fontWeight: "bold",
+  profileImageContainer: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#000',
+  },
+  darkLabel: {
+    color: '#fff',
+  },
+  text: {
+    fontSize: 16,
+    marginBottom: 20,
+    color: '#000',
+  },
+  darkText: {
+    color: '#fff',
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    color: '#000',
+  },
+  darkInput: {
+    borderColor: '#555',
+    color: '#fff',
+  },
+  editButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  editButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
     textAlign: 'center',
-
-  }
-
+  },
+  saveButton: {
+    backgroundColor: '#28a745',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  saveButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  setting: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 30,
+  },
+  settingText: {
+    fontSize: 18,
+    color: '#000',
+  },
+  darkSettingText: {
+    color: '#fff',
+  },
 });
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <UserProfileScreen />
+    </ThemeProvider>
+  );
+}

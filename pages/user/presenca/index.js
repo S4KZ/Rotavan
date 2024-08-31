@@ -16,9 +16,8 @@ export default function Presenca() {
 
         <Image source={ilusConfi} style={styles.ilustra} /> 
         <View style={styles.box3}>
-          <Text style={styles.title}>Confirme sua Presença na ida</Text>
+          <Text style={styles.title}>Confirme sua presença </Text>
 
-  
           <View style={styles.botoesContainer}>
 
           <TouchableOpacity style={styles.botao} >
@@ -31,18 +30,7 @@ export default function Presenca() {
 
           </View>
 
-          <Text style={styles.title}>Confirme sua Presença na volta</Text>
-
-          <View style={styles.botoesContainer}>
-          <TouchableOpacity style={styles.botao} >
-          <Text style={styles.texto}>Não voltarei hoje</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.botao} >
-          <Text style={styles.texto}>Voltarei hoje</Text>
-          </TouchableOpacity>
-          </View>
-
+        
           <TouchableOpacity style={styles.botaoConf} >
           <Text style={styles.texto}>CONFIRMAR</Text>
           </TouchableOpacity>

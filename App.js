@@ -13,7 +13,7 @@ import Login from "./pages/log/login";
 import Cadastro from "./pages/log/cadastro";
 import Sair from "./pages/log/Sair";
 
-const icon = require('./assets/icons/Login-cuate.png');
+const icon = require('./assets/icons/welcome-ilustra.png');
 
 
 
@@ -23,12 +23,14 @@ const icon = require('./assets/icons/Login-cuate.png');
       <View style={styles.container}>
           
           <Image source={icon} style={styles.image} />
-          <Text style={styles.text}>É novo por aqui?</Text>
+          <Text style={styles.title}>Seja bem-vindo!</Text>
+          <Text style={styles.text3}>Seja bem-vindo ao RotaVan, cadastre se ou</Text>
+          <Text style={styles.text4}>efetue seu login com os dados existentes!</Text>
           <TouchableOpacity onPress={() => navigation.navigate('Cadastro')} style={styles.button}>
-              <Text style={styles.buttonText}>Entrar</Text>
+              <Text style={styles.buttonText}>Cadastrar</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.text2}>Já tenho uma conta</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.button2}>
+              <Text style={styles.buttonText2}>Login</Text>
           </TouchableOpacity>
 
       </View>
@@ -78,6 +80,7 @@ const styles = StyleSheet.create({
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor:'#fff'
       
   },
   image: {
@@ -98,16 +101,57 @@ const styles = StyleSheet.create({
   },
   button: {
       padding: 10,
-      borderRadius: 20,
+      borderRadius: 8,
       width: 250,
       backgroundColor: '#1A478A',
-      margin: 10
+      margin: 10,
+      marginBottom:10,
   },
+
+  button2: {
+    padding: 10,
+    borderRadius: 8,
+    width: 250,
+    backgroundColor: '#F6B628',
+},
+
+buttonText2: {
+    color: '#1A478A',
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+},
+
   buttonText: {
       color: '#F6B628',
       textAlign: 'center',
-      fontSize: 24,
+      fontSize: 18,
       fontWeight: 'bold',
-  }
+
+  },
+
+  title: { // estilização do text
+    fontSize: 25,
+    right:80,
+    padding: 10,
+    textAlign: 'center',
+    fontVariant: 'bold',
+    fontWeight: 'bold',
+
+},
+text3: {
+    fontSize: 16,
+    fontVariant: 'bold',
+    right:20,
+  
+},
+
+text4: {
+    fontSize: 16,
+    fontVariant: 'bold',
+    right:20,
+    marginBottom:40,
+},
+
 });
 

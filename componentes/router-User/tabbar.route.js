@@ -16,8 +16,8 @@ import Presenca from '../../pages/user/presenca';
 const HomeIcon = require('../../assets/icons/icon-home-azul.png');
 const HomeIconY = require('../../assets/icons/icon-home.png');
 
-const EquipeIcon = require('../../assets/icons/icon-equipe-azul.png');
-const EquipeIconY = require('../../assets/icons/icon-equipe.png');
+const EquipeIcon = require('../../assets/icons/icon-perfil.png');
+const EquipeIconY = require('../../assets/icons/icon-perfil-amarelo.png');
 
 const PresIcon = require('../../assets/icons/icon-presenca-azul.png')
 const PresIconY = require('../../assets/icons/icon-presenca.png');
@@ -83,14 +83,14 @@ export default function TabButton() {
               return(
                 <View style={styles.box}>
                   <Image source={EquipeIconY} style={styles.imgg} name="equipe"/>
-                  <Text style={styles.txtFocus}>EQUIPE</Text>
+                  <Text style={styles.txtFocus}>PERFIL</Text>
                 </View>
               );
             }
             return(
               <View style={styles.box}>
                 <Image source={EquipeIcon} style={styles.imgg} name="equipe"/>
-                <Text style={styles.txt}>EQUIPE</Text>
+                <Text style={styles.txt}>PERFIL</Text>
               </View>
             );
           }
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   },
   imgg: {
     width: 45,
-    height: 25,
+    height: 32,
   },
 });
 
