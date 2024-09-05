@@ -142,15 +142,16 @@ buttonText2: {
 text3: {
     fontSize: 16,
     fontVariant: 'bold',
-    right:20,
+    marginright:10,
+  
   
 },
 
 text4: {
     fontSize: 16,
     fontVariant: 'bold',
-    right:20,
     marginBottom:40,
+    marginright:10,
 },
 
 });

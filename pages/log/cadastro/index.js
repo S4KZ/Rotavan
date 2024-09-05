@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal,StyleSheet, button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal, StyleSheet, button, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import {  useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import User from './cadastro-user';
+import Mot from './cadastro-mot';
 
 
-export default function Cadastro() {
+ function Cadastro() {
   const [tipoUsuario, setTipoUsuario] = useState('passageiro');
+   const [modalVisible, setModalVisible] = useState(false);
+
+  const navigation = useNavigation();
 
   return (
-    <ScrollView>
+ 
       <View style={styles.container}>
         
         <View style={styles.box}>
  
-  
         <Text style={styles.title}>Cadastro</Text>
 
 
@@ -58,18 +65,97 @@ export default function Cadastro() {
             <TextInput style={styles.textInput} placeholder="Confirme sua senha " secureTextEntry={true} />
           </View>
 
-          <View style={styles.form}>
+          {/* <View style={styles.form}>
             <TouchableOpacity style={styles.button}>
               <Text style={styles.buttonText}>Entrar</Text>
             </TouchableOpacity>
+          </View> */}
+
+  <View style={styles.centeredView}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Você é motorista?</Text>
+
+            <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => navigation.navigate('Mot')}>
+              <Text style={styles.buttonText}>Sim</Text>
+            </TouchableOpacity>
+
+              <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => navigation.navigate('User')}>
+              <Text style={styles.buttonText}>Não</Text>
+            </TouchableOpacity>
+
           </View>
+        </View>
+      </Modal>
+      <TouchableOpacity
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => setModalVisible(true)}>
+        <Text style={styles.buttonText}>Entrar</Text>
+      </TouchableOpacity>
+    </View>
+
+
 
         </View>
       </View>
 
-    </ScrollView>
+ 
   );
 }
+
+
+export default function Telas() { 
+    const Stack = createNativeStackNavigator();
+    return (
+
+        <Stack.Navigator>
+            <Stack.Screen name="Cadastro" component={Cadastro}
+                options={{ headerShown: false }}
+            />
+
+            <Stack.Screen name="Mot" component={Mot}
+                options={{ headerShown: false }}
+            />
+
+            
+            <Stack.Screen name="User" component={User}
+                options={{ headerShown: false }}
+            />
+
+          
+        </Stack.Navigator>
+
+    );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const styles = {
   container: {
@@ -79,6 +165,12 @@ const styles = {
     alignItems: 'center',
     backgroundColor: '#fff',
     marginBottom: 10,
+  },
+    centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
   },
   box: {
     top:90,
@@ -91,8 +183,9 @@ const styles = {
     shadowRadius: 5,
     shadowSpread: 5,
     elevation: 15,
-    marginBottom: 200,
+    marginBottom: 150,
     width:400,
+    height:600,
   },
 
   box2: {
@@ -128,9 +221,21 @@ const styles = {
     padding: 10,
     borderRadius: 10,
     width: 250,
+    height:53,
     backgroundColor: '#1A478A',
     margin: 10
   },
+
+    button: {
+    padding: 10,
+    borderRadius: 10,
+    width: 250,
+    height:53,
+    backgroundColor: '#1A478A',
+    margin: 10
+  },
+
+  
   buttonText: {
     color: '#F6B628',
     textAlign: 'center',
@@ -181,4 +286,49 @@ const styles = {
     shadowRadius: 5,
     elevation: 2,
   },
+   modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+    modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize:18,
+    fontWeight: 'bold',
+
+  },
+
+   textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+
+  
+buttonText2: {
+    color: '#1A478A',
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+},
+
+  buttonText: {
+      color: '#F6B628',
+      textAlign: 'center',
+      fontSize: 18,
+      fontWeight: 'bold',
+
+  },
+  
 };
