@@ -36,8 +36,7 @@ import Mot from './cadastro-mot';
           </View> */}
 
           <View style={styles.form}>
-            <Text style={styles.text}>Nome Completo</Text>
-            <TextInput style={styles.textInput} placeholder=" Digite seu nome completo" />
+            <TextInput style={styles.textInput} placeholder=" Nome completo" />
           </View>
 
           {/* <View style={styles.form}>
@@ -51,17 +50,14 @@ import Mot from './cadastro-mot';
           </View> */}
 
           <View style={styles.form}>
-            <Text style={styles.text}>Email</Text>
-            <TextInput style={styles.textInput} placeholder="Digite seu email"/>
+            <TextInput style={styles.textInput} placeholder="Email"/>
           </View>
 
           <View style={styles.form}>
-            <Text style={styles.text}>Senha</Text>
-            <TextInput style={styles.textInput} placeholder="Digite sua senha" secureTextEntry={true} />
+            <TextInput style={styles.textInput} placeholder="Senha" secureTextEntry={true} />
           </View>
 
           <View style={styles.form}>
-            <Text style={styles.text}>Confirmar Senha</Text>
             <TextInput style={styles.textInput} placeholder="Confirme sua senha " secureTextEntry={true} />
           </View>
 
@@ -139,22 +135,6 @@ export default function Telas() {
 
     );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 const styles = {
@@ -246,14 +226,14 @@ const styles = {
     padding: 10
   },
   textInput: {
-    height: 40,
-    borderColor: '#CCCCCC',
-    borderWidth: 1,
+    height: 50,
+    width:300,
+    backgroundColor: '#f4f4f4',
     borderRadius: 7,
     paddingHorizontal: 10,
     paddingVertical: 10,
     fontSize: 16,
-    color: '#333',
+    color: '#000',
   },
 
   title: { // estilização do text
