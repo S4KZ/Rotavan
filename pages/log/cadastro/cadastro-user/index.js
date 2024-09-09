@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { TextInputMask } from 'react-native-masked-text'
+import * as Animatable from 'react-native-animatable';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function User (){
   const [tipoUsuario, setTipoUsuario] = useState('passageiro');
@@ -12,21 +14,19 @@ return(
 
 <View style={styles.container}>
 
-
-<View style={styles.box}>
 <Text style={styles.title} >Cadastro Passageiro </Text>
 
+<Animatable.View 
+ animation={"fadeInUp"}
+ delay={500}
 
-          {/* <View style={styles.form}>
-            <Text style={styles.text}>Endereço de embarque</Text>
-            <TextInput style={styles.textInput} placeholder="Digite seu endereço"/>
-          </View> */}
+style={styles.box}>
+
 
  <View style={styles.form}> 
-          <TextInputMask
-          style={styles.input}
+          <TextInputMask style={styles.input}
           placeholder="Telefone"
-            type={'cel-phone'}
+          type={'cel-phone'}
             options={{
               maskType: 'BRL',
               withDDD: true,
@@ -35,6 +35,9 @@ return(
             value={cell}
             onChangeText={text =>  setCell (text)}
           />
+
+
+
  </View>
 
      <View style={styles.form}>
@@ -50,6 +53,7 @@ return(
           />
 
        </View>
+
 
 
            <View style={styles.form}>
@@ -101,7 +105,7 @@ return(
           </View> 
 </View>
 
-</View>
+</Animatable.View>
 
 
 
@@ -120,14 +124,20 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#f4f4f4',
     marginBottom: 10,
   },
-    
+  icon: {
+    position:'absolute',
+    left:22,
+    top:25,
+},
+
   box: {
-    top:90,
-    padding: 30,
-    borderRadius: 10,
+    top:100,
+    padding: 38,
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: { width: 15, height: 15 },
@@ -135,9 +145,8 @@ const styles = {
     shadowRadius: 5,
     shadowSpread: 5,
     elevation: 15,
-    marginBottom: 150,
-    width:400,
-    height:600,
+    flex:1,
+  
   },
   image: {
     height: 250,
@@ -161,6 +170,9 @@ const styles = {
   },
   form: {
     padding: 10,
+    flexDirection: 'row',
+    paddingLeft: 10,
+    marginBottom: 10,
   
   },
   title: { // estilização do text
@@ -170,6 +182,7 @@ const styles = {
     textAlign: 'center',
     fontVariant: 'bold',
     fontWeight: 'bold',
+    top:55,
 },
   selectContainer: {
     padding: 10,
@@ -184,14 +197,14 @@ const styles = {
   input: {
     height: 50,
     width:300,
-    margin:5,
+    margin:1,
     borderColor: '#CCCCCC',
     borderRadius: 7,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     paddingVertical: 10,
     fontSize: 14,
     color: '#000',
-  backgroundColor: '#f4f4f4',
+    backgroundColor: '#f4f4f4',
   
   },
 

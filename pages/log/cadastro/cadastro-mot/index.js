@@ -1,45 +1,79 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-
+import * as Animatable from 'react-native-animatable';
+import { TextInputMask } from 'react-native-masked-text';
 
 
 export default function User (){
-
+  const [cell, setCell] = useState('');
       const [tipoUsuario, setTipoUsuario] = useState('passageiro');
+      const [cnh, setCnh] = useState('');
+      const [cpf, setCpf] = useState('');
+      const [placa, setPlaca] = useState('');
 return(
 
 <View style={styles.container}>
 
-
-<View style={styles.box}>
-
 <Text style={styles.title} >Cadastro Motorista </Text>
 
+<Animatable.View animation={"fadeInUp"} style={styles.box}>
 
-          <View style={styles.form}>
-            <TextInput style={styles.textInput} placeholder="Digite seu telefone"/>
-          </View>
-
+          
+ <View style={styles.form}> 
+          <TextInputMask style={styles.textInput}
+          placeholder="Telefone"
+          type={'cel-phone'}
+            options={{
+              maskType: 'BRL',
+              withDDD: true,
+              dddMask: '(99) '
+            }}
+            value={cell}
+            onChangeText={text =>  setCell (text)}
+          />
+ </View>
             <View style={styles.form}>
-       
-            <TextInput style={styles.textInput} placeholder="Digite seu CNH"/>
+            <TextInputMask
+        style={styles.textInput}
+        placeholder="CNH"
+        type={'custom'}
+        options={{
+          mask: '99999999999'  // Máscara para CNH (11 dígitos)
+        }}
+        value={cnh}
+        onChangeText={text => setCnh(text)}
+      />
           </View>
 
            <View style={styles.form}>
-            <TextInput style={styles.textInput} placeholder="Digite seu CPF"/>
+           <TextInputMask
+        style={styles.textInput}
+        placeholder="CPF"
+        type={'cpf'}
+        value={cpf}
+        onChangeText={text => setCpf(text)}
+      />
           </View>
             
-     <Text style={styles.title} >Cadastro da van</Text>
+          {/* <Text style={styles.title} >Cadastro da van</Text>
 
 
           <View style={styles.form}>
-            <TextInput style={styles.textInput} placeholder="Digite seu telefone"/>
+            <TextInput style={styles.textInput} placeholder="Modelo"/>
           </View>
 
             <View style={styles.form}>
-       
-            <TextInput style={styles.textInput} placeholder="Digite seu CNH"/>
-          </View>
+            <TextInputMask
+        style={styles.textInput}
+        placeholder="Placa"
+        type={'custom'}
+        options={{
+          mask: 'AAA-9999', // Formato tradicional
+        }}
+        value={placa}
+        onChangeText={text => setPlaca(text)}
+      />
+          </View> */}
 
 
 
@@ -49,7 +83,7 @@ return(
             </TouchableOpacity>
           </View> 
 
-</View>
+</Animatable.View>
 
 
 
@@ -73,33 +107,18 @@ const styles = {
   },
     
   box: {
-    top:90,
-    padding: 30,
-    borderRadius: 10,
+    top:130,
+    padding: 38,
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: { width: 15, height: 15 },
     shadowOpacity: 0.7,
-    shadowRadius: 5,
     shadowSpread: 5,
     elevation: 15,
-    marginBottom: 150,
-    width:400,
-    height:600,
-  },
-
-  box2: {
-    top:10,
-    padding: 30,
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 15, height: 15 },
-    shadowOpacity: 0.7,
-    shadowRadius: 5,
-    shadowSpread: 5,
-    elevation: 15,
-    marginBottom: 200,
+  flex:1,
+  
   },
   image: {
     height: 250,
@@ -120,22 +139,12 @@ const styles = {
   button: {
     padding: 10,
     borderRadius: 10,
-    width: 250,
-    height:53,
+    width: 280,
+    height:43,
     backgroundColor: '#1A478A',
     margin: 10
   },
 
-    button: {
-    padding: 10,
-    borderRadius: 10,
-    width: 250,
-    height:53,
-    backgroundColor: '#1A478A',
-    margin: 10
-  },
-
-  
   buttonText: {
     color: '#F6B628',
     textAlign: 'center',
@@ -146,17 +155,20 @@ const styles = {
     padding: 10
   },
   textInput: {
-    height: 40,
+    height: 50,
+    width:300,
+    margin:1,
     borderColor: '#CCCCCC',
-    borderWidth: 1,
     borderRadius: 7,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     paddingVertical: 10,
-    fontSize: 16,
-    color: '#333',
+    fontSize: 14,
+    color: '#000',
+    backgroundColor: '#f4f4f4',
   },
 
   title: { // estilização do text
+    top:70,
     fontSize: 28,
     color: '#F6B628',
     right:40,
@@ -221,16 +233,16 @@ buttonText2: {
    form: {
     padding: 10
   },
-  textInput: {
-    height: 40,
-    borderColor: '#CCCCCC',
-    borderWidth: 1,
-    borderRadius: 7,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    fontSize: 16,
-    color: '#333',
-  },
+  // textInput: {
+  //   height: 40,
+  //   borderColor: '#CCCCCC',
+  //   borderWidth: 1,
+  //   borderRadius: 7,
+  //   paddingHorizontal: 10,
+  //   paddingVertical: 10,
+  //   fontSize: 16,
+  //   color: '#333',
+  // },
 
    pickerBox: {
     borderColor: '#021C58',

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Image, Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const icon = require('../../../assets/icons/Login-rafikii.png');
 
@@ -31,12 +33,19 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-        <Image source={icon} style={styles.image} />
+     
+        <Animatable.Image source={icon} 
+       animation={"fadeInLeft"}
+        style={styles.image} />
 
-      <View style={styles.box}>
+      <Animatable.View 
+      animation={"fadeInUp"}
+      delay={500}
+      
+      style={styles.box}>
       
         <View style={styles.form}>
-          <Text style={styles.text}>Email</Text>
+             
           <TextInput
             style={styles.textInput}
             placeholder="Email"
@@ -47,13 +56,14 @@ export default function Login() {
             value={email}
             onChangeText={(text) => setEmail(text)}
           />
+
+<Icon name="at" size={23} color="#1A478A" style={styles.icon} />
         </View>
 
         <View style={styles.form}>
-          <Text style={styles.text}>Password</Text>
           <TextInput
             style={styles.textInput}
-            placeholder="Password"
+            placeholder="Senha"
             placeholderTextColor="#AAAAAA"
             secureTextEntry={true}
             autoCapitalize="none"
@@ -61,6 +71,8 @@ export default function Login() {
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
+
+          <Icon name="lock" size={23} color="#1A478A" style={styles.icon} />
         </View>
 
         <View style={styles.form}>
@@ -68,7 +80,7 @@ export default function Login() {
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </Animatable.View>
     </View>
   );
 }
@@ -79,7 +91,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#f4f4f4',
   },
   box: {
     padding: 40,
@@ -88,11 +100,12 @@ const styles = StyleSheet.create({
     minWidth:400,
     height: 500,
     maxHeight:600,
-    borderRadius: 10,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
     backgroundColor:'#fff',
     shadowColor: '#000',
     shadowOffset:{ width:0, height:10 },
-    shadowRadius: 1.3,
+  
     elevation: 20,
   },
   image: {
@@ -110,34 +123,37 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline'
   },
   button: {
-    padding: 10,
+    padding: 8,
     borderRadius: 10,
-    width: 280,
     backgroundColor: '#1A478A',
-    margin: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  
-
+    width: 295,
+    height:45,
+    top:20,
 
   },
   buttonText: {
     color: '#F6B628',
     textAlign: 'center',
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   form: {
     padding: 10
   },
   textInput: {
-    height: 40,
-    borderColor: '#CCCCCC',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
+    height: 50,
+    width:300,
+    backgroundColor: '#f4f4f4',
+    borderRadius: 7,
+    paddingHorizontal: 40,
     paddingVertical: 10,
-    fontSize: 18,
-    color: '#333',
+    fontSize: 16,
+    color: '#000',
+    top:10,
   },
+  icon: {
+    position:'absolute',
+    left:22,
+    top:32,
+},
 });

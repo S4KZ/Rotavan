@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import 'react-native-gesture-handler';
+import * as Animatable from 'react-native-animatable';
 
 import RouterUser from './componentes/router-User/index';
 import RouterMotor from './componentes/router-Motor/index';
@@ -22,10 +23,18 @@ const icon = require('./assets/icons/welcome-ilustra.png');
   return (
       <View style={styles.container}>
           
-          <Image source={icon} style={styles.image} />
-          <Text style={styles.title}>Seja bem-vindo!</Text>
+          <Animatable.Image 
+          animation={"flipInY"}
+          delay={500}
+          Image source={icon} style={styles.image} 
+           
+          />
+
+ <Animatable.Text  animation={"fadeInLeft"} style={styles.title}>Seja bem-vindo!</Animatable.Text>
+
           <Text style={styles.text3}>Seja bem-vindo ao RotaVan, cadastre se ou</Text>
           <Text style={styles.text4}>efetue seu login com os dados existentes!</Text>
+
           <TouchableOpacity onPress={() => navigation.navigate('Cadastro')} style={styles.button}>
               <Text style={styles.buttonText}>Cadastrar</Text>
           </TouchableOpacity>
@@ -49,14 +58,10 @@ export default function App(){
                 options={{ headerShown: false }}
                 />
                 <Stack.Screen name="Login" component={Login}
-                options={{
-                    title: ''
-                }}
+                  options={{ headerShown: false }}
                 />
                 <Stack.Screen name="Cadastro" component={Cadastro}
-                 options={{
-                    title: ''
-                }}
+                  options={{ headerShown: false }}
                 />
                 <Stack.Screen name="RouterMotor" component={RouterMotor} 
                 options={{ headerShown: false }}
