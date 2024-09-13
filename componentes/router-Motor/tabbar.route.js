@@ -30,7 +30,6 @@ export default function TabButton(){
         headerShown: false,
         tabBarStyle: {
           position: 'absolute',
-        
           borderRadius: 4,
           height: 90,
           shadowColor: '#000',
@@ -171,7 +170,7 @@ const styles = StyleSheet.create({
   },
   txtFocus: {
     fontSize: 12,
-    color: '#666',
+    color: '#FAB428',
   },
   imgg: {
     width: 45,

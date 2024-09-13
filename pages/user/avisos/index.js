@@ -45,11 +45,6 @@ export default function Avisos() {
 
 
 
-
-
-
-
-
     </View>
     {/* </SafeAreaView> */}
      </ScrollView> 
@@ -117,32 +112,13 @@ const styles = StyleSheet.create({
       elevation: 5,
     },
     
-    box2: {
-      //estilização
-      backgroundColor: "#F4F4F4",
-      padding: 20,
-      minHeight:320,
-      maxheight: 390,
-      width: "93%",
-      height: 320,
-      top: 70, //margin top
-      borderRadius: 10,
-      //posicionamento dos componentes 
-      alignItems: "center",
-      //colocar sombras
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
-    }, 
-
+  
     row: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
       //assim n precisando fazer um milhão de margin pra alinhar certo
       display: "flex",
       flexDirection: "column",
 
-      marginBottom:60,
+      marginBottom:80,
       //estilização
       padding: 20,
       borderRadius: 15,

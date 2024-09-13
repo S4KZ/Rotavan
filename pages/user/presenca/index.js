@@ -1,45 +1,92 @@
-import * as React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
+import React, { useState } from 'react';
+import { View, Text, Button, Alert, StyleSheet, Image, ScrollView, TouchableOpacity} from 'react-native';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 
 const ilusConfi = require("../../../assets/icons/ilustra-Confirmar.png")// o icone
 
+// Configurando o calendário para português
+LocaleConfig.locales['pt-br'] = {
+  monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+  monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+  dayNames: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],
+  dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+  today: 'Hoje'
+};
+LocaleConfig.defaultLocale = 'pt-br';
 
+export default function ConfirmacaoVan() {
+  // Estado para armazenar as datas selecionadas
+  const [selectedDates, setSelectedDates] = useState({});
 
-export default function Presenca() {
+  // Função para selecionar ou deselecionar datas
+  const handleDayPress = (day) => {
+    const selected = { ...selectedDates };
+
+    // Se a data já está selecionada, desmarcar. Caso contrário, marcar.
+    if (selected[day.dateString]) {
+      delete selected[day.dateString];
+    } else {
+      selected[day.dateString] = { selected: true, marked: true, selectedColor: '#1A478A' };
+    }
+
+    setSelectedDates(selected);
+  };
+
+  // Função para confirmar presença nos dias selecionados
+  const confirmarPresenca = () => {
+    const diasSelecionados = Object.keys(selectedDates);
+
+    if (diasSelecionados.length === 0) {
+      Alert.alert('Erro', 'Nenhum dia foi selecionado!');
+      return;
+    }
+
+    Alert.alert('Confirmação', `Você confirmou falta para os dias: ${diasSelecionados.join(', ')}`);
+
+    // Exemplo de envio de dados para um servidor
+    // fetch('https://seu-servidor.com/api/confirmacao', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ datas: diasSelecionados }),
+    // });
+  };
+
   return (
-   
-      <ScrollView>
-        <SafeAreaView style={styles.container}  >
+    <ScrollView> 
+    <View style={styles.container}>
 
-        <Image source={ilusConfi} style={styles.ilustra} /> 
-        <View style={styles.box3}>
-          <Text style={styles.title}>Confirme sua presença </Text>
+<Image source={ilusConfi} style={styles.ilustra} /> 
+         <View style={styles.box}>
+      <Text style={styles.title}>Selecione os dias que você não vai usar a van:</Text>
 
-          <View style={styles.botoesContainer}>
+      <View style={styles.box2}>
+      <Calendar
+        // Permitir a seleção de múltiplas datas
+        onDayPress={handleDayPress}
+        markedDates={selectedDates}
+        markingType={'multi-dot'} // Exibe múltiplos dias selecionados
+      />
+     </View>
 
-          <TouchableOpacity style={styles.botao} >
-          <Text style={styles.texto}>Não irei hoje</Text>
-          </TouchableOpacity>
-    
-          <TouchableOpacity style={styles.botao} >
-          <Text style={styles.texto}>Irei hoje</Text>
-          </TouchableOpacity>
+      <View style={styles.buttonContainer}>
 
-          </View>
+      <TouchableOpacity style={styles.button} onPress={confirmarPresenca}>
+            <Text style={styles.buttonText}>Confirmar </Text>
+       </TouchableOpacity>
+       
+      </View>
 
-        
-          <TouchableOpacity style={styles.botaoConf} >
-          <Text style={styles.texto}>CONFIRMAR</Text>
-          </TouchableOpacity>
-     
-      
-  
-      <StatusBar style="auto" />
+      {Object.keys(selectedDates).length > 0 && (
+        <View style={styles.selectedDatesContainer}>
+          <Text style={styles.selectedDatesText}>
+            Você selecionou os dias:
+            {Object.keys(selectedDates).map((date) => ` ${date}`).join(', ')}
+          </Text>
+        </View>
+      )}
     </View>
-    </SafeAreaView>
+
+    </View>
     </ScrollView> 
   );
 }
@@ -48,30 +95,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
-    marginBottom:10,
-  
+    display: 'flex',
   },
-
   ilustra: { //estilização da imagem
 
     flex: 1,
-    width: 350, // largura desejada da imagem
-    height: 350, // altura desejada da imagem
+    width: 300, // largura desejada da imagem
+    height: 300, // altura desejada da imagem
     resizeMode: 'contain', // ajuste de escala da imagem
+   marginLeft:50,
   },
-  box3: {
+
+  box: {
     flexDirection:'column',
     padding: 40,
-    maxHeight:1000,
-    minHeight:600,
-    borderRadius: 10,
+    maxHeight:1900,
+    minHeight:900,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     backgroundColor: '#FFF',
     shadowColor: '#000',
     shadowOffset: { width:0, height:10 },
     shadowRadius: 1.3,
     elevation: 25,
+    marginBottom:30,
+    top:20,
+    
+  },
+
+   box2: {
+    flexDirection:'column',
+    padding: 40,
+    maxHeight:400,
+    minHeight:200,
+    borderRadius: 20,
+    backgroundColor: '#FFF',
+    shadowColor: '#000',
+    shadowOffset: { width:0, height:10 },
+    shadowRadius: 1.3,
+    elevation: 5,
     marginBottom:30,
     top:20,
     
@@ -84,61 +147,37 @@ const styles = StyleSheet.create({
     padding: 20, 
     textAlign: 'center'
   },
-
-  botoesContainer: {
-    flexDirection: 'row', // alinha os botões em linha
-    justifyContent: 'center', // alinha os botões no centro
-    alignItems: 'center', // alinha os botões verticalmente no centro
-  },
-
-
-  botao: {
-    width: 150, // largura do botão quadrado
-    height: 100, // altura do botão quadrado
-    backgroundColor:'#F4F4F4', // cor de fundo do botão
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10, 
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginHorizontal: 10, // bordas arredondadas
-
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 15 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
-    marginTop:10,
-    marginBottom:20,
-  },
-
+  buttonContainer: {
+    marginTop: 20,
   
-  botaoConf: {
-    width: 300, // largura do botão quadrado
-    height: 50, // altura do botão quadrado
-    backgroundColor: '#F6B628', // cor de fundo do botão
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10, 
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginHorizontal: 25, // bordas arredondadas
-    //colocar sombras
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 15 },
-    shadowOpacity: 0.8,
-    shadowRadius: 4,
-    elevation: 5,
-    marginTop:2,
-    marginBottom:100,
+  },
+  button: {
+    padding: 10,
+    borderRadius: 10,
+    width: 250,
+    height:45,
+    marginLeft:40,
+    backgroundColor: '#1A478A',
+    margin: 10,
+  
   },
 
-  texto: {
-    color:'#1A478A', // cor do texto
-    fontSize: 18, // tamanho do texto
-    fontWeight: 'bold', // negrito do texto
+  buttonText: {
+    color: '#F6B628',
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 
-
-
+  selectedDatesContainer: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#F6B628',
+    borderRadius: 5,
+  },
+  selectedDatesText: {
+    fontSize: 16,
+    color: '#333',
+    textAlign: 'center',
+  },
 });

@@ -1,14 +1,64 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { TextInputMask } from 'react-native-masked-text'
 import * as Animatable from 'react-native-animatable';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function User (){
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Login from '../../login';
+import {  useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+
+  const User = () => {
+    const [cep, setCep] = useState('');
+    const [endereco, setEndereco] = useState({
+      logradouro: '',
+      bairro: '',
+      cidade: '',
+      uf: ''
+    });
+
+    useEffect(() => {
+      // Verifica se o CEP tem 8 caracteres antes de fazer a requisição
+      if (cep.length === 8) {
+        (async () => {
+          try {
+            const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            const data = await response.json();
+            
+            if (data.erro) {
+              // Se o CEP for inválido, você pode querer limpar os campos ou exibir uma mensagem
+              setEndereco({
+                logradouro: '',
+                bairro: '',
+                cidade: '',
+                uf: ''
+              });
+              return;
+            }
+  
+            setEndereco({
+              logradouro: data.logradouro,
+              bairro: data.bairro,
+              cidade: data.localidade,
+              uf: data.uf
+            });
+          } catch (error) {
+            // Lide com erros de rede ou outros problemas
+            console.error('Erro ao buscar endereço:', error);
+          }
+        })();
+      }
+    }, [cep]);
+  
+
   const [tipoUsuario, setTipoUsuario] = useState('passageiro');
-const [cell, setCell] = useState('');
-const [cep, setCep] = useState('');
+  const [cell, setCell] = useState('');
+
+
+
+
 
 return(
 
@@ -35,75 +85,44 @@ style={styles.box}>
             value={cell}
             onChangeText={text =>  setCell (text)}
           />
-
-
-
  </View>
 
      <View style={styles.form}>
-            <TextInputMask
-            style={styles.input}
-            placeholder="CEP"
-            type={'custom'}
-            options={{
-              mask: '99999-999',
-            }}
-            value={cep}
-            onChangeText={text => setCep(text)}
-          />
-
+     <TextInput
+        style={styles.input}
+        placeholder="Digite o CEP"
+        value={cep}
+        onChangeText={(text) => {
+          // Remove caracteres não numéricos
+          const cleanText = text.replace(/\D/g, '');
+          setCep(cleanText);
+        }}
+        keyboardType="numeric"
+        maxLength={8}
+      />
        </View>
 
+      <View style={styles.form}>
+        <Text style={styles.input2}  >Logradouro: {endereco.logradouro}</Text>
+        </View>
+        <View style={styles.form}>
+        <Text  style={styles.input2}>Bairro: {endereco.bairro}</Text>
+        </View>
+        <View style={styles.form}>
+        <Text style={styles.input2}>Cidade: {endereco.cidade}</Text>
+        </View>
+        <View style={styles.form}>
+        <Text style={styles.input2}>UF: {endereco.uf}</Text>
+      </View>
 
+      <View style={styles.form}>
+          <TouchableOpacity style={styles.button}  onPress={() => navigation.navigate('Login') }>
+            <Text style={styles.buttonText}>Entrar</Text>
+          </TouchableOpacity>
+        </View>
+   
+  
 
-           <View style={styles.form}>
-            <TextInput style={styles.input} placeholder="Bairro"/>
-          </View>
-
-           <View style={styles.form}>
-            <TextInput style={styles.input} placeholder="Cidade"/>
-          </View>
-
-
-  <View style={styles.form}>
-
-      <View style={styles.selectContainer}>
-            
-            <Picker
-              style={styles.picker}
-              selectedValue={tipoUsuario}
-              onValueChange={(itemValue) => setTipoUsuario(itemValue)}
-            >
-             <Picker.Item label="Acre" value="AC" />
-        <Picker.Item label="Alagoas" value="AL" />
-        <Picker.Item label="Amazonas" value="AM" />
-        <Picker.Item label="Bahia" value="BA" />
-        <Picker.Item label="Ceará" value="CE" />
-        <Picker.Item label="Distrito Federal" value="DF" />
-        <Picker.Item label="Espírito Santo" value="ES" />
-        <Picker.Item label="Goiás" value="GO" />
-        <Picker.Item label="Maranhão" value="MA" />
-        <Picker.Item label="Mato Grosso" value="MT" />
-        <Picker.Item label="Mato Grosso do Sul" value="MS" />
-        <Picker.Item label="Minas Gerais" value="MG" />
-        <Picker.Item label="Pará" value="PA" />
-        <Picker.Item label="Paraíba" value="PB" />
-        <Picker.Item label="Paraná" value="PR" />
-        <Picker.Item label="Pernambuco" value="PE" />
-        <Picker.Item label="Piauí" value="PI" />
-        <Picker.Item label="Rio de Janeiro" value="RJ" />
-        <Picker.Item label="Rio Grande do Norte" value="RN" />
-        <Picker.Item label="Rio Grande do Sul" value="RS" />
-        <Picker.Item label="Rondônia" value="RO" />
-        <Picker.Item label="Roraima" value="RR" />
-        <Picker.Item label="Santa Catarina" value="SC" />
-        <Picker.Item label="São Paulo" value="SP" />
-        <Picker.Item label="Sergipe" value="SE" />
-        <Picker.Item label="Tocantins" value="TO" />
-      </Picker>
-      
-          </View> 
-</View>
 
 </Animatable.View>
 
@@ -114,8 +133,10 @@ style={styles.box}>
 
 
 );
-
 }
+
+
+
 
 
 const styles = {
@@ -208,6 +229,20 @@ const styles = {
   
   },
 
+  input2: {
+    height: 50,
+    width:300,
+    margin:1,
+    borderColor: '#CCCCCC',
+    borderRadius: 7,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: '#696969',
+    backgroundColor: '#f4f4f4',
+  
+  },
+
    picker: {
     borderColor: '#021C58',
     borderRadius:20,
@@ -221,5 +256,21 @@ const styles = {
     elevation: 2,
      backgroundColor: '#f4f4f4',
   },
-  
+  button: {
+    padding: 8,
+    borderRadius: 10,
+    backgroundColor: '#1A478A',
+    width: 295,
+    height:45,
+    top:20,
+
+  },
+  buttonText: {
+    color: '#F6B628',
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
 };
+
+export default  User;

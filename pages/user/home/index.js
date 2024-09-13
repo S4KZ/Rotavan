@@ -14,7 +14,7 @@ export default function Home() {
     <View style={styles.container}>
       <Image source={mapIcon} style={styles.map} />
 
-      <GestureHandlerRootView style={StyleSheet.absoluteFillObject}>
+      {/* <GestureHandlerRootView style={StyleSheet.absoluteFillObject}>
         <BottomSheet
           ref={bottomSheetRef}
           index={0}
@@ -36,7 +36,7 @@ export default function Home() {
             </View>
         
         </BottomSheet>
-      </GestureHandlerRootView>
+      </GestureHandlerRootView> */}
     </View>
   );
 }

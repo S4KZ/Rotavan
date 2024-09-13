@@ -74,8 +74,6 @@ import Mot from './cadastro-mot';
           </View>
 
 
-
-
           <View style={styles.form}>
          
           
@@ -190,7 +188,6 @@ export default function Telas() {
                 options={{ headerShown: false }}
             />
 
-          
         </Stack.Navigator>
 
     );

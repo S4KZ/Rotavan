@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { View, Text, TextInput, StyleSheet, Button, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, ScrollView, TouchableOpacity  } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 export default function Ajuda(){
   const [motivo, setMotivo] = React.useState('');
 
   return(
-    <ScrollView>
+  
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <Text style={styles.headerTitle}>Algum problema?</Text>
@@ -46,12 +46,17 @@ export default function Ajuda(){
             style={styles.textArea}
           />
 
-          <View style={styles.button}>
-            <Button title="Enviar Chamado" />
-          </View>
+        
+
+        
+      <TouchableOpacity style={styles.button} >
+          <Text style={styles.buttonText}>Enviar Chamado</Text>
+       </TouchableOpacity>
+       
+         
         </View>
       </View>
-    </ScrollView>
+ 
   );
 }
 
@@ -59,6 +64,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+   backgroundColor:'#fff'
   },
   headerContainer: {
     backgroundColor: '#f7f7f7',
@@ -74,7 +80,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
-    color: '#021C58',
+    color: '#1A478A',
   },
   headerSubtitle: {
     fontSize: 18,
@@ -87,7 +93,7 @@ const styles = StyleSheet.create({
   formTitle: {
     fontSize: 18,
     marginBottom: 10,
-    color: '#021C58',
+    color: '#1A478A',
     textAlign: 'center',
     fontWeight: 'bold',
   },
@@ -99,31 +105,49 @@ const styles = StyleSheet.create({
   },
   inputRow: {
     flexDirection: 'row',
-    marginBottom: 5,
-    borderRadius: 10,
+    marginBottom: 15,
+    borderRadius: 8,
     margin: 20,
+    
+   
   },
   input: {
     height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
-    width: 120,
+    width: 150,
+    padding: 10,
+    borderRadius: 8,
+  },
+ 
+  button: {
     padding: 10,
     borderRadius: 10,
+    width: 250,
+    height:45,
+    marginLeft:40,
+    backgroundColor: '#1A478A',
+    margin: 10,
+  
   },
+
+  buttonText: {
+    color: '#F6B628',
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+
   textArea: {
     height: 100,
     borderColor: '#ccc',
     borderWidth: 1,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    borderRadius: 20,
+    borderRadius: 8,
+    marginBottom:30,
   },
-  button: {
-    marginTop: 5,
-    borderRadius: 40,
-    alignItems: 'center',
-  },
+
   pickerBox: {
     borderColor: '#021C58',
     borderWidth: 1,

@@ -36,7 +36,7 @@ export default function TabButton() {
             tabBarStyle:{
               position: 'absolute',
               borderRadius: 4,
-              height: 80,
+              height: 90,
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.75,
@@ -109,14 +109,14 @@ export default function TabButton() {
             if(focused){
               return(
                 <View style={styles.box}>
-                  <Image source={PresIconY} style={styles.img} name="presença"/>
+                  <Image source={PresIconY} style={styles.imgP} name="presença"/>
                   <Text style={styles.txtFocus}>PRESENÇA</Text>
                 </View>
               );
             }
             return(
               <View style={styles.box}>
-                <Image source={PresIcon} style={styles.img} name="presença"/>
+                <Image source={PresIcon} style={styles.imgP} name="presença"/>
                 <Text style={styles.txt}>PRESENÇA</Text>
               </View>
             );
@@ -164,17 +164,23 @@ const styles = StyleSheet.create({
   },
   img: {
     width: 28,
-    height: 26,
+    height: 27,
+  },
+  imgP: {
+    width: 32,
+    height: 30,
   },
   txt:{
+    fontSize: 12,
     color: '#021C58'
     
   },
    txtFocus:{
+    fontSize: 12,
     color: '#FAB428'
   },
   imgg: {
-    width: 45,
+    width: 43,
     height: 32,
   },
 });

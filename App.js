@@ -32,14 +32,16 @@ const icon = require('./assets/icons/welcome-ilustra.png');
 
  <Animatable.Text  animation={"fadeInLeft"} style={styles.title}>Seja bem-vindo!</Animatable.Text>
 
-          <Text style={styles.text3}>Seja bem-vindo ao RotaVan, cadastre se ou</Text>
-          <Text style={styles.text4}>efetue seu login com os dados existentes!</Text>
+          <Animatable.Text animation={"fadeInLeft"} style={styles.text3}>Seja bem-vindo ao RotaVan, cadastre se ou</Animatable.Text>
+          <Text animation={"fadeInLeft"} style={styles.text4}>efetue seu login com os dados existentes!</Text>
 
-          <TouchableOpacity onPress={() => navigation.navigate('Cadastro')} style={styles.button}>
-              <Text style={styles.buttonText}>Cadastrar</Text>
+          <TouchableOpacity  onPress={() => navigation.navigate('Cadastro')} style={styles.button}>
+              <Animatable.Text animation={"flipInY"}
+          delay={500}   style={styles.buttonText}>Cadastrar</Animatable.Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.button2}>
-              <Text style={styles.buttonText2}>Login</Text>
+              <Animatable.Text animation={"flipInY"}
+          delay={500}  style={styles.buttonText2}>Login</Animatable.Text>
           </TouchableOpacity>
 
       </View>
@@ -69,8 +71,6 @@ export default function App(){
                 <Stack.Screen name="RouterUser" component={RouterUser}  
                 options={{ headerShown: false }}
                 />
-
-              
 
               
             </Stack.Navigator>
@@ -148,7 +148,7 @@ text3: {
     fontSize: 16,
     fontVariant: 'bold',
     marginright:10,
-  
+    textAlign: 'left',
   
 },
 
@@ -156,7 +156,7 @@ text4: {
     fontSize: 16,
     fontVariant: 'bold',
     marginBottom:40,
-    marginright:10,
+    textAlign: 'left',
 },
 
 });
