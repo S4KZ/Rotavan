@@ -1,0 +1,11 @@
+{
+    "database": {
+        "username": "hubsap45_usrRotavan",
+        "password": "R0t@vAn@202IV",
+        "database": "hubsap45_bd_rotavan",
+        "host": "br612.hostgator.com.br",
+        "dialect": "mysql"
+
+    }
+}
+

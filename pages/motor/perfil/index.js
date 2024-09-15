@@ -1,37 +1,59 @@
-import React, { createContext, useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, Switch, StyleSheet, Alert } 
-from 'react-native';
-
-const ThemeContext = createContext();
-
-const ThemeProvider = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
-  return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-};
-
-const useTheme = () => useContext(ThemeContext);
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import config from '../../../config/config.json';
 
 const UserProfileScreen = () => {
-  const { isDarkMode, toggleTheme } = useTheme();
-  const [name, setName] = useState('Isadora Vidal');
-  const [email, setEmail] = useState('isadora.vidal@example.com');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [newName, setNewName] = useState(name);
-  const [newEmail, setNewEmail] = useState(email);
+  const route = useRoute();
+  const { userId } = route.params;
+
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newConfirmPassword, setNewConfirmPassword] = useState('');
-  const [profileImage, setProfileImage] = useState('https://via.placeholder.com/150');
-  const [editing, setEditing] = useState(false);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch(config.urlRootNode + '/user', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: userId }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao buscar perfil');
+        }
+
+        const data = await response.json();
+        if (data.error) {
+          setError(data.error);
+        } else {
+          setProfileData(data);
+          setNewName(data.nome);
+          setNewEmail(data.email);
+        }
+      } catch (err) {
+        setError('Erro ao buscar perfil. Por favor, tente novamente.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userId) {
+      fetchUserProfile();
+    } else {
+      setError('ID do usuário não fornecido.');
+      setLoading(false);
+    }
+  }, [userId]);
 
   const handleSaveProfile = () => {
     if (newPassword !== newConfirmPassword) {
@@ -39,9 +61,13 @@ const UserProfileScreen = () => {
       return;
     }
 
-    setName(newName);
-    setEmail(newEmail);
-    setPassword(newPassword);
+    // Atualiza o perfil no backend ou faz outras ações necessárias
+    setProfileData(prevData => ({
+      ...prevData,
+      nome: newName,
+      email: newEmail,
+      password: newPassword
+    }));
     setEditing(false);
     Alert.alert('Perfil atualizado com sucesso!');
   };
@@ -51,51 +77,67 @@ const UserProfileScreen = () => {
     Alert.alert('Escolher foto do perfil');
   };
 
+  if (loading) {
+    return (
+      <View style={styles.centeredContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centeredContainer}>
+        <Text>{error}</Text>
+      </View>
+    );
+  }
+
+  if (!profileData) {
+    return <Text>Dados do perfil não disponíveis</Text>;
+  }
+
   return (
-    <View style={[styles.container, isDarkMode && styles.darkContainer]}>
+    <View style={styles.container}>
       <TouchableOpacity style={styles.profileImageContainer} onPress={handleChoosePhoto}>
-        <Image source={{ uri: profileImage }} style={styles.profileImage} />
+        <Image source={{ uri: profileData.profileImage || 'https://via.placeholder.com/150' }} style={styles.profileImage} />
       </TouchableOpacity>
 
       {editing ? (
         <View>
-          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>Novo Nome:</Text>
+          <Text style={styles.label}>Novo Nome:</Text>
           <TextInput
-            style={[styles.input, isDarkMode && styles.darkInput]}
+            style={styles.input}
             value={newName}
             onChangeText={setNewName}
             placeholder="Digite seu novo nome"
-            placeholderTextColor={isDarkMode ? "#ccc" : "#888"}
           />
 
-          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>Novo E-mail:</Text>
+          <Text style={styles.label}>Novo E-mail:</Text>
           <TextInput
-            style={[styles.input, isDarkMode && styles.darkInput]}
+            style={styles.input}
             value={newEmail}
             onChangeText={setNewEmail}
             placeholder="Digite seu novo e-mail"
             keyboardType="email-address"
-            placeholderTextColor={isDarkMode ? "#ccc" : "#888"}
           />
 
-          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>Nova Senha:</Text>
+          <Text style={styles.label}>Nova Senha:</Text>
           <TextInput
-            style={[styles.input, isDarkMode && styles.darkInput]}
+            style={styles.input}
             value={newPassword}
             onChangeText={setNewPassword}
             placeholder="Digite sua nova senha"
             secureTextEntry={true}
-            placeholderTextColor={isDarkMode ? "#ccc" : "#888"}
           />
 
-          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>Confirmar Nova Senha:</Text>
+          <Text style={styles.label}>Confirmar Nova Senha:</Text>
           <TextInput
-            style={[styles.input, isDarkMode && styles.darkInput]}
+            style={styles.input}
             value={newConfirmPassword}
             onChangeText={setNewConfirmPassword}
             placeholder="Confirme sua nova senha"
             secureTextEntry={true}
-            placeholderTextColor={isDarkMode ? "#ccc" : "#888"}
           />
 
           <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
@@ -104,34 +146,31 @@ const UserProfileScreen = () => {
         </View>
       ) : (
         <View>
-          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>Nome:</Text>
-          <Text style={[styles.text, isDarkMode && styles.darkText]}>{name}</Text>
+          <Text style={styles.label}>Nome:</Text>
+          <Text style={styles.text}>{profileData.nome}</Text>
 
-          <Text style={[styles.label, isDarkMode && styles.darkLabel]}>E-mail:</Text>
-          <Text style={[styles.text, isDarkMode && styles.darkText]}>{email}</Text>
+          <Text style={styles.label}>E-mail:</Text>
+          <Text style={styles.text}>{profileData.email}</Text>
 
           <TouchableOpacity style={styles.editButton} onPress={() => setEditing(true)}>
             <Text style={styles.editButtonText}>Editar Perfil</Text>
           </TouchableOpacity>
         </View>
       )}
-
-      <View style={styles.setting}>
-        <Text style={[styles.settingText, isDarkMode && styles.darkSettingText]}>Modo Escuro</Text>
-        <Switch value={isDarkMode} onValueChange={toggleTheme} />
-      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
-  },
-  darkContainer: {
-    backgroundColor: '#333',
   },
   profileImageContainer: {
     marginBottom: 20,
@@ -148,16 +187,10 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: '#000',
   },
-  darkLabel: {
-    color: '#fff',
-  },
   text: {
     fontSize: 16,
     marginBottom: 20,
     color: '#000',
-  },
-  darkText: {
-    color: '#fff',
   },
   input: {
     width: '100%',
@@ -168,10 +201,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     color: '#000',
-  },
-  darkInput: {
-    borderColor: '#555',
-    color: '#fff',
   },
   editButton: {
     backgroundColor: '#007BFF',
@@ -199,25 +228,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  setting: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 30,
-  },
-  settingText: {
-    fontSize: 18,
-    color: '#000',
-  },
-  darkSettingText: {
-    color: '#fff',
-  },
 });
 
-export default function App() {
-  return (
-    <ThemeProvider>
-      <UserProfileScreen />
-    </ThemeProvider>
-  );
-}
+export default UserProfileScreen;
