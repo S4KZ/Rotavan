@@ -5,7 +5,7 @@ const cors=require('cors');
 
 
 const { ValidateLogin, VerifyLogin } = require('./validate');
-const { SelectUser} = require('./select');
+const { SelectUser, ListE} = require('./select');
 
 let app=express();
 app.use(cors());    
@@ -54,10 +54,38 @@ app.post('/user', async(req,res) =>{
      res.send({  
         email: user.email, nome: user.nome
     });
+});
+
+app.post('/equipe', async(req, res) =>{
+    const results = await ListE(); //array com os email e nomes dos alunos
+    res.json({ results }); // Envia a resposta como JSON
+
 })
 
 //start server
 let port=process.env.PORT || 3000;
 app.listen(port,(req,res)=>{
-    console.log('Servidor ok ' + port)
+
+    console.log('Servidor ok, sua porta é ' + port)
 })
+
+// let port = process.env.PORT || 3000;
+// app.listen(port, async () => {
+
+//     try {
+//         const results = await ListE(1);
+//         if (Array.isArray(results)) {
+//             // Itera sobre os resultados se for um array
+//             results.forEach(item => {
+//                 console.log(item);
+//                 // console.log(`Nome: ${item.useNome} --- Email: ${item.useEmail}`);
+//             });
+//         }
+
+//     } catch (error) {
+//         console.error('Erro ao executar a consulta:', error);
+//     }
+
+
+//     console.log('Servidor ok ' + port)
+// })

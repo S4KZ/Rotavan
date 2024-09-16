@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useRoute } from '@react-navigation/native';
 
 import Home from '../../pages/motor/home';
 import Avisos from '../../pages/motor/avisos';
@@ -23,6 +24,11 @@ const AvisosIconY = require('../../assets/icons/icon-avisos.png')
 const Tab = createBottomTabNavigator();
 
 export default function TabButton(){
+  const route = useRoute();
+  const { userId } = route.params || {}; // Garante que userId é acessado de forma segura
+
+  //  console.log(userId);
+
   return(
     <Tab.Navigator
       screenOptions={{
@@ -42,6 +48,7 @@ export default function TabButton(){
       <Tab.Screen
         name='Home'
         component={Home}
+        initialParams={{ userId }}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => {
@@ -66,6 +73,7 @@ export default function TabButton(){
 <Tab.Screen 
       name="Equipe" 
       component={Equipe} 
+      initialParams={{ userId }}
       options={
         {
           headerShown: false,

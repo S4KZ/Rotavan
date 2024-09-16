@@ -6,7 +6,7 @@ import config from '../../../config/config.json';
 const UserProfileScreen = () => {
   const route = useRoute();
   const { userId } = route.params;
-
+  // console.log(userId);
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

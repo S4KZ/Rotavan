@@ -23,7 +23,7 @@ export default function DrawerTab() {
 
   return (
     <Drawer.Navigator screenOptions={{ title: '' }}>
-      <Drawer.Screen name='home' component={TabButton} options={{
+      <Drawer.Screen name='home' initialParams={{userId}} component={TabButton} options={{
         drawerIcon: () => (
           <View style={styles.box}>
             <Image source={HomeIcon} style={styles.img} />

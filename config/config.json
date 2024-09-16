@@ -21,6 +21,6 @@
     "dialect": "mysql"
   },
   
-    "urlRootNode": "http://192.168.1.10:3000"
+    "urlRootNode": "http://192.168.1.2:3000"
   
 }

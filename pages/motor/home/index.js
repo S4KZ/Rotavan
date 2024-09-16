@@ -3,11 +3,17 @@ import { Image, StyleSheet, Text, View, ScrollView, Button } from 'react-native'
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import GoogleMapsScreen from "../../../src/screens/maps";
+import { useRoute } from '@react-navigation/native';
 
 const mapIcon = require("../../../assets/icons/mapa.png");
 const Icon = require("../../../assets/icons/clock.png");
 
 export default function Home() {
+  const route = useRoute();
+  const { userId } = route.params;
+
+
+
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["20%", "50%"], []);
 

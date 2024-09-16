@@ -1,7 +1,10 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, SafeAreaView } from 'react-native';
-import {  useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, SafeAreaView, } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useRoute } from '@react-navigation/native';
+import config from '../../../config/config.json';
 
 import Adicionar from './adicionar';
 import Excluir from './excluir';
@@ -11,60 +14,94 @@ const ilusEqui = require("../../../assets/icons/ilustra-Equipes.png")// o icone
 
 function EquipesTela() { // aonde vai trabalhar o visual
     const navigation = useNavigation();
+
+    const route = useRoute();
+    const { userId } = route.params || {}; // Garante que userId é acessado de forma segura
+    console.log(userId); // Verifique se userId está sendo recebido
+    async function handleEquipe(userId) {
+        try {
+          const reqs = await fetch(config.urlRootNode + '/equipe', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: userId, // Use userId aqui
+            }),
+          });
+      
+          const ress = await reqs.json();
+          const results = ress.results; // Acessa a array de resultados
+      
+          if (Array.isArray(results)) { // Verifica se results é uma array
+            results.forEach(item => {
+              console.log('Item da equipe:', item); // Imprime o objeto inteiro no console
+              console.log(`Nome: ${item.useNome} --- Email: ${item.useEmail}`);
+            });
+          } else {
+            console.error('A resposta não contém uma array de resultados.');
+          }
+          
+        } catch (error) {
+          console.error('Error fetching equipe data:', error);
+        }
+      }
+        
     return (
 
         <ScrollView>
             <SafeAreaView style={styles.container}>
-               
+
                 <Image source={ilusEqui} style={styles.ilustra} />
-                 <View style={styles.box3 }>
-                <View style={styles.row}>
+                <View style={styles.box3}>
+                    <View style={styles.row}>
                         <Text style={styles.title}>Turma da manhã</Text>
                         <Text style={styles.subtitle}>Horário da chegada:  7:20h</Text>
                         <Text style={styles.subtitle}>Horário da saída:   15:30h</Text>
                         <Text style={styles.subtitle}>Local: Escola Maria Julia, Rua José Alves, 450</Text>
-                </View>
+                    </View>
 
 
 
-                <View style={styles.box}>
-                    <TouchableOpacity style={styles.item}>
-                        <Icon name="users" size={35} color="#1A478A" style={styles.icon} />
-                        <Text style={styles.title}>Sua equipe</Text>
-                    </TouchableOpacity>
-                    <View style={styles.row2}>
-                                <Text style={styles.label}>  Usuário                   Email</Text>
-                                <TouchableOpacity >
-                                    <Text style={styles.info}>Isabelle Vidal   isinha@gmail.com</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity >
-                                    <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity >
-                                    <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity >
-                                    <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity >
-                                    <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity >
-                                    <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity >
-                                    <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
-                                </TouchableOpacity>
-                                
+                    <View style={styles.box}>
+                        <TouchableOpacity style={styles.item}>
+                            <Icon name="users" size={35} color="#1A478A" style={styles.icon} />
+                            <Text style={styles.title}>Sua equipe</Text>
+                        </TouchableOpacity>
+                        <View style={styles.row2}>
+                            <Text style={styles.label}>  Usuário                   Email</Text>
+                            <TouchableOpacity >
+                                <Text style={styles.info}>Isabelle Vidal   isinha@gmail.com</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity >
+                                <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity >
+                                <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity >
+                                <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity >
+                                <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity >
+                                <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity >
+                                <Text style={styles.info}>Isabelle Vidal    isinha@gmail.com</Text>
+                            </TouchableOpacity>
+
                         </View>
 
-                           <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('Menu')}>
-                    <Text style={styles.texto}>Editar Equipes</Text>
-                </TouchableOpacity>
+                        <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('Menu')}>
+                            <Text style={styles.texto}>Editar Equipes</Text>
+                        </TouchableOpacity>
+
+                    </View>
 
                 </View>
-             
-                  </View>
             </SafeAreaView>
         </ScrollView>
     );
@@ -98,10 +135,17 @@ function Menu() { // menuzao
 
 export default function Equipes() { // aqui na mexe aaaaaaaaaaaaa
     const Stack = createNativeStackNavigator();
+    //sempre coloca essa bagaça aonde tá exportando, samuel seu animal
+    const route = useRoute();
+    const { userId } = route.params || {}; // Garante que userId é acessado de forma segura
+    // console.log(userId); 
+
+
+
     return (
 
         <Stack.Navigator>
-            <Stack.Screen name="EquipesTela" component={EquipesTela}
+            <Stack.Screen name="EquipesTela" initialParams={{ userId }} component={EquipesTela}
                 options={{ headerShown: false }}
             />
 
@@ -121,22 +165,22 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor:'#ffff',
+        backgroundColor: '#ffff',
 
     },
     box3: {
-    flexDirection:'column',
-    padding: 40,
-    maxHeight:1200,
-    borderRadius: 10,
-    backgroundColor: '#FFF',
-    shadowColor: '#000',
-    shadowOffset: { width:0, height:10 },
-    shadowRadius: 1.3,
-    elevation: 20,
-    marginBottom:30,
-    
-  },
+        flexDirection: 'column',
+        padding: 40,
+        maxHeight: 1200,
+        borderRadius: 10,
+        backgroundColor: '#FFF',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowRadius: 1.3,
+        elevation: 20,
+        marginBottom: 30,
+
+    },
 
     ilustra: { //estilização da imagem
         flex: 1,
@@ -166,10 +210,10 @@ const styles = StyleSheet.create({
         //estilização
         backgroundColor: "#FFF",
         padding: 20,
-        minWidth:320,
+        minWidth: 320,
         maxwidth: 500,
-        minHeight:200,
-        maxHeight:450,
+        minHeight: 200,
+        maxHeight: 450,
         top: 10, //margin top
         borderRadius: 10,
         //posicionamento dos componentes 
@@ -185,11 +229,11 @@ const styles = StyleSheet.create({
 
     },
 
-    row: { 
+    row: {
         padding: 20,
         borderRadius: 10,
         minWidth: 100,
-        maxwidth:300,
+        maxwidth: 300,
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 15 },
@@ -208,7 +252,7 @@ const styles = StyleSheet.create({
 
     },
 
-    subtitle: { 
+    subtitle: {
         fontSize: 16,
         color: '#1A478A',
         fontWeight: "bold",

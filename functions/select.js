@@ -90,7 +90,7 @@ async function SelectMot(useid) { // Função para armazenar motorista com o use
 // Função para listar passageiros da equipe
 async function ListE(pasIdEquipe) {
     const row = `
-        SELECT useId, useNome, useEmail, pasIdEquipe
+        SELECT useId, useNome, useEmail
         FROM hubsap45_bd_rotavan.tblUsers
         INNER JOIN hubsap45_bd_rotavan.tblPassageiro USING (useId)
         WHERE pasIdEquipe = :pasIdEquipe
@@ -102,22 +102,18 @@ async function ListE(pasIdEquipe) {
             type: Sequelize.QueryTypes.SELECT
         });
 
-       // console.log('Results:', results); //Imprima os resultados para ver a estrutura
-
         if (Array.isArray(results)) {
-            // Itera sobre os resultados se for um array
-            results.forEach(item => {
-                console.log(`Nome: ${item.useNome} --- Email: ${item.useEmail}`);
-            });
+            // Retorne o array de resultados
+            return results;
         } else {
-            // Se não for um array, trate o resultado como um único objeto
-            console.log(`Nome: ${results.useNome} --- Email: ${results.useEmail}`);
+            // Retorne o objeto único
+            return [results]; 
         }
     } catch (error) {
-        console.error('Error executing query:', error);
+        // Retorne uma mensagem de erro ou um valor padrão
+        return null; 
     }
 }
-
 
 // ListE(1);
 
