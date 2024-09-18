@@ -1,31 +1,58 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { useRoute } from '@react-navigation/native';
+import config from '../../../../config/config.json';
 
 export default function Adicionar() {
+  const route = useRoute();
+  const [email, setEmail] = useState(''); // Estado para armazenar o e-mail
+
+  async function handleAdicionar() {
+    const { userId } = route.params || {}; // Garante que userId é acessado de forma segura
+    console.log(userId);
+
+    try {
+      let reqs = await fetch(config.urlRootNode + '/add', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          motId: userId, // id do motorista
+          email: email, // Adiciona o e-mail ao corpo da requisição
+        }),
+      });
+      let ress = await reqs.json();
+      console.log(ress);
+      if(ress.msg === 'carregou'){
+        alert('Adicionado com sucesso!');
+      }else{
+        alert('Erro ao adicionar!');
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar integrante:', error);
+    }
+  }
+
   return (
-
     <ScrollView>
-      <View style={styles.container}>
-
-
+      <SafeAreaView style={styles.container}>
         <Text style={[styles.title, { color: '#1A478A' }]}>Adicionar um novo integrante</Text>
-
 
         <TextInput
           style={styles.input}
           placeholder="Id ou email do integrante:"
+          value={email} // Valor do TextInput
+          onChangeText={setEmail} // Atualiza o estado com o valor inserido
         />
 
-        <TouchableOpacity style={styles.botaoConf} >
-          <Text style={styles.texto}>Salvar </Text>
+        <TouchableOpacity style={styles.botaoConf} onPress={handleAdicionar}>
+          <Text style={styles.texto}>Salvar</Text>
         </TouchableOpacity>
-
-      </View>
+      </SafeAreaView>
     </ScrollView>
-
   );
 }
 
@@ -35,7 +62,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffff',
-
   },
   title: {
     fontSize: 23,
@@ -64,7 +90,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     marginHorizontal: 25, // bordas arredondadas
-    //colocar sombras
+    // colocar sombras
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 15 },
     shadowOpacity: 0.8,
@@ -78,72 +104,4 @@ const styles = StyleSheet.create({
     fontSize: 20, // tamanho do texto
     fontWeight: 'bold', // negrito do texto
   },
-
-  box2: {
-    //estilização
-    backgroundColor: "#FAFAFA",
-    padding: 20,
-    width: "90%",
-    height: 500,
-    top: 10, //margin top
-    borderRadius: 15,
-    //posicionamento dos componentes 
-    alignItems: "center",
-    //colocar sombras
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    marginBottom: 50,
-  },
-
-
-
-  row: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
-    //assim n precisando fazer um milhão de margin pra alinhar certo
-    display: "flex",
-    flexDirection: "row",
-
-    //estilização
-    padding: 18,
-    borderRadius: 15,
-    top: 10,
-    width: "90%",
-    height: 210,
-
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 15 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowSpread: 5,
-    elevation: 25,
-    marginBottom: 40,
-  },
-
-  row2: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
-    //assim n precisando fazer um milhão de margin pra alinhar certo
-    display: "flex",
-    flexDirection: "row",
-
-    //estilização
-    padding: 20,
-    borderRadius: 15,
-    top: 5,
-    width: "100%",
-    height: 315,//margin top
-
-
-    //colocar sombras
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 15 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowSpread: 5,
-    elevation: 25,
-  },
-
-
 });

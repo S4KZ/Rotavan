@@ -1,250 +1,157 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRoute } from '@react-navigation/native';
+import config from '../../../../config/config.json'; // Ajuste o caminho conforme necessário
 
+export default function Excluir() {
+  const [emails, setEmails] = useState([]);
+  const route = useRoute();
+  const { userId } = route.params || {}; // Garante que userId é acessado de forma segura
 
-export default function Excluir(){
-    return(
+  useEffect(() => {
+    if (userId) {
+      fetchEmails(userId);
+    }
+  }, [userId]);
 
-        <ScrollView> 
-    <View  style={styles.container}> 
-     
+  async function fetchEmails(userId) {
+    try {
+      console.log(`Fetching emails for userId: ${userId}`); // Verifique o userId
+      const response = await fetch(config.urlRootNode + '/equipe', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pasIdEquipe: userId,
+        }),
+      });
 
- <Text style={[styles.title , {   color: '#1A478A'}]}>Excluir integrante</Text>
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
+      const data = await response.json();
+      console.log('API response:', data); // Verifique a resposta da API
 
+      const results = data.results || [];
+      setEmails(results.map(item => item.useEmail)); // Atualize o estado com os e-mails
+    } catch (error) {
+      console.error('Erro ao buscar e-mails:', error);
+    }
+  }
 
- <View style={styles.box2}>
-          
-          <TouchableOpacity style={styles.item}>
-        <Icon name="users" size={35} color="#1A478A" style={styles.icon} />
-        <Text style={[styles.title , {   color: '#F6B628'}]}>Sua equipe</Text>
-        </TouchableOpacity>
-  
-           <View style={styles.row2}> 
-          <View style={styles.container}>
-         
-        <View style={styles.column}>
-          <Text style={styles.label}>             Usuários                  </Text>
-  
-              <TouchableOpacity style={[styles.item,  , {   backgroundColor: '#FFFF'}]}>
-                  <Text style={styles.info}>isinha@gmail.com</Text>
-                  <Icon name="trash-o" size={23} color="#1A478A" style={styles.iconn} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.item,  , {   backgroundColor: '#FFFF'}]}>
-                  <Text style={styles.info}>isinha@gmail.com</Text>
-                  <Icon name="trash-o" size={23} color="#1A478A" style={styles.iconn} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.item,  , {   backgroundColor: '#FFFF'}]}>
-                  <Text style={styles.info}>isinha@gmail.com</Text>
-                  <Icon name="trash-o" size={23} color="#1A478A" style={styles.iconn} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.item,  , {   backgroundColor: '#FFFF'}]}>
-                  <Text style={styles.info}>isinha@gmail.com</Text>
-                  <Icon name="trash-o" size={23} color="#1A478A" style={styles.iconn} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.item,  , {   backgroundColor: '#FFFF'}]}>
-                  <Text style={styles.info}>isinha@gmail.com</Text>
-                  <Icon name="trash-o" size={23} color="#1A478A" style={styles.iconn} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.item,  , {   backgroundColor: '#FFFF'}]}>
-                  <Text style={styles.info}>isinha@gmail.com</Text>
-                  <Icon name="trash-o" size={23} color="#1A478A" style={styles.iconn} />
-              </TouchableOpacity>
-
-
-
-
-
-
-
-  
+  return (
+    <ScrollView>
+      <SafeAreaView style={styles.container}>
+        <Text style={[styles.title, { color: '#1A478A' }]}>Excluir integrante</Text>
         
-        </View>
-  
-      </View>
-      </View>
-   </View>
-                
-    
-            
-         
-
-  
-  
-
-        <TouchableOpacity style={styles.botaoConf} >
-          <Text style={styles.texto}>Excluir</Text>
+        <View style={styles.box}>
+          <TouchableOpacity style={styles.item}>
+            <Icon name="users" size={35} color="#1A478A" style={styles.icon} />
+            <Text style={[styles.title, { color: '#F6B628' }]}>Sua equipe</Text>
           </TouchableOpacity>
-       
-  
+          
+          <View style={styles.row}>
+            <Text style={styles.label}>Usuários</Text>
+            {emails.length > 0 ? (
+              emails.map((email, index) => (
+                <TouchableOpacity key={index} style={[styles.item, { backgroundColor: '#FFFF' }]}>
+                  <Text style={styles.info}>{email}</Text>
+                  <Icon name="trash-o" size={23} color="#1A478A" style={styles.iconn} />
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={styles.info}>Nenhum e-mail encontrado</Text>
+            )}
+          </View>
+        </View>
 
-
-    </View>
+        <TouchableOpacity style={styles.botaoConf}>
+          <Text style={styles.texto}>Excluir</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
     </ScrollView>
-
-);
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#ffff',
-     
-    },
-    title: {
-      fontSize: 23,
-      fontWeight: 'bold',
-      marginBottom: 50,
-      top:40,
-    },
-    input: {
-      borderWidth: 1,
-      borderColor: '#1A478A',
-      padding: 10,
-      marginBottom: 10,
-      borderRadius: 8,
-      height:40,
-      width:350,
-      top:40,
-      marginBottom: 50,
-    },
-    botaoConf: {
-        width: 250, // largura do botão quadrado
-        height: 50, // altura do botão quadrado
-        backgroundColor: '#1A478A', // cor de fundo do botão
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10, 
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        marginHorizontal: 25, // bordas arredondadas
-        //colocar sombras
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 15 },
-        shadowOpacity: 0.8,
-        shadowRadius: 4,
-        elevation: 5,
-        marginTop:2,
-        marginBottom:200,
-      } ,
-      texto: {
-        color:'#F6B628', // cor do texto
-        fontSize: 20, // tamanho do texto
-        fontWeight: 'bold', // negrito do texto
-      },
-      
-  box2: {
-    //estilização
-    backgroundColor: "#FAFAFA",
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffff',
+  },
+  box: {
+    backgroundColor: "#FFF",
     padding: 20,
-    width: "90%",
-    height: 500,
-    top: 10, //margin top
-    borderRadius: 15,
-    //posicionamento dos componentes 
+    borderRadius: 10,
     alignItems: "center",
-    //colocar sombras
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    marginBottom:50,
+    marginBottom: 30,
+    marginHorizontal: 10,
   },
-
-
-
-    row2: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
-      //assim n precisando fazer um milhão de margin pra alinhar certo
-      display: "flex",
-      flexDirection: "row",
-  
-      //estilização
-      padding: 20,
-      borderRadius: 15,
-      top: 5, 
-      width: "100%",
-      height: 315,//margin top
-
-      
-          //colocar sombras
-      backgroundColor: '#FFFFFF', 
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 15 },
-      shadowOpacity: 0.2,
-      shadowRadius: 5,
-      shadowSpread: 5,
-      elevation: 25,
-        },
-
-        item: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            padding: 5,
-            backgroundColor: '#fafafa',
-            borderRadius: 5,
-            marginBottom: 10,
-        
-          },
-          icon: {
-            marginRight: 15,
-          },
-
-          iconn: {
-            marginLeft: 40,
-          },
-
-           
-
-  title:{ // estilização do text
+  row: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#fafafa',
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  icon: {
+    marginRight: 15,
+  },
+  iconn: {
+    marginLeft: 40,
+  },
+  title: {
     fontSize: 24,
     color: '#F6B628',
     fontWeight: "bold",
-    padding: 15, 
     textAlign: 'center',
-   
   },
-
-  titleContainer: {
-    flex: 1, // Ocupa todo o espaço disponível
-    alignItems: 'center', // Alinha o texto centralizado
-  },
-  
-  subtitle:{ // estilização do subtext
-   
-    fontSize: 18,
-    color: '#1A478A',
-    fontWeight: "bold",
-    textAlign: 'left',
-
-  },
-
   label: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
-    gap: 10,
+    marginBottom: 10,
     color: '#1A478A',
   },
   info: {
     fontSize: 17,
-   
-    alignItems:'left',
-   
-    
-  }
-
-        
-        
-
-    
+  },
+  botaoConf: {
+    width: 250,
+    height: 50,
+    backgroundColor: '#1A478A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginHorizontal: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 15 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
+    elevation: 5,
+    marginTop: 20,
+    marginBottom: 100,
+  },
+  texto: {
+    color: '#F6B628',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
 });

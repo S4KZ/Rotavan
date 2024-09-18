@@ -117,9 +117,9 @@ export default function Equipes() {
     return (
         <Stack.Navigator>
             <Stack.Screen name="EquipesTela" initialParams={{ userId }} component={EquipesTela} options={{ headerShown: false }} />
-            <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }} />
-            <Stack.Screen name='Adicionar' component={Adicionar} />
-            <Stack.Screen name='Excluir' component={Excluir} />
+            <Stack.Screen name="Menu" initialParams={{ userId }} component={Menu} options={{ headerShown: false }} />
+            <Stack.Screen name='Adicionar' initialParams={{ userId }} component={Adicionar} />
+            <Stack.Screen name='Excluir' initialParams={{ userId }} component={Excluir} />
         </Stack.Navigator>
     );
 }
