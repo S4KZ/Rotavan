@@ -54,19 +54,23 @@ export default function Excluir() {
             <Text style={[styles.title, { color: '#F6B628' }]}>Sua equipe</Text>
           </TouchableOpacity>
           
-          <View style={styles.row}>
-            <Text style={styles.label}>Usuários</Text>
+          <View style={styles.row2}>
             {emails.length > 0 ? (
               emails.map((email, index) => (
+
                 <TouchableOpacity key={index} style={[styles.item, { backgroundColor: '#FFFF' }]}>
+                      <View key={index} style={styles.infobox}>
                   <Text style={styles.info}>{email}</Text>
-                  <Icon name="trash-o" size={23} color="#1A478A" style={styles.iconn} />
+                  </View>
+                  <Icon name="trash-o" size={23} color="#1A478A" style={styles.iconn} /> 
+
+
                 </TouchableOpacity>
               ))
             ) : (
               <Text style={styles.info}>Nenhum e-mail encontrado</Text>
             )}
-          </View>
+         </View>
         </View>
 
         <TouchableOpacity style={styles.botaoConf}>
@@ -84,9 +88,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#ffff',
   },
+  row2: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+},
+  infobox: {
+    width: '100%',
+    alignItems: 'stretch',
+    marginBottom: 10,
+    marginLeft:10,
+
+},
+
   box: {
     backgroundColor: "#FFF",
     padding: 20,
+    maxWidth:350,
+    minWidth:330,
     borderRadius: 10,
     alignItems: "center",
     shadowColor: '#000',
@@ -96,7 +115,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginBottom: 30,
     marginHorizontal: 10,
-  },
+},
   row: {
     flexDirection: 'column',
     alignItems: 'center',
@@ -106,33 +125,38 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#fafafa',
+    backgroundColor: '#fff',
     borderRadius: 5,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   icon: {
     marginRight: 15,
   },
   iconn: {
-    marginLeft: 40,
+    marginLeft: 270,
+    position: 'absolute',
+ 
   },
   title: {
     fontSize: 24,
+    marginBottom:35,
+    top:10,
     color: '#F6B628',
     fontWeight: "bold",
     textAlign: 'center',
   },
   label: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 10,
     color: '#1A478A',
-  },
-  info: {
-    fontSize: 17,
-  },
+},
+info: {
+  fontSize: 16,
+  textAlign: 'left',
+},
+
   botaoConf: {
-    width: 250,
+    width: 290,
     height: 50,
     backgroundColor: '#1A478A',
     justifyContent: 'center',

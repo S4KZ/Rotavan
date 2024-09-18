@@ -50,39 +50,44 @@ function EquipesTela() {
 
     return (
         <ScrollView>
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <Image source={ilusEqui} style={styles.ilustra} />
                 <View style={styles.box3}>
-                    <View style={styles.row}>
+
+                    <View style={styles.box1}>
                         <Text style={styles.title}>Turma da manhã</Text>
                         <Text style={styles.subtitle}>Horário da chegada:  7:20h</Text>
                         <Text style={styles.subtitle}>Horário da saída:   15:30h</Text>
                         <Text style={styles.subtitle}>Local: Escola Etec Alfredão, Rua José Alves, 450</Text>
                     </View>
 
+
                     <View style={styles.box}>
                         <TouchableOpacity style={styles.item}>
                             <Icon name="users" size={35} color="#1A478A" style={styles.icon} />
                             <Text style={styles.title}>Sua equipe</Text>
                         </TouchableOpacity>
+
                         <View style={styles.row2}>
-                            <Text style={styles.label}>Usuário     Email</Text>
                             {equipes.length > 0 ? (
                                 equipes.map((item, index) => (
+
                                     <View key={index} style={styles.infobox}>
-                                        <Text style={styles.info}>{item.useNome}     {item.useEmail}</Text>
+                                        <Text style={styles.label}> {item.useNome}     </Text>
+                                        <Text style={styles.info}>  {item.useEmail}</Text>
                                     </View>
                                 ))
                             ) : (
                                 <Text style={styles.info}>Nenhum membro encontrado</Text>
                             )}
                         </View>
+                        
                     </View>
                     <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('Menu')}>
                         <Text style={styles.texto}>Editar Equipes</Text>
                     </TouchableOpacity>
                 </View>
-            </SafeAreaView>
+            </View>
         </ScrollView>
     );
 }
@@ -118,8 +123,8 @@ export default function Equipes() {
         <Stack.Navigator>
             <Stack.Screen name="EquipesTela" initialParams={{ userId }} component={EquipesTela} options={{ headerShown: false }} />
             <Stack.Screen name="Menu" initialParams={{ userId }} component={Menu} options={{ headerShown: false }} />
-            <Stack.Screen name='Adicionar' initialParams={{ userId }} component={Adicionar} />
-            <Stack.Screen name='Excluir' initialParams={{ userId }} component={Excluir} />
+            <Stack.Screen name='Adicionar' initialParams={{ userId }} component={Adicionar}  options={{ headerShown: false }} />
+            <Stack.Screen name='Excluir' initialParams={{ userId }} component={Excluir}  options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 }
@@ -131,17 +136,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#ffff',
     },
-    box3: {
-        flexDirection: 'column',
-        padding: 20,
-        borderRadius: 10,
-        backgroundColor: '#FFF',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 10 },
-        shadowRadius: 1.3,
-        elevation: 20,
-        margin: 10,
-    },
+    
+  box3: {
+    flexDirection:'column',
+    padding: 40,
+    maxHeight:1900,
+    minHeight:900,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    backgroundColor: '#FFF',
+    shadowColor: '#000',
+    shadowOffset: { width:0, height:10 },
+    shadowRadius: 1.3,
+    elevation: 25,
+    marginBottom:30,
+    top:20,
+    
+  },
     ilustra: {
         width: 450,
         height: 340,
@@ -158,10 +169,13 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginRight: 10,
+       
     },
     box: {
         backgroundColor: "#FFF",
         padding: 20,
+        maxWidth:380,
+        minWidth:350,
         borderRadius: 10,
         alignItems: "center",
         shadowColor: '#000',
@@ -172,9 +186,12 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         marginHorizontal: 10,
     },
-    row: {
+    box1: {
         padding: 20,
         borderRadius: 10,
+        marginLeft:10,
+        maxWidth:350,
+        minWidth:100,
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 15 },
@@ -191,7 +208,9 @@ const styles = StyleSheet.create({
     infobox: {
         width: '100%',
         alignItems: 'stretch',
-        marginBottom: 10,
+        marginBottom: 30,
+        marginLeft:30,
+
     },
     title: {
         fontSize: 24,
@@ -206,17 +225,17 @@ const styles = StyleSheet.create({
         textAlign: 'left',
     },
     label: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 5,
         color: '#1A478A',
     },
     info: {
-        fontSize: 17,
-        textAlign: 'center',
+        fontSize: 16,
+        textAlign: 'left',
     },
+
     botaoConf: {
-        width: 250,
+        width: 290,
         height: 50,
         backgroundColor: '#1A478A',
         justifyContent: 'center',
@@ -232,6 +251,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         marginTop: 5,
         marginBottom: 110,
+        marginLeft:40,
     },
     botao: {
         width: 250,
@@ -254,12 +274,12 @@ const styles = StyleSheet.create({
     },
     texto: {
         color: '#F6B628',
-        fontSize: 15,
+        fontSize: 16,
         fontWeight: 'bold',
     },
     text: {
         color: '#1A478A',
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
     },
 });

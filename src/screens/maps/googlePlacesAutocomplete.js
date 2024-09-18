@@ -1,5 +1,4 @@
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import KEY from "../../constants/mapaKey"
 
 const GooglePlacesInput = () => {
     return (
@@ -10,7 +9,7 @@ const GooglePlacesInput = () => {
                 console.log(data, details);
             }}
             query={{
-                key: KEY,
+                key: "",
                 language: 'en',
             }}
             requestUrl={{

@@ -8,8 +8,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Enviar from './enviar';
 
 
-
-
 function Tela() {
   const navigation = useNavigation();
   return (
@@ -110,7 +108,6 @@ const styles = StyleSheet.create({
     color: '#FAB428',
     fontWeight: "bold",
     marginTop: 20,
-    fontFamily:'Kanit_400Regular',
   },
 
   item: {

@@ -39,11 +39,12 @@ export default function Adicionar() {
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
+
         <Text style={[styles.title, { color: '#1A478A' }]}>Adicionar um novo integrante</Text>
 
         <TextInput
           style={styles.input}
-          placeholder="Id ou email do integrante:"
+          placeholder=" Email do integrante:"
           value={email} // Valor do TextInput
           onChangeText={setEmail} // Atualiza o estado com o valor inserido
         />
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: 'bold',
     marginBottom: 20,
-    top: 40,
+    top: 200,
   },
   input: {
     borderWidth: 1,
@@ -77,11 +78,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     height: 40,
     width: 350,
-    top: 40,
+    top: 200,
     marginBottom: 60,
   },
   botaoConf: {
-    width: 250, // largura do botão quadrado
+    width: 290, // largura do botão quadrado
     height: 50, // altura do botão quadrado
     backgroundColor: '#1A478A', // cor de fundo do botão
     justifyContent: 'center',
@@ -98,6 +99,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginTop: 2,
     marginBottom: 500,
+    top: 170,
   },
   texto: {
     color: '#F6B628', // cor do texto

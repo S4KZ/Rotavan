@@ -14,7 +14,7 @@ export default function Equipes() {
 <View style={styles.box3}>
         <View style={styles.box}>
           <Text style={styles.title}>Veja quem vai hoje na ida</Text>
-          <View style={styles.row}>
+        
            
                 <Text style={styles.label}> Usuário                    Horário</Text>
                 <TouchableOpacity >
@@ -40,13 +40,12 @@ export default function Equipes() {
                 <TouchableOpacity >
                   <Text style={styles.info}>Maria Júlia                        7:10</Text>
                 </TouchableOpacity>
-          
-            </View>
+         
           </View>
 
         <View style={styles.box}>
           <Text style={styles.title}>Veja quem vai voltar hoje</Text>
-          <View style={styles.row}>
+         
                 <Text style={styles.label}> Usuário                    Horário</Text>
                 <TouchableOpacity >
                   <Text style={styles.info}>Isabelle Vidal                    6:35</Text>
@@ -72,7 +71,7 @@ export default function Equipes() {
                   <Text style={styles.info}>Maria Júlia                        7:10</Text>
                 </TouchableOpacity>
            
-            </View>
+    
           </View>
 
 

@@ -49,16 +49,16 @@ export default function GoogleMapsScreen() {
                 provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 initialRegion={{
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
+                    latitude: -50.289339,
+                    longitude: -54.755859,
                     latitudeDelta: 0.001,
                     longitudeDelta: 0.002,
                 }}
             >
                 <Marker
                 coordinate={{
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
+                    latitude: -50.289339,
+                    longitude: -54.755859,
                 }}
                 />
             </MapView>

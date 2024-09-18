@@ -32,7 +32,7 @@ export default function Avisos() {
 
      
       <Text style={styles.title}>Já vizualizados</Text>
-           <View style={styles.row}> 
+           <View style={styles.row2}> 
               <View style={styles.column}>
               <Text style={styles.subtitle}>Atenção com os horários! </Text>
               <Text style={styles.paragraph}>Nos últimos dias tem ocorrido muitos atrasos na hora da ida então peço por favor para que 
@@ -93,25 +93,7 @@ const styles = StyleSheet.create({
 
   },
   
-    box: {
-      //estilização
-      backgroundColor: "#F4F4F4",
-      padding: 20,
-      width: "93%",
-      minHeight:320,
-      maxheight: 390,
-      top: 40, //margin top
-      borderRadius: 10,
-      //posicionamento dos componentes 
-      alignItems: "center",
-      //colocar sombras
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
-    },
-    
+   
   
     row: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
       //assim n precisando fazer um milhão de margin pra alinhar certo
@@ -136,6 +118,31 @@ const styles = StyleSheet.create({
       shadowRadius: 5,
       shadowSpread: 5,
       elevation: 15,
+},
+
+row2: { // a classe row é pra deixar aquele os items(Text e Image), alinhado um do lado do outro
+  //assim n precisando fazer um milhão de margin pra alinhar certo
+  display: "flex",
+  flexDirection: "column",
+
+  marginBottom:200,
+  //estilização
+  padding: 20,
+  borderRadius: 15,
+  top: 20, 
+  minHeight:200,
+  maxheight: 300,
+  minwidth: 100,
+  maxWidth:350,
+
+//colocar sombras
+  backgroundColor: '#FFFFFF', 
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 15 },
+  shadowOpacity: 0.2,
+  shadowRadius: 5,
+  shadowSpread: 5,
+  elevation: 15,
 }
 
 });
