@@ -74,9 +74,9 @@ export default function GoogleMapsScreen() {
                     }}
                 />
             </MapView>
-            <View style={{ width: "100%", height: 200 }}>
+            {/* <View style={{ width: "100%", height: 200 }}>
                 <GooglePlacesInput />
-            </View>
+            </View> */}
         </View>
     );
 }

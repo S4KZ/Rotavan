@@ -2,7 +2,7 @@ import React, { useRef, useMemo } from "react";
 import { Image, StyleSheet, Text, View, ScrollView, Button } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import GoogleMapsScreen from "../../../src/screens/maps";
+import GoogleMapsScreen from "../../../screens/maps";
 import { useRoute } from '@react-navigation/native';
 
 const mapIcon = require("../../../assets/icons/mapa.png");
