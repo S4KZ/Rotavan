@@ -10,7 +10,7 @@ export default function Adicionar() {
 
   async function handleAdicionar() {
     const { userId } = route.params || {}; // Garante que userId é acessado de forma segura
-    console.log(userId);
+    //console.log(userId);
 
     try {
       let reqs = await fetch(config.urlRootNode + '/add', {
@@ -25,7 +25,7 @@ export default function Adicionar() {
         }),
       });
       let ress = await reqs.json();
-      console.log(ress);
+     // console.log(ress);
       if(ress.msg === 'carregou'){
         alert('Adicionado com sucesso!');
       }else{

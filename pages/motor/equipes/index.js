@@ -15,7 +15,6 @@ function EquipesTela() {
     const route = useRoute();
     const { userId } = route.params || {}; // Garante que userId é acessado de forma segura
     const [equipes, setEquipes] = useState([]);
-
     useEffect(() => {
         if (userId) {
             handleEquipe(userId);
@@ -118,7 +117,7 @@ export default function Equipes() {
     const Stack = createNativeStackNavigator();
     const route = useRoute();
     const { userId } = route.params || {}; // Garante que userId é acessado de forma segura
-
+    
     return (
         <Stack.Navigator>
             <Stack.Screen name="EquipesTela" initialParams={{ userId }} component={EquipesTela} options={{ headerShown: false }} />
