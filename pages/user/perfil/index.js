@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 import config from '../../../config/config.json';
 
 const UserProfileScreen = () => {
@@ -72,9 +73,19 @@ const UserProfileScreen = () => {
     Alert.alert('Perfil atualizado com sucesso!');
   };
 
-  const handleChoosePhoto = () => {
-    // Lógica para escolher uma nova foto de perfil
-    Alert.alert('Escolher foto do perfil');
+  const handleChoosePhoto = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permissão para acessar a galeria foi negada!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.cancelled) {
+      setProfileData(prevData => ({ ...prevData, profileImage: result.uri }));
+    }
   };
 
   if (loading) {

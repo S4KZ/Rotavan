@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, Button, Alert, StyleSheet, Image, ScrollView, TouchableOpacity} from 'react-native';
+import { View, Text, Alert, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
+import { Picker } from '@react-native-picker/picker';
 
-const ilusConfi = require("../../../assets/icons/ilustra-Confirmar.png")// o icone
+const ilusConfi = require("../../../assets/icons/ilustra-Confirmar.png");
 
-// Configurando o calendário para português
+// Configuração do calendário em português
 LocaleConfig.locales['pt-br'] = {
   monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
   monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
@@ -15,79 +16,64 @@ LocaleConfig.locales['pt-br'] = {
 LocaleConfig.defaultLocale = 'pt-br';
 
 export default function ConfirmacaoVan() {
-  // Estado para armazenar as datas selecionadas
+  const [motivo, setMotivo] = useState('');
   const [selectedDates, setSelectedDates] = useState({});
 
-  // Função para selecionar ou deselecionar datas
+  // Seleciona/deseleciona datas
   const handleDayPress = (day) => {
-    const selected = { ...selectedDates };
-
-    // Se a data já está selecionada, desmarcar. Caso contrário, marcar.
-    if (selected[day.dateString]) {
-      delete selected[day.dateString];
-    } else {
-      selected[day.dateString] = { selected: true, marked: true, selectedColor: '#1A478A' };
-    }
-
-    setSelectedDates(selected);
+    setSelectedDates((prevDates) => {
+      const updatedDates = { ...prevDates };
+      updatedDates[day.dateString]
+        ? delete updatedDates[day.dateString]
+        : (updatedDates[day.dateString] = { selected: true, marked: true, selectedColor: '#1A478A' });
+      return updatedDates;
+    });
   };
 
-  // Função para confirmar presença nos dias selecionados
+  // Confirma presença nos dias selecionados
   const confirmarPresenca = () => {
     const diasSelecionados = Object.keys(selectedDates);
 
     if (diasSelecionados.length === 0) {
       Alert.alert('Erro', 'Nenhum dia foi selecionado!');
-      return;
+    } else {
+      Alert.alert('Confirmação', `Você confirmou falta para os dias: ${diasSelecionados.join(', ')}`);
     }
-
-    Alert.alert('Confirmação', `Você confirmou falta para os dias: ${diasSelecionados.join(', ')}`);
-
-    // Exemplo de envio de dados para um servidor
-    // fetch('https://seu-servidor.com/api/confirmacao', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ datas: diasSelecionados }),
-    // });
   };
 
   return (
-    <ScrollView> 
-    <View style={styles.container}>
+    <ScrollView>
+      <View style={styles.container}>
+        <Image source={ilusConfi} style={styles.ilustra} />
+        <View style={styles.box}>
+          <Text style={styles.title}>Selecione os dias que você não vai usar a van:</Text>
 
-<Image source={ilusConfi} style={styles.ilustra} /> 
-         <View style={styles.box}>
-      <Text style={styles.title}>Selecione os dias que você não vai usar a van:</Text>
+          <View style={styles.box2}>
+            <Calendar onDayPress={handleDayPress} markedDates={selectedDates} markingType="multi-dot" />
+          </View>
 
-      <View style={styles.box2}>
-      <Calendar
-        // Permitir a seleção de múltiplas datas
-        onDayPress={handleDayPress}
-        markedDates={selectedDates}
-        markingType={'multi-dot'} // Exibe múltiplos dias selecionados
-      />
-     </View>
+          <View style={styles.pickerWrapper}>
+            <Picker selectedValue={motivo} onValueChange={(itemValue) => setMotivo(itemValue)} style={styles.pickerBox}>
+              <Picker.Item label="Não irei nem retornarei com a van" value="Não irei nem retornarei com a van" />
+              <Picker.Item label="Irei com a van mas não retornarei com ela" value=" Irei com a van mas não retornarei com ela" />
+              <Picker.Item label="Não irei com a van, mas retornarei com ela" value="Não irei com a van, mas retornarei com ela " />
+            </Picker>
+          </View>
 
-      <View style={styles.buttonContainer}>
+          {Object.keys(selectedDates).length > 0 && (
+            <View style={styles.selectedDatesContainer}>
+              <Text style={styles.selectedDatesText}>
+                Você selecionou os dias: {Object.keys(selectedDates).join(', ')}
+              </Text>
+            </View>
+          )}
 
-      <TouchableOpacity style={styles.button} onPress={confirmarPresenca}>
-            <Text style={styles.buttonText}>Confirmar </Text>
-       </TouchableOpacity>
-       
-      </View>
-
-      {Object.keys(selectedDates).length > 0 && (
-        <View style={styles.selectedDatesContainer}>
-          <Text style={styles.selectedDatesText}>
-            Você selecionou os dias:
-            {Object.keys(selectedDates).map((date) => ` ${date}`).join(', ')}
-          </Text>
+          <TouchableOpacity style={styles.button} onPress={confirmarPresenca}>
+            <Text style={styles.buttonText}>Confirmar</Text>
+          </TouchableOpacity>
         </View>
-      )}
-    </View>
-
-    </View>
-    </ScrollView> 
+      </View>
+    </ScrollView>
   );
 }
 
@@ -98,77 +84,78 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     display: 'flex',
   },
-  ilustra: { //estilização da imagem
-
+  ilustra: {
     flex: 1,
-    width: 300, // largura desejada da imagem
-    height: 300, // altura desejada da imagem
-    resizeMode: 'contain', // ajuste de escala da imagem
-   marginLeft:50,
+    width: 300,
+    height: 300,
+    resizeMode: 'contain',
+    marginLeft: 50,
   },
-
   box: {
-    flexDirection:'column',
+    flexDirection: 'column',
     padding: 40,
-    maxHeight:1900,
-    minHeight:900,
+    maxHeight: 1900,
+    minHeight: 900,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     backgroundColor: '#FFF',
     shadowColor: '#000',
-    shadowOffset: { width:0, height:10 },
+    shadowOffset: { width: 0, height: 10 },
     shadowRadius: 1.3,
     elevation: 25,
-    marginBottom:30,
-    top:20,
-    
+    marginBottom: 30,
+    top: 20,
   },
-
-   box2: {
-    flexDirection:'column',
+  box2: {
+    flexDirection: 'column',
     padding: 40,
-    maxHeight:400,
-    minHeight:200,
+    maxHeight: 400,
+    minHeight: 200,
     borderRadius: 20,
     backgroundColor: '#FFF',
     shadowColor: '#000',
-    shadowOffset: { width:0, height:10 },
+    shadowOffset: { width: 0, height: 10 },
     shadowRadius: 1.3,
     elevation: 5,
-    marginBottom:30,
-    top:20,
-    
+    marginBottom: 30,
+    top: 20,
   },
-
-  title:{ // estilização do text
+  title: {
     fontSize: 20,
     color: '#F6B628',
-    fontWeight: "bold",
-    padding: 20, 
-    textAlign: 'center'
+    fontWeight: 'bold',
+    padding: 20,
+    textAlign: 'center',
   },
-  buttonContainer: {
-    marginTop: 20,
-  
+  pickerWrapper: {
+    top:20,
+    borderColor: '#F6B628',
+    borderWidth: 1,
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginBottom: 20,
+  },
+  pickerBox: {
+    width: '100%',
+    fontSize: 16,
+    color: '#333',
+    backgroundColor: '#fff',
   },
   button: {
     padding: 10,
     borderRadius: 10,
     width: 250,
-    height:45,
-    marginLeft:40,
+    height: 45,
+    marginLeft: 40,
     backgroundColor: '#1A478A',
-    margin: 10,
-  
+    marginTop: 20,
   },
-
   buttonText: {
     color: '#F6B628',
     textAlign: 'center',
     fontSize: 20,
     fontWeight: 'bold',
   },
-
   selectedDatesContainer: {
     marginTop: 20,
     padding: 10,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,13 +16,13 @@ export default function Login() {
       let reqs = await fetch(config.urlRootNode + '/log', {
         method: 'POST',
         headers: {
-          'Accept': 'application/json', // Corrigido o typo de 'Accpet' para 'Accept'
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           tryEmail: email,
-          tryPassword: password
-        })
+          tryPassword: password,
+        }),
       });
 
       let ress = await reqs.json();
@@ -30,7 +30,7 @@ export default function Login() {
 
       if (ress.tipo) {
         let routeName;
-        let params = { id: useId }; // Passa o ID como parte dos parâmetros
+        let params = { id: useId };
 
         if (ress.tipo === 'motorista') {
           routeName = 'RouterMotor';
@@ -38,11 +38,10 @@ export default function Login() {
           routeName = 'RouterUser';
         }
 
-        // Reseta a navegação e passa o ID por parâmetro
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: routeName, params: params }],
+            routes: [{ name: routeName, params }],
           })
         );
       } else {
@@ -55,7 +54,7 @@ export default function Login() {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Animatable.Image source={icon} animation={"fadeInLeft"} style={styles.image} />
       <Animatable.View animation={"fadeInUp"} delay={500} style={styles.box}>
         <View style={styles.form}>
@@ -90,25 +89,21 @@ export default function Login() {
           </TouchableOpacity>
         </View>
       </Animatable.View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f4f4f4',
   },
   box: {
     padding: 40,
-    top: 120,
-    // maxWidth: 800,
-    // minWidth: 400,
-     minHeight: 450,
-     maxHeight: 900,
+    minHeight: 450,
+    maxHeight: 900,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     backgroundColor: '#fff',
@@ -117,15 +112,10 @@ const styles = StyleSheet.create({
     elevation: 20,
   },
   image: {
-    top:40,
-    maxHeight:250,
+    maxHeight: 250,
     minHeight: 200,
     maxWidth: 370,
-    minWidth:270,
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    minWidth: 270,
   },
   button: {
     padding: 8,
@@ -142,7 +132,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   form: {
-    padding: 10
+    padding: 10,
   },
   textInput: {
     height: 50,
@@ -153,7 +143,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 16,
     color: '#000',
-    top: 10,
   },
   icon: {
     position: 'absolute',

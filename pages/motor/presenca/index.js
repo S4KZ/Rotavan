@@ -13,7 +13,7 @@ export default function Equipes() {
 
 <View style={styles.box3}>
         <View style={styles.box}>
-          <Text style={styles.title}>Veja quem vai hoje na ida</Text>
+          <Text style={styles.title}>Veja quem irá hoje na ida</Text>
         
            
                 <Text style={styles.label}> Usuário                    Horário</Text>
@@ -44,7 +44,7 @@ export default function Equipes() {
           </View>
 
         <View style={styles.box}>
-          <Text style={styles.title}>Veja quem vai voltar hoje</Text>
+          <Text style={styles.title}>Veja quem irá voltar hoje</Text>
          
                 <Text style={styles.label}> Usuário                    Horário</Text>
                 <TouchableOpacity >

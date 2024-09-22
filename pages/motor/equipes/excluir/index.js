@@ -44,21 +44,23 @@ export default function Excluir() {
   }
 
   // Função para mostrar o alerta de confirmação
-  async function HandleExcluir(index) {
+  function HandleExcluir(index) {
     Alert.alert(
-      'Confirmação',
-      `Você tem certeza que deseja excluir este usuário: ${emails[index]}?`,
+      'Confirmação', // Título do alerta
+      `Você tem certeza que deseja excluir este usuário: ${emails[index]}?`, // Mensagem
       [
         {
-          text: 'Não',
-          onPress: () => console.log('Ação cancelada'),
-          style: 'cancel',
+          text: 'Não', // Texto do botão "Não"
+          onPress: () => console.log('Ação cancelada'), // Ação quando o usuário clica em "Não"
+          style: 'cancel', // Define o estilo como 'cancel'
         },
         {
-          text: 'Sim',
+          text: 'Sim', // Texto do botão "Sim"
           onPress: async () => {
-            const pasID = pasId[index];
-            console.log(pasID);
+          //   console.log('iIDs', pasId); // Log do ID excluído
+          //  console.log(Array.prototype.findIndex(pasId[index]));
+          const pasID = pasId[index];
+          console.log(pasID)
             try {
               const reqs = await fetch(config.urlRootNode + '/del', {
                 method: 'POST',
@@ -67,19 +69,16 @@ export default function Excluir() {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                  pass: pasID,
+                  pass: pasID, // apenas o ID do usuário selecionado
                 }),
               });
-  
+
               let ress = await reqs.json();
-  
+              
+
               if (ress.msg === 'removido') {
                 alert('Removido com sucesso!');
-                // Atualiza a lista de emails
-                const updatedEmails = emails.filter((_, i) => i !== index);
-                const updatedPasId = pasId.filter((_, i) => i !== index);
-                setEmails(updatedEmails);
-                setPasId(updatedPasId);
+               
               } else {
                 alert('Erro ao remover!');
               }
@@ -87,12 +86,12 @@ export default function Excluir() {
               console.error('Erro ao excluir usuário:', error);
             }
           },
-          style: 'destructive',
+          style: 'destructive', // Estilo "destructive" para indicar ação perigosa
         },
       ],
+     // { cancelable: false } // O alerta não pode ser fechado clicando fora dele
     );
   }
-  
 
   return (
     <ScrollView>
