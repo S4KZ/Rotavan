@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import config from '../../../config/config.json';
 import Adicionar from './adicionar';
 import Excluir from './excluir';
+import Turnos from './turnos';
 
 const ilusEqui = require("../../../assets/icons/ilustra-Equipes.png");
 
@@ -56,14 +57,22 @@ function EquipesTela() {
     return (
         <ScrollView>
             <View style={styles.container}>
+      
                 <Image source={ilusEqui} style={styles.ilustra} />
                 <View style={styles.box3}>
-                    <View style={styles.box1}>
-                        <Text style={styles.title}>Turma da manhã</Text>
-                        <Text style={styles.subtitle}>Horário da chegada:  7:20h</Text>
-                        <Text style={styles.subtitle}>Horário da saída:   15:30h</Text>
-                        <Text style={styles.subtitle}>Local: Escola Etec Alfredão, Rua José Alves, 450</Text>
+                
+                    <View style={styles.card}>
+                        
+                    <TouchableOpacity onPress={() => navigation.navigate('Turnos') }>
+                        <Text style={styles.title1}>Meus turnos</Text>
+                        
+                        <Text style={styles.subtitle}>Consulte aqui seus turnos!</Text>
+                        <Icon name="clock-o" size={50} color="#1A478A" style={styles.item1} />
+                        </TouchableOpacity>
+
                     </View>
+
+                   
 
                     <View style={styles.box}>
                         <TouchableOpacity style={styles.item}>
@@ -127,6 +136,8 @@ export default function Equipes() {
             <Stack.Screen name="Menu" initialParams={{ userId }} component={Menu} options={{ headerShown: false }} />
             <Stack.Screen name='Adicionar' initialParams={{ userId }} component={Adicionar} options={{ headerShown: false }} />
             <Stack.Screen name='Excluir' initialParams={{ userId }} component={Excluir} options={{ headerShown: false }} />
+            <Stack.Screen name='Turnos' initialParams={{ userId }} component={Turnos} options={{ headerShown: false }} />
+
         </Stack.Navigator>
     );
 }
@@ -165,8 +176,21 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 10,
     },
+
+    item1: {
+        flexDirection: 'row',
+        bottom:30,
+       marginHorizontal:10,
+    
+      },
+
     icon: {
         marginRight: 10,
+
+    },
+    icon1: {
+      right:10,
+   
     },
     box: {
         backgroundColor: "#FFF",
@@ -181,10 +205,11 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         marginHorizontal: 10,
     },
-    box1: {
+    card: {
         padding: 20,
         borderRadius: 10,
         maxWidth: 350,
+        height:130,
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 15 },
@@ -204,13 +229,23 @@ const styles = StyleSheet.create({
         marginLeft: 30,
     },
     title: {
-        fontSize: 24,
+        fontSize: 25,
         color: '#F6B628',
         fontWeight: "bold",
         textAlign: 'center',
     },
+    title1: {
+        fontSize: 25,
+        left:70,
+        top:20,
+        color: '#F6B628',
+        fontWeight: "bold",
+        textAlign: 'left',  
+    },
     subtitle: {
         fontSize: 16,
+        top:20,
+        left:70,
         color: '#1A478A',
         fontWeight: "bold",
         textAlign: 'left',
