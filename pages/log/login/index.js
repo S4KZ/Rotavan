@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,9 +9,11 @@ const icon = require('../../../assets/icons/Login-rafikii.png');
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); // Estado para controle de carregamento
   const navigation = useNavigation();
 
   async function handleLogin() {
+    setLoading(true); // Ativar carregamento
     try {
       let reqs = await fetch(config.urlRootNode + '/log', {
         method: 'POST',
@@ -50,6 +52,8 @@ export default function Login() {
     } catch (error) {
       console.error(error);
       alert('Ocorreu um erro ao tentar fazer login.');
+    } finally {
+      setLoading(false); // Desativar carregamento
     }
   }
 
@@ -84,8 +88,12 @@ export default function Login() {
           <Icon name="lock" size={23} color="#1A478A" style={styles.icon} />
         </View>
         <View style={styles.form}>
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Entrar</Text>
+          <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+            {loading ? (
+              <ActivityIndicator size="small" color="#FFF" />
+            ) : (
+              <Text style={styles.buttonText}>Entrar</Text>
+            )}
           </TouchableOpacity>
         </View>
       </Animatable.View>
@@ -124,10 +132,12 @@ const styles = StyleSheet.create({
     width: 295,
     height: 45,
     top: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonText: {
     color: '#F6B628',
-    textAlign: 'center',
     fontSize: 20,
     fontWeight: 'bold',
   },

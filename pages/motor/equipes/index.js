@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, SafeAreaView, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -10,13 +10,14 @@ import Turnos from './turnos';
 
 const ilusEqui = require("../../../assets/icons/ilustra-Equipes.png");
 
+const { width, height } = Dimensions.get('window');
+
 function EquipesTela() {
     const navigation = useNavigation();
     const route = useRoute();
     const { userId } = route.params || {};
     const [equipes, setEquipes] = useState([]);
 
-    //recarrega a tela quando foca
     useEffect(() => {
         if (userId) {
             handleEquipe(userId);
@@ -28,7 +29,6 @@ function EquipesTela() {
 
         return unsubscribe;
     }, [userId, navigation]);
-    //fim do reload
 
     const handleEquipe = async (userId) => {
         try {
@@ -57,22 +57,15 @@ function EquipesTela() {
     return (
         <ScrollView>
             <View style={styles.container}>
-      
                 <Image source={ilusEqui} style={styles.ilustra} />
                 <View style={styles.box3}>
-                
                     <View style={styles.card}>
-                        
-                    <TouchableOpacity onPress={() => navigation.navigate('Turnos') }>
-                        <Text style={styles.title1}>Meus turnos</Text>
-                        
-                        <Text style={styles.subtitle}>Consulte aqui seus turnos!</Text>
-                        <Icon name="clock-o" size={50} color="#1A478A" style={styles.item1} />
+                        <TouchableOpacity onPress={() => navigation.navigate('Turnos')}>
+                            <Text style={styles.title1}>Meus turnos</Text>
+                            <Text style={styles.subtitle}>Consulte aqui seus turnos!</Text>
+                            <Icon name="clock-o" size={50} color="#1A478A" style={styles.item1} />
                         </TouchableOpacity>
-
                     </View>
-
-                   
 
                     <View style={styles.box}>
                         <TouchableOpacity style={styles.item}>
@@ -137,7 +130,6 @@ export default function Equipes() {
             <Stack.Screen name='Adicionar' initialParams={{ userId }} component={Adicionar} options={{ headerShown: false }} />
             <Stack.Screen name='Excluir' initialParams={{ userId }} component={Excluir} options={{ headerShown: false }} />
             <Stack.Screen name='Turnos' initialParams={{ userId }} component={Turnos} options={{ headerShown: false }} />
-
         </Stack.Navigator>
     );
 }
@@ -151,7 +143,7 @@ const styles = StyleSheet.create({
     },
     box3: {
         flexDirection: 'column',
-        padding: 40,
+        padding: 20,
         backgroundColor: '#FFF',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
@@ -161,10 +153,12 @@ const styles = StyleSheet.create({
         elevation: 25,
         marginBottom: 30,
         top: 20,
+        width: '98%', // Ajustado para ser responsivo
+        maxWidth: 400, // Limite máximo
     },
     ilustra: {
-        width: 450,
-        height: 340,
+        width: '100%',
+        height: height * 0.35, // Altura relativa à tela
         resizeMode: 'contain',
         marginBottom: 10,
     },
@@ -176,21 +170,13 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 10,
     },
-
     item1: {
         flexDirection: 'row',
-        bottom:30,
-       marginHorizontal:10,
-    
-      },
-
+        bottom: 30,
+        marginHorizontal: 10,
+    },
     icon: {
         marginRight: 10,
-
-    },
-    icon1: {
-      right:10,
-   
     },
     box: {
         backgroundColor: "#FFF",
@@ -203,13 +189,11 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
         marginBottom: 30,
-        marginHorizontal: 10,
+        width: '100%', // Ajustado para ser responsivo
     },
     card: {
         padding: 20,
         borderRadius: 10,
-        maxWidth: 350,
-        height:130,
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 15 },
@@ -217,6 +201,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 5,
         marginBottom: 30,
+        width: '100%', // Ajustado para ser responsivo
     },
     row2: {
         flexDirection: 'column',
@@ -236,16 +221,16 @@ const styles = StyleSheet.create({
     },
     title1: {
         fontSize: 25,
-        left:70,
-        top:20,
+        left: 70,
+        top: 20,
         color: '#F6B628',
         fontWeight: "bold",
-        textAlign: 'left',  
+        textAlign: 'left',
     },
     subtitle: {
         fontSize: 16,
-        top:20,
-        left:70,
+        top: 20,
+        left: 70,
         color: '#1A478A',
         fontWeight: "bold",
         textAlign: 'left',
@@ -260,7 +245,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
     },
     botaoConf: {
-        width: 290,
+        width: '80%', // Ajustado para ser responsivo
         height: 50,
         backgroundColor: '#1A478A',
         justifyContent: 'center',
@@ -274,10 +259,9 @@ const styles = StyleSheet.create({
         elevation: 5,
         marginTop: 5,
         marginBottom: 110,
-        marginLeft: 40,
     },
     botao: {
-        width: 250,
+        width: '80%', // Ajustado para ser responsivo
         height: 50,
         backgroundColor: '#F6B628',
         justifyContent: 'center',

@@ -17,6 +17,8 @@ const App = () => {
 
    <Text style={styles.title}>Seus turnos</Text>
 
+ 
+
       {cardsData.map(card => (
         <TouchableOpacity
           key={card.id}
@@ -24,7 +26,11 @@ const App = () => {
           onPress={() => handleCardPress(card.title)}
         >
           <Text style={styles.cardText}>{card.title}</Text>
+          
+    
         </TouchableOpacity>
+
+        
 
 
 
@@ -33,7 +39,9 @@ const App = () => {
 
 
 
-
+<TouchableOpacity style={styles.botaoConf}>
+                        <Text style={styles.texto}>Editar Equipes</Text>
+                    </TouchableOpacity>
 
     </View>
   );
@@ -73,12 +81,33 @@ const styles = StyleSheet.create({
 
 
 title: {
-    fontSize: 24,
-    top:20,
-    left:70,
+    fontSize: 25,
+    marginBottom:30,
     color: '#1A478A',
     fontWeight: "bold",
     textAlign: 'center',
+},
+botaoConf: {
+  width: '80%', // Ajustado para ser responsivo
+  height: 50,
+  backgroundColor: '#1A478A',
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderRadius: 10,
+  marginHorizontal: 25,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 15 },
+  shadowOpacity: 0.8,
+  shadowRadius: 4,
+  elevation: 5,
+  marginTop: 5,
+  marginBottom: 110,
+},
+
+texto: {
+  color: '#F6B628',
+  fontSize: 16,
+  fontWeight: 'bold',
 },
 });
 
