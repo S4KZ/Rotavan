@@ -101,6 +101,7 @@ export default function TabButton(){
 <Tab.Screen 
       name="Presença" 
       component={Presenca}
+      initialParams={{ userId }}
       options={
         {
           headerShown: false,
@@ -131,6 +132,7 @@ export default function TabButton(){
       <Tab.Screen
         name='Avisos'
         component={Avisos}
+        initialParams={{ userId }}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => {
