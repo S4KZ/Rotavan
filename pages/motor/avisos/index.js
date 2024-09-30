@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -12,7 +12,7 @@ function Tela() {
   const navigation = useNavigation();
   const route = useRoute();
   const { userId } = route.params || {};
-  console.log(userId);
+  // console.log(userId);
 
   const [avisos, setAvisos] = useState([]);
 
@@ -40,6 +40,7 @@ function Tela() {
       const data = await response.json();
       if (data.results) {
         setAvisos(data.results);
+  
       } else {
         console.error('Resposta da API não contém "results" ou está vazia:', data);
       }
@@ -50,7 +51,7 @@ function Tela() {
   return (
     <View style={styles.container}>
 
-      <ScrollView>
+      <ScrollView style={styles.mgS}>
 
         <View style={styles.container}>
 
@@ -134,7 +135,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#ffff'
   },
-
+  mgS:{
+    marginBottom: 100
+  },
   title: { // estilização do text
     fontSize: 25,
     color: '#FAB428',

@@ -1,32 +1,72 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import config from '../../../../config/config.json';
+
+
 export default function Enviar() {
-    return (
-        <View style={styles.container}>
-            <ScrollView>
-                <Text style={[styles.title, { marginBottom: 25, color: '#1A478A' }]}>Envie novo aviso</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Título do aviso"
-                />
-                <TextInput
-                    style={[styles.input, { height: 150 }]}
-                    placeholder="Assunto"
-                />
+  const route = useRoute();
+  const { userId } = route.params || {};
+  console.log(userId);
 
-         <TouchableOpacity style={styles.botaoConf} >
-                <Text style={styles.texto}>Salvar aviso</Text>
-            </TouchableOpacity>
+  const [avTitulo, setAvTitulo] = useState(''); // Add this line to store the title input value
+  const [avAss, setAvAss] = useState(''); // Add this line to store the assunto input value
 
-            </ScrollView>
+  const handleEnviar = async () => {
+    try {
+      const response = await fetch(config.urlRootNode+'/addAvisos', { // Replace with your API URL
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          avTitulo,
+          avAss,
+          motId: userId,
+        }),
+      });
+      const data = await response.json();
+      if (data.mensagem === 'Aviso criado com sucesso!') {
+        console.log('Aviso criado com sucesso!');
+        Alert.alert('AVISO ENVIADO COM SUCESSO');
+      } else {
+        console.error('Erro ao criar aviso:', data);
+      }
+    } catch (error) {
+      console.error('Erro ao criar aviso:', error);
+    }
+  };
 
-        </View>
-    );
+  return (
+    <View style={styles.container}>
+      <ScrollView>
+        <Text style={[styles.title, { marginBottom: 25, color: '#1A478A' }]}>Envie novo aviso</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Título do aviso"
+          value={avTitulo}
+          onChangeText={(texto) => setAvTitulo(texto)}
+        />
+        <TextInput
+          style={[styles.input, { height: 150 }]}
+          placeholder="Assunto"
+          value={avAss}
+          onChangeText={(texto) => setAvAss(texto)}
+        />
+
+        <TouchableOpacity style={styles.botaoConf} onPress={handleEnviar}>
+          <Text style={styles.texto}>Salvar aviso</Text>
+        </TouchableOpacity>
+
+      </ScrollView>
+
+    </View>
+  );
 }
-
 
 
 const styles = StyleSheet.create({
