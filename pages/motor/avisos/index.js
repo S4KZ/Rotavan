@@ -1,93 +1,125 @@
-
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import config from '../../../config/config.json';
 
 import Enviar from './enviar';
 
 
 function Tela() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { userId } = route.params || {};
+  console.log(userId);
+
+  const [avisos, setAvisos] = useState([]);
+
+  useEffect(() => {
+    if (userId) {
+      handleAvisos(userId);
+    }
+    const unsubscribe = navigation.addListener('focus', () => {
+      handleAvisos(userId);
+    });
+
+    return unsubscribe;
+  }, [userId, navigation]);
+
+  const handleAvisos = async (motId) => {
+    try {
+      const response = await fetch(config.urlRootNode + '/avisos', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ motId: motId }),
+      });
+      const data = await response.json();
+      if (data.results) {
+        setAvisos(data.results);
+      } else {
+        console.error('Resposta da API não contém "results" ou está vazia:', data);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar avisos:', error);
+    }
+  };
   return (
     <View style={styles.container}>
 
       <ScrollView>
 
         <View style={styles.container}>
-       
-            <Text style={styles.title}>Avisos</Text>
-            <View style={styles.row2}>
 
-              <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Enviar')}>
-                <Icon name="file-text-o" size={35} color="#1A478A" style={styles.icon} />
-                <Text style={styles.subtitle}>Digite aqui</Text>
-              </TouchableOpacity>
+          <Text style={styles.title}>Avisos</Text>
+          <View style={styles.row2}>
 
-            </View>
-       
+            <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Enviar')}>
+              <Icon name="file-text-o" size={35} color="#1A478A" style={styles.icon} />
+              <Text style={styles.subtitle}>Digite aqui</Text>
+            </TouchableOpacity>
 
-         
-            <Text style={styles.title}>Já enviados </Text>
-            <View style={styles.row2}>
-          
+          </View>
+
+
+
+          <Text style={styles.title}>Já enviados </Text>
+
+
+
+          {avisos.length > 0 ? (
+            avisos.map((aviso, index) => (
+
+              <View style={styles.row2} key={index}>
                 <TouchableOpacity style={styles.item}>
                   <Icon name="exclamation-circle" size={28} color="#1A478A" style={styles.icon} />
-                  <Text style={styles.subtitle}>Atenção com os horários! </Text>
+                  <Text style={styles.subtitle}>{aviso.avTitulo}</Text>
                 </TouchableOpacity>
+                <Text style={styles.paragraph}>{aviso.avAss}</Text>
+                <Text style={styles.paragraphh}>{aviso.avData}</Text>
 
-                <Text style={styles.paragraph}>Nos últimos dias tem ocorrido muitos atrasos na hora da ida então peço por favor para que
-                  se atentem aos horários pois isso prejudica e atrasa sua chegada. </Text>
-                <Text style={styles.paragraphh}>Motorista Rodrigo</Text>
-                <Text style={styles.paragraphh}>08/05/2024 - 19:11h </Text>
-
-            </View>
-
-            <View style={styles.row}>
-            
-                <TouchableOpacity style={styles.item}>
-                  <Icon name="times" size={28} color="#1A478A" style={styles.icon} />
-                  <Text style={styles.subtitle}>Não haverá van amanhã</Text>
-                </TouchableOpacity>
-
-                <Text style={styles.paragraph}>A
-                  van apresentou um problema de motor, já foi levada para
-                  o concerto porém só ficará pronta amanhã no período da tarde!</Text>
-                <Text style={styles.paragraphh}>Motorista Rodrigo</Text>
-                <Text style={styles.paragraphh}>08/05/2024 - 19:11h </Text>
-            </View>
-            
-
-
-
+              </View>
+            ))
+          ) : (
+            <Text style={styles.title}>Não há avisos enviados </Text>
+          )}
 
 
         </View>
 
-      </ScrollView>
 
 
-    </View>
+      </ScrollView >
+
+
+    </View >
   )
 };
 
 export default function EnviarNav() {
   const Stack = createNativeStackNavigator();
+  const route = useRoute();
+  const { userId } = route.params || {};
+  // console.log(userId);
   return (
     <Stack.Navigator>
 
 
       <Stack.Screen
+        initialParams={{ userId }}
         name='Tela'
         component={Tela}
-      options={{ headerShown: false }}
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen
+        initialParams={{ userId }}
         name='Enviar'
         component={Enviar}
-         options={{ headerShown: false }}
+        options={{ headerShown: false }}
       />
 
 
@@ -155,7 +187,7 @@ const styles = StyleSheet.create({
     top: 20,
     width: "95%",
     minheight: 120,
-    maxHeight:250,
+    maxHeight: 250,
 
     //colocar sombras
     backgroundColor: '#FFFFFF',
@@ -165,9 +197,9 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowSpread: 5,
     elevation: 10,
-    marginBottom:150,
-},
-  row2: { 
+    marginBottom: 150,
+  },
+  row2: {
     display: "flex",
     flexDirection: "column",
 
@@ -177,7 +209,7 @@ const styles = StyleSheet.create({
     top: 20,
     width: "95%",
     minheight: 120,
-    maxHeight:250,
+    maxHeight: 250,
 
     //colocar sombras
     backgroundColor: '#FFFFFF',
@@ -187,9 +219,9 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowSpread: 5,
     elevation: 10,
-    marginBottom:30,
+    marginBottom: 30,
   },
- 
+
 
 });
 
