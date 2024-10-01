@@ -3,21 +3,19 @@ import { useRoute } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import config from '../../../../config/config.json';
-
 
 export default function Enviar() {
   const route = useRoute();
   const { userId } = route.params || {};
   console.log(userId);
 
-  const [avTitulo, setAvTitulo] = useState(''); // Add this line to store the title input value
-  const [avAss, setAvAss] = useState(''); // Add this line to store the assunto input value
+  const [avTitulo, setAvTitulo] = useState(''); // Armazena o valor do título
+  const [avAss, setAvAss] = useState(''); // Armazena o valor do assunto
 
   const handleEnviar = async () => {
     try {
-      const response = await fetch(config.urlRootNode+'/addAvisos', { // Replace with your API URL
+      const response = await fetch(config.urlRootNode + '/addAvisos', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -29,10 +27,15 @@ export default function Enviar() {
           motId: userId,
         }),
       });
+
       const data = await response.json();
       if (data.mensagem === 'Aviso criado com sucesso!') {
         console.log('Aviso criado com sucesso!');
         Alert.alert('AVISO ENVIADO COM SUCESSO');
+
+        // Limpar os campos de texto após o aviso ser enviado com sucesso
+        setAvTitulo('');
+        setAvAss('');
       } else {
         console.error('Erro ao criar aviso:', data);
       }
@@ -61,21 +64,18 @@ export default function Enviar() {
         <TouchableOpacity style={styles.botaoConf} onPress={handleEnviar}>
           <Text style={styles.texto}>Salvar aviso</Text>
         </TouchableOpacity>
-
       </ScrollView>
-
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffff'},
-
+    backgroundColor: '#ffff'
+  },
   input: {
     borderWidth: 1,
     borderColor: '#1A478A',
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: 350,
   },
- title: { // estilização do text
+  title: {
     fontSize: 25,
     color: '#FAB428',
     fontWeight: "bold",
@@ -108,22 +108,11 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginTop: 5,
     marginBottom: 110,
-    marginLeft:40,
-},
-
-texto: {
-  color: '#F6B628',
-  fontSize: 16,
-  fontWeight: 'bold',
-},
-
-
-
-
-
-
-
-
-
-  }
-  );
+    marginLeft: 40,
+  },
+  texto: {
+    color: '#F6B628',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useRoute } from '@react-navigation/native';
+import{FontAwesome} from 'react-native-vector-icons';
 
 import TabButton from './tabbar.route';
 import Ajuda from '../../pages/motor/ajuda';
@@ -26,7 +27,8 @@ export default function DrawerTab() {
       <Drawer.Screen name='home' initialParams={{userId}} component={TabButton} options={{
         drawerIcon: () => (
           <View style={styles.box}>
-            <Image source={HomeIcon} style={styles.img} />
+              <FontAwesome name="home" size={30} color="#1A478A"/>
+            {/* <Image source={HomeIcon} style={styles.img} /> */}
             <Text style={styles.txt}>Home</Text>
           </View>
         )
@@ -34,7 +36,8 @@ export default function DrawerTab() {
       <Drawer.Screen name='Perfil' initialParams={{userId}} component={Perfil} options={{
         drawerIcon: () => (
           <View style={styles.box}>
-            <Image source={ProfileIcon} style={styles.img} />
+            <FontAwesome name="user-circle-o" size={30} color="#1A478A"/>
+            {/* <Image source={ProfileIcon} style={styles.img} /> */}
             <Text style={styles.txt}>Perfil</Text>
           </View>
         )
@@ -42,7 +45,8 @@ export default function DrawerTab() {
       <Drawer.Screen name='Ajuda' component={Ajuda} options={{
         drawerIcon: () => (
           <View style={styles.box}>
-            <Image source={AjudaIcon} style={styles.img} />
+             <FontAwesome name="exclamation-circle" size={30} color="#1A478A"/>
+            {/* <Image source={AjudaIcon} style={styles.img} /> */}
             <Text style={styles.txt}>Ajuda</Text>
           </View>
         )
@@ -50,7 +54,8 @@ export default function DrawerTab() {
       <Drawer.Screen name='Sair' component={Sair} options={{
         drawerIcon: () => (
           <View style={styles.box}>
-            <Ionicons name="exit" size={24} color="black" />
+              <FontAwesome name="sign-out" size={30} color="#1A478A"/>
+            {/* <Ionicons name="exit" size={24} color="black" /> */}
             <Text style={styles.txt}>Sair</Text>
           </View>
         )

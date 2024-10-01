@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useRoute } from '@react-navigation/native';
+import{FontAwesome} from 'react-native-vector-icons';
 
 // Importando as páginas
 import Home from '../../pages/user/home';
@@ -37,25 +38,45 @@ export default function TabButton() {
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.75,
                     shadowRadius: 5,
+                    justifyContent: 'space-between',
+                    paddingHorizontal:20,
+                    paddingVertical:10,
                 }
             }}
         >
-            <Tab.Screen
-                name="Home"
-                component={Home}
-                initialParams={{ userId }}
+            <Tab.Screen name="Home" component={Home}
                 options={{
                     headerShown: false,
-                    tabBarIcon: ({ focused }) => (
-                        <View style={styles.box}>
-                            <Image source={focused ? HomeIconY : HomeIcon} style={styles.img} />
-                            <Text style={focused ? styles.txtFocus : styles.txt}>HOME</Text>
-                        </View>
-                    ),
-                }}
-            />
+                    tabBarIcon: ({ focused }) => {
 
-            <Tab.Screen
+                        if (focused) { // se ele estiver focado
+                            return (
+                                // <View style={styles.box}>
+                                     <View style={styles.highlighWrapper}>
+                                     <TouchableOpacity style={styles.highlighted}>
+                                      <FontAwesome name="home" size={30} color="#1A478A"/>
+                                    {/* <Image source={HIcon2} style={styles.icon} /> */}
+                                    </TouchableOpacity>
+                                </View>
+                                // </View>
+                            );
+                        }
+                        // se n tiver interação
+                        return (
+                            <View style={styles.box}>
+                             <FontAwesome name="home" size={30} color="#1A478A"/>
+                                {/* <Image source={HIcon} style={styles.icon} /> */}
+                                <Text style={styles.title}>Home</Text>
+                               
+                          
+                            </View>
+                        )
+
+                    }
+                }} />
+
+
+            {/* <Tab.Screen
                 name="Perfil"
                 component={Perfil}
                 initialParams={{ userId }}
@@ -68,9 +89,43 @@ export default function TabButton() {
                         </View>
                     ),
                 }}
-            />
+            /> */}
+    
 
-            <Tab.Screen
+    <Tab.Screen name="Perfil" component={Perfil}
+     initialParams={{ userId }}
+                options={{
+                    headerShown: false,
+                    tabBarIcon: ({ focused }) => {
+
+                        if (focused) { // se ele estiver focado
+                            return (
+                                // <View style={styles.box}>
+                                     <View style={styles.highlighWrapper}>
+                                     <TouchableOpacity style={styles.highlighted}>
+                                      <FontAwesome name="user-circle-o" size={30} color="#1A478A"/>
+                                    {/* <Image source={HIcon2} style={styles.icon} /> */}
+                                    </TouchableOpacity>
+                                </View>
+                                // </View>
+                            );
+                        }
+                        // se n tiver interação
+                        return (
+                            <View style={styles.box}>
+                             <FontAwesome name="user-circle-o" size={30} color="#1A478A"/>
+                                {/* <Image source={HIcon} style={styles.icon} /> */}
+                                <Text style={styles.title}>Perfil</Text>
+                               
+                          
+                            </View>
+                        )
+
+                    }
+                }} />
+
+
+            {/* <Tab.Screen
                 name="Presença"
                 component={Presenca}
                 options={{
@@ -82,9 +137,73 @@ export default function TabButton() {
                         </View>
                     ),
                 }}
-            />
+            /> */}
 
-            <Tab.Screen
+            
+    <Tab.Screen name="Presença" component={Presenca}
+                options={{
+                    headerShown: false,
+                    tabBarIcon: ({ focused }) => {
+
+                        if (focused) { // se ele estiver focado
+                            return (
+                                // <View style={styles.box}>
+                                     <View style={styles.highlighWrapper}>
+                                     <TouchableOpacity style={styles.highlighted}>
+                                      <FontAwesome name="check-square-o" size={30} color="#1A478A"/>
+                                    {/* <Image source={HIcon2} style={styles.icon} /> */}
+                                    </TouchableOpacity>
+                                </View>
+                                // </View>
+                            );
+                        }
+                        // se n tiver interação
+                        return (
+                            <View style={styles.box}>
+                             <FontAwesome name="check-square-o" size={30} color="#1A478A"/>
+                                {/* <Image source={HIcon} style={styles.icon} /> */}
+                                <Text style={styles.title}>Presença</Text>
+                               
+                            </View>
+                        )
+
+                    }
+                }} />
+
+                          
+    <Tab.Screen name="Avisos" component={Avisos}
+                options={{
+                    headerShown: false,
+                    tabBarIcon: ({ focused }) => {
+
+                        if (focused) { // se ele estiver focado
+                            return (
+                                // <View style={styles.box}>
+                                     <View style={styles.highlighWrapper}>
+                                     <TouchableOpacity style={styles.highlighted}>
+                                      <FontAwesome name="bell" size={30} color="#1A478A"/>
+                                    {/* <Image source={HIcon2} style={styles.icon} /> */}
+                                    </TouchableOpacity>
+                                </View>
+                                // </View>
+                            );
+                        }
+                        // se n tiver interação
+                        return (
+                            <View style={styles.box}>
+                             <FontAwesome name="bell" size={30} color="#1A478A"/>
+                                {/* <Image source={HIcon} style={styles.icon} /> */}
+                                <Text style={styles.title}>Avisos</Text>
+                               
+                            </View>
+                        )
+
+                    }
+                }} />
+
+
+
+            {/* <Tab.Screen
                 name="Avisos"
                 component={Avisos}
                 options={{
@@ -96,7 +215,7 @@ export default function TabButton() {
                         </View>
                     ),
                 }}
-            />
+            /> */}
         </Tab.Navigator>
     );
 }
@@ -126,4 +245,25 @@ const styles = StyleSheet.create({
         width: 43,
         height: 32,
     },
+    highlighWrapper: {
+        position: 'absolute',
+        top: -10,
+        alignSelf:'center',
+        borderRadius: 50,
+        padding:10,
+        backgroundColor: '#fff',
+    },
+
+    highlighted:{
+        backgroundColor: '#FAB428',
+        borderRadius: 50,
+        padding:15,
+    },
+    title:{
+        fontSize: 14,
+        marginBottom: 5,
+        color:"#1A478A",
+        bottom:4,
+        top:4,
+    }
 });

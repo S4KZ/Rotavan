@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
     padding: 18,
     backgroundColor: '#fff',
     borderRadius: 5,
+    
   },
   icon: {
     marginRight: 15,
@@ -217,7 +218,7 @@ const styles = StyleSheet.create({
     //colocar sombras
     backgroundColor: '#FFFFFF',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 15 },
+    shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
     shadowSpread: 5,

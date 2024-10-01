@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   box: {
     padding: 40,
-    minHeight: 450,
+    minHeight: 480,
     maxHeight: 900,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
@@ -118,8 +118,10 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     elevation: 20,
+    top:60,
   },
   image: {
+    top:20,
     maxHeight: 250,
     minHeight: 200,
     maxWidth: 370,
@@ -157,6 +159,6 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     left: 22,
-    top: 32,
+    top: 26,
   },
 });

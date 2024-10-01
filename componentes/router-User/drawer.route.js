@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useRoute } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import{FontAwesome} from 'react-native-vector-icons';
 
 // Importando as páginas
 import TabButton from './tabbar.route';
@@ -28,7 +29,8 @@ export default function DrawerTab() {
                 options={{
                     drawerIcon: () => (
                         <View style={styles.box}>
-                            <Image source={HomeIcon} style={styles.img} />
+                              <FontAwesome name="home" size={30} color="#1A478A"/>
+                            {/* <Image source={HomeIcon} style={styles.img} /> */}
                             <Text style={styles.txt}>Home</Text>
                         </View>
                     )
@@ -41,7 +43,8 @@ export default function DrawerTab() {
                 options={{
                     drawerIcon: () => (
                         <View style={styles.box}>
-                            <Image source={AjudaIcon} style={styles.img} />
+                            <FontAwesome name="exclamation-circle" size={30} color="#1A478A"/>
+                            {/* <Image source={AjudaIcon} style={styles.img} /> */}
                             <Text style={styles.txt}>Ajuda</Text>
                         </View>
                     )
@@ -54,7 +57,8 @@ export default function DrawerTab() {
                 options={{
                     drawerIcon: () => (
                         <View style={styles.box}>
-                            <Ionicons name="exit" size={24} color="black" />
+                             <FontAwesome name="sign-out" size={30} color="#1A478A"/>
+                            {/* <Ionicons name="exit" size={24} color="black" /> */}
                             <Text style={styles.txt}>Sair</Text>
                         </View>
                     )

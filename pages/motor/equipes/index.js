@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, SafeAreaVi
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Picker } from '@react-native-picker/picker'; // Importa o Picker
 import config from '../../../config/config.json';
 import Adicionar from './adicionar';
 import Excluir from './excluir';
@@ -17,6 +18,7 @@ function EquipesTela() {
     const route = useRoute();
     const { userId } = route.params || {};
     const [equipes, setEquipes] = useState([]);
+    const [selectedTurno, setSelectedTurno] = useState(''); // Estado para o valor selecionado do Picker
 
     useEffect(() => {
         if (userId) {
@@ -55,15 +57,31 @@ function EquipesTela() {
     };
 
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.container}>
                 <Image source={ilusEqui} style={styles.ilustra} />
                 <View style={styles.box3}>
                     <View style={styles.card}>
-                        <TouchableOpacity onPress={() => navigation.navigate('Turnos')}>
+                        <TouchableOpacity>
                             <Text style={styles.title1}>Meus turnos</Text>
                             <Text style={styles.subtitle}>Consulte aqui seus turnos!</Text>
                             <Icon name="clock-o" size={50} color="#1A478A" style={styles.item1} />
+                        </TouchableOpacity>
+                        {/* Picker adicionado aqui */}
+                        <Picker
+                            selectedValue={selectedTurno}
+                            style={styles.picker}
+                            onValueChange={(itemValue) => setSelectedTurno(itemValue)}
+                        >
+                            <Picker.Item label="Turno 1" value="turno1" />
+                            <Picker.Item label="Turno 2" value="turno2" />
+                            <Picker.Item label="Turno 3" value="turno3" />
+                            <Picker.Item label="Turno 48" value="turno3" />
+                        </Picker>
+
+                        {/* Botão de editar adicionado */}
+                        <TouchableOpacity style={styles.editButton}  onPress={() => navigation.navigate('Turnos')}>
+                            <Text style={styles.editButtonText}>Editar</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -148,7 +166,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 10 },
+        shadowOffset: { width: 0, height: 5 },
         shadowRadius: 1.3,
         elevation: 25,
         marginBottom: 30,
@@ -184,7 +202,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
@@ -196,7 +214,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#FFFFFF',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 15 },
+        shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.2,
         shadowRadius: 5,
         elevation: 5,
@@ -214,13 +232,13 @@ const styles = StyleSheet.create({
         marginLeft: 30,
     },
     title: {
-        fontSize: 25,
+        fontSize: 20, // Reduzido
         color: '#F6B628',
         fontWeight: "bold",
         textAlign: 'center',
     },
     title1: {
-        fontSize: 25,
+        fontSize: 20, // Reduzido
         left: 70,
         top: 20,
         color: '#F6B628',
@@ -228,7 +246,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
     },
     subtitle: {
-        fontSize: 16,
+        fontSize: 14, // Reduzido
         top: 20,
         left: 70,
         color: '#1A478A',
@@ -236,12 +254,12 @@ const styles = StyleSheet.create({
         textAlign: 'left',
     },
     label: {
-        fontSize: 16,
+        fontSize: 14, // Reduzido
         fontWeight: 'bold',
         color: '#1A478A',
     },
     info: {
-        fontSize: 16,
+        fontSize: 14, // Reduzido
         textAlign: 'left',
     },
     botaoConf: {
@@ -253,8 +271,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginHorizontal: 25,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 15 },
-        shadowOpacity: 0.8,
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.5,
         shadowRadius: 4,
         elevation: 5,
         marginTop: 5,
@@ -269,8 +287,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginHorizontal: 25,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 15 },
-        shadowOpacity: 0.8,
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.5,
         shadowRadius: 4,
         elevation: 5,
         marginTop: 40,
@@ -278,12 +296,30 @@ const styles = StyleSheet.create({
     },
     texto: {
         color: '#F6B628',
-        fontSize: 16,
+        fontSize: 14, // Reduzido
         fontWeight: 'bold',
     },
     text: {
         color: '#1A478A',
-        fontSize: 16,
+        fontSize: 14, // Reduzido
         fontWeight: 'bold',
     },
+    picker: {
+        height: 50,
+        width: '100%',
+        marginVertical: 20,
+    },
+    editButton: {
+        backgroundColor: '#F6B628',
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+    },
+    editButtonText: {
+        color: '#1A478A',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
 });
+
