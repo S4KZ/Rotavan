@@ -25,6 +25,7 @@ const Tab = createBottomTabNavigator();
 export default function TabButton() {
     const route = useRoute();
     const userId = route.params?.userId;
+    // console.log(userId);
 
     return (
         <Tab.Navigator
@@ -45,6 +46,7 @@ export default function TabButton() {
             }}
         >
             <Tab.Screen name="Home" component={Home}
+            initialParams={{ userId }}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => {
@@ -141,6 +143,7 @@ export default function TabButton() {
 
             
     <Tab.Screen name="Presença" component={Presenca}
+    initialParams={{ userId }}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => {
@@ -172,6 +175,7 @@ export default function TabButton() {
 
                           
     <Tab.Screen name="Avisos" component={Avisos}
+    initialParams={{ userId }}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => {

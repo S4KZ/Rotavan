@@ -39,6 +39,7 @@ export default function DrawerTab() {
 
             <Drawer.Screen
                 name='Ajuda'
+                initialParams={{ userId }}
                 component={Ajuda}
                 options={{
                     drawerIcon: () => (

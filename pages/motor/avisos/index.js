@@ -12,7 +12,7 @@ function Tela() {
   const navigation = useNavigation();
   const route = useRoute();
   const { userId } = route.params || {};
-  // console.log(userId);
+//  console.log(userId);
 
   const [avisos, setAvisos] = useState([]);
 
@@ -27,7 +27,7 @@ function Tela() {
     return unsubscribe;
   }, [userId, navigation]);
 
-  const handleAvisos = async (motId) => {
+  const handleAvisos = async (userId) => {
     try {
       const response = await fetch(config.urlRootNode + '/avisos', {
         method: 'POST',
@@ -35,7 +35,7 @@ function Tela() {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ motId: motId }),
+        body: JSON.stringify({ useId: userId }),
       });
       const data = await response.json();
       if (data.results) {

@@ -1,152 +1,140 @@
-import{ useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import config from '../../../config/config.json';
 
-export default function Avisos() {
-  // Estados para controlar os avisos
-  const [pendentes, setPendentes] = useState([
-    {
-      id: 1,
-      titulo: 'Não haverá van amanhã',
-      descricao: 'A van apresentou um problema de motor, já foi levada para o concerto, porém só ficará pronta amanhã no período da tarde!',
-      motorista: 'Motorista Rodrigo',
-      data: '08/05/2024 - 19:11h',
-    },
-  ]);
+function Tela() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { userId } = route.params || {};
+  console.log(userId);
 
-  const [visualizados, setVisualizados] = useState([
-    {
-      id: 2,
-      titulo: 'Atenção com os horários!',
-      descricao: 'Nos últimos dias, tem ocorrido muitos atrasos na hora da ida, então peço por favor para que se atentem aos horários, pois isso prejudica e atrasa sua chegada.',
-      motorista: 'Motorista Rodrigo',
-      data: '08/05/2024 - 19:11h',
-    },
-  ]);
+  const [avisos, setAvisos] = useState([]);
 
-  // Função para marcar o aviso como lido
-  const marcarComoLido = (id) => {
-    const aviso = pendentes.find((aviso) => aviso.id === id);
-    if (aviso) {
-      setVisualizados([...visualizados, aviso]);
-      setPendentes(pendentes.filter((aviso) => aviso.id !== id));
+  useEffect(() => {
+    if (userId) {
+      handleAvisos(userId);
+    }
+    const unsubscribe = navigation.addListener('focus', () => {
+      handleAvisos(userId);
+    });
+
+    return unsubscribe;
+  }, [userId, navigation]);
+
+  const handleAvisos = async (userId) => {
+    try {
+      const response = await fetch(config.urlRootNode + '/avisos', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ useId: userId }),
+      });
+      const data = await response.json();
+      if (data.results) {
+        setAvisos(data.results);  
+      } else {
+        console.error('Resposta da API não contém "results" ou está vazia:', data);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar avisos:', error);
     }
   };
 
   return (
-    <ScrollView> 
-      <View style={styles.container}> 
+    <View style={styles.container}>
+      <ScrollView style={styles.mgS}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Avisos</Text>
 
-        {/* Pendentes */}
-        <Text style={styles.title}>Pendentes</Text>
-        {pendentes.length === 0 ? (
-          <Text style={styles.emptyText}>Não há avisos pendentes.</Text>
-        ) : (
-          pendentes.map((aviso) => (
-            <View key={aviso.id} style={styles.card}>
-              <View style={styles.cardHeader}>
-                <MaterialIcons name="error-outline" size={24} color="#FAB428" />
-                <Text style={styles.subtitle}>{aviso.titulo}</Text>
+          {/* Seção para mostrar os avisos enviados */}
+          {avisos.length > 0 ? (
+            avisos.map((aviso, index) => (
+              <View style={styles.row2} key={index}>
+                <TouchableOpacity style={styles.item}>
+                  <Icon name="exclamation-circle" size={28} color="#1A478A" style={styles.icon} />
+                  <Text style={styles.subtitle}>{aviso.avTitulo}</Text>
+                </TouchableOpacity>
+                <Text style={styles.paragraph}>{aviso.avAss}</Text>
+                <Text style={styles.paragraphh}>{aviso.avData}</Text>
               </View>
-              <Text style={styles.paragraph}>{aviso.descricao}</Text>
-              <Text style={styles.footerText}>{aviso.motorista}</Text>
-              <Text style={styles.footerText}>{aviso.data}</Text>
-              <TouchableOpacity style={styles.actionButton} onPress={() => marcarComoLido(aviso.id)}>
-                <Text style={styles.actionButtonText}>Marcar como Lido</Text>
-              </TouchableOpacity>
-            </View>
-          ))
-        )}
-
-        {/* Já visualizados */}
-        <Text style={styles.title}>Já visualizados</Text>
-        {visualizados.length === 0 ? (
-          <Text style={styles.emptyText}>Não há avisos visualizados.</Text>
-        ) : (
-          visualizados.map((aviso) => (
-            <View key={aviso.id} style={[styles.card, styles.viewedCard]}>
-              <View style={styles.cardHeader}>
-                <MaterialIcons name="schedule" size={24} color="#1A478A" />
-                <Text style={styles.subtitle}>{aviso.titulo}</Text>
-              </View>
-              <Text style={styles.paragraph}>{aviso.descricao}</Text>
-              <Text style={styles.footerText}>{aviso.motorista}</Text>
-              <Text style={styles.footerText}>{aviso.data}</Text>
-            </View>
-          ))
-        )}
-      </View>
-    </ScrollView>
+            ))
+          ) : (
+            <Text style={styles.title}>Não há avisos enviados </Text>
+          )}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
+
+export default Tela;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    alignItems: 'center',
+    backgroundColor: '#ffff'
+  },
+  mgS: {
+    marginBottom: 100
   },
   title: {
-    fontSize: 22,
-    color: '#1A478A',
+    fontSize: 25,
+    color: '#FAB428',
     fontWeight: "bold",
-    marginVertical: 10,
+    marginTop: 20,
   },
-  card: {
-    backgroundColor: '#FFF',
-    borderRadius: 15,
-    padding: 20,
-    marginVertical: 10,
-    width: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  cardHeader: {
+  item: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    padding: 18,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+  },
+  icon: {
+    marginRight: 15,
   },
   subtitle: {
     fontSize: 18,
     color: '#1A478A',
     fontWeight: "bold",
-    marginLeft: 10,
+    textAlign: 'center',
   },
   paragraph: {
     fontSize: 15,
     color: '#333',
     lineHeight: 20,
-    marginBottom: 10,
+    textAlign: 'justify',
+    marginVertical: 5,
+    fontWeight: "bold",
   },
-  footerText: {
+  paragraphh: {
     fontSize: 12,
-    color: '#888',
+    color: '#1A478A',
+    fontWeight: "bold",
     textAlign: 'right',
   },
-  viewedCard: {
-    backgroundColor: '#e6e6e6',
-  },
-  actionButton: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: '#FAB428',
+  row2: {
+    display: "flex",
+    flexDirection: "column",
+    padding: 20,
     borderRadius: 10,
-    alignItems: 'center',
-  },
-  actionButtonText: {
-    color: '#1A478A',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#888',
-    textAlign: 'center',
-    marginVertical: 10,
+    top: 20,
+    width: "95%",
+    minheight: 120,
+    maxHeight: 250,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    shadowSpread: 5,
+    elevation: 10,
+    marginBottom: 30,
   },
 });
