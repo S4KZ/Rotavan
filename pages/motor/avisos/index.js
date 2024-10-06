@@ -7,12 +7,10 @@ import config from '../../../config/config.json';
 
 import Enviar from './enviar';
 
-
 function Tela() {
   const navigation = useNavigation();
   const route = useRoute();
   const { userId } = route.params || {};
-//  console.log(userId);
 
   const [avisos, setAvisos] = useState([]);
 
@@ -27,6 +25,7 @@ function Tela() {
     return unsubscribe;
   }, [userId, navigation]);
 
+  // Função para buscar os avisos do servidor
   const handleAvisos = async (userId) => {
     try {
       const response = await fetch(config.urlRootNode + '/avisos', {
@@ -37,10 +36,14 @@ function Tela() {
         },
         body: JSON.stringify({ useId: userId }),
       });
+      
+      if (!response.ok) {
+        throw new Error(`Erro: ${response.status}`); // Se o status não for OK, lançar erro
+      }
+
       const data = await response.json();
       if (data.results) {
         setAvisos(data.results);
-  
       } else {
         console.error('Resposta da API não contém "results" ou está vazia:', data);
       }
@@ -48,32 +51,75 @@ function Tela() {
       console.error('Erro ao buscar avisos:', error);
     }
   };
+
+  // Função para excluir um aviso
+  const deleteAviso = async (avisoId) => {
+    try {
+      const response = await fetch(config.urlRootNode + '/deleteAviso', {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ avisoId }),
+      });
+
+      // Verifica se o status da resposta é OK
+      if (!response.ok) {
+        console.log('Status da resposta:', response.status);
+        throw new Error(`Erro: ${response.status}`);
+      }
+
+      const responseText = await response.text();
+      console.log('Raw response:', responseText);
+
+      // Tenta fazer o parse do JSON
+      try {
+        const data = JSON.parse(responseText);
+        if (data.success) {
+          Alert.alert('Sucesso', 'Aviso excluído com sucesso!');
+          handleAvisos(userId); // Recarregar avisos após a exclusão
+        } else {
+          Alert.alert('Erro', 'Não foi possível excluir o aviso.');
+        }
+      } catch (jsonError) {
+        console.error('Erro ao parsear JSON:', jsonError);
+        Alert.alert('Erro', 'Ocorreu um erro inesperado.');
+      }
+    } catch (error) {
+      console.error('Erro ao excluir aviso:', error);
+      Alert.alert('Erro', 'Ocorreu um erro ao tentar excluir o aviso.');
+    }
+  };
+
+  // Confirmar exclusão
+  const confirmDelete = (avisoId) => {
+    Alert.alert(
+      'Excluir aviso',
+      'Você tem certeza que deseja excluir este aviso?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Excluir', onPress: () => deleteAviso(avisoId) },
+      ]
+    );
+  };
+
   return (
     <View style={styles.container}>
-
       <ScrollView style={styles.mgS}>
-
         <View style={styles.container}>
-
           <Text style={styles.title}>Avisos</Text>
           <View style={styles.row2}>
-
             <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Enviar')}>
               <Icon name="file-text-o" size={35} color="#1A478A" style={styles.icon} />
               <Text style={styles.subtitle}>Digite aqui</Text>
             </TouchableOpacity>
-
           </View>
 
-
-
-          <Text style={styles.title}>Já enviados </Text>
-
-
+          <Text style={styles.title}>Já enviados</Text>
 
           {avisos.length > 0 ? (
             avisos.map((aviso, index) => (
-
               <View style={styles.row2} key={index}>
                 <TouchableOpacity style={styles.item}>
                   <Icon name="exclamation-circle" size={28} color="#1A478A" style={styles.icon} />
@@ -82,50 +128,43 @@ function Tela() {
                 <Text style={styles.paragraph}>{aviso.avAss}</Text>
                 <Text style={styles.paragraphh}>{aviso.avData}</Text>
 
+                {/* Botão de excluir */}
+                <TouchableOpacity style={styles.deleteButton} onPress={() => confirmDelete(aviso.avId)}>
+                  <Icon name="trash" size={28} color="#FF0000" />
+                  <Text style={styles.deleteText}>Excluir</Text>
+                </TouchableOpacity>
               </View>
             ))
           ) : (
-            <Text style={styles.title}>Não há avisos enviados </Text>
+            <Text style={styles.title}>Não há avisos enviados</Text>
           )}
-
-
         </View>
-
-
-
-      </ScrollView >
-
-
-    </View >
-  )
-};
+      </ScrollView>
+    </View>
+  );
+}
 
 export default function EnviarNav() {
   const Stack = createNativeStackNavigator();
   const route = useRoute();
   const { userId } = route.params || {};
-  // console.log(userId);
+
   return (
     <Stack.Navigator>
-
-
       <Stack.Screen
         initialParams={{ userId }}
         name='Tela'
         component={Tela}
         options={{ headerShown: false }}
       />
-
       <Stack.Screen
         initialParams={{ userId }}
         name='Enviar'
         component={Enviar}
         options={{ headerShown: false }}
       />
-
-
     </Stack.Navigator>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -133,36 +172,32 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffff'
+    backgroundColor: '#ffff',
   },
-  mgS:{
-    marginBottom: 100
+  mgS: {
+    marginBottom: 100,
   },
-  title: { // estilização do text
+  title: {
     fontSize: 25,
     color: '#FAB428',
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginTop: 20,
   },
-
   item: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 18,
     backgroundColor: '#fff',
     borderRadius: 5,
-    
   },
   icon: {
     marginRight: 15,
   },
-
-  subtitle: { // estilização do subtext
+  subtitle: {
     fontSize: 18,
     color: '#1A478A',
-    fontWeight: "bold",
+    fontWeight: 'bold',
     textAlign: 'center',
-
   },
   paragraph: {
     fontSize: 15,
@@ -170,62 +205,38 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     textAlign: 'justify',
     marginVertical: 5,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
-
   paragraphh: {
     fontSize: 12,
     color: '#1A478A',
-    fontWeight: "bold",
+    fontWeight: 'bold',
     textAlign: 'right',
-
-  },
-
-  row: {
-    display: "flex",
-    flexDirection: "column",
-
-    //estilização
-    padding: 20,
-    borderRadius: 10,
-    top: 20,
-    width: "95%",
-    minheight: 120,
-    maxHeight: 250,
-
-    //colocar sombras
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 15 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowSpread: 5,
-    elevation: 10,
-    marginBottom: 150,
   },
   row2: {
-    display: "flex",
-    flexDirection: "column",
-
-    //estilização
+    flexDirection: 'column',
     padding: 20,
     borderRadius: 10,
     top: 20,
-    width: "95%",
-    minheight: 120,
+    width: '95%',
+    minHeight: 120,
     maxHeight: 250,
-
-    //colocar sombras
     backgroundColor: '#FFFFFF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    shadowSpread: 5,
     elevation: 10,
     marginBottom: 30,
   },
-
-
+  deleteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  deleteText: {
+    marginLeft: 10,
+    color: '#FF0000',
+    fontWeight: 'bold',
+  },
 });
-

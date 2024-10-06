@@ -73,10 +73,10 @@ function EquipesTela() {
                             style={styles.picker}
                             onValueChange={(itemValue) => setSelectedTurno(itemValue)}
                         >
-                            <Picker.Item label="Turno 1" value="turno1" />
-                            <Picker.Item label="Turno 2" value="turno2" />
-                            <Picker.Item label="Turno 3" value="turno3" />
-                            <Picker.Item label="Turno 48" value="turno3" />
+                            <Picker.Item label="Turno manhã" value="turno1" />
+                            <Picker.Item label="Turno tarde " value="turno2" />
+                            <Picker.Item label="Turno noite" value="turno3" />
+                         
                         </Picker>
 
                         {/* Botão de editar adicionado */}

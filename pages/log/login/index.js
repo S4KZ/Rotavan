@@ -9,6 +9,7 @@ const icon = require('../../../assets/icons/Login-rafikii.png');
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // Estado para alternar a visualização da senha
   const [loading, setLoading] = useState(false); // Estado para controle de carregamento
   const navigation = useNavigation();
 
@@ -79,13 +80,23 @@ export default function Login() {
             style={styles.textInput}
             placeholder="Senha"
             placeholderTextColor="#AAAAAA"
-            secureTextEntry={true}
+            secureTextEntry={!showPassword} // Alterna entre ocultar e exibir a senha
             autoCapitalize="none"
             autoCorrect={false}
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
           <Icon name="lock" size={23} color="#1A478A" style={styles.icon} />
+          <TouchableOpacity 
+            style={styles.eyeIcon} 
+            onPress={() => setShowPassword(!showPassword)} // Alterna o estado de visualização da senha
+          >
+            <Icon 
+              name={showPassword ? 'eye' : 'eye-slash'} 
+              size={20} 
+              color="#1A478A" 
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.form}>
           <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
@@ -118,10 +129,10 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     elevation: 20,
-    top:60,
+    top: 60,
   },
   image: {
-    top:20,
+    top: 20,
     maxHeight: 250,
     minHeight: 200,
     maxWidth: 370,
@@ -159,6 +170,11 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     left: 22,
+    top: 26,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 22,
     top: 26,
   },
 });

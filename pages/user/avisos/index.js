@@ -46,24 +46,24 @@ function Tela() {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.mgS}>
-        <View style={styles.container}>
-          <Text style={styles.title}>Avisos</Text>
+      <ScrollView style={styles.scroll}>
+        <View style={styles.innerContainer}>
+          <Text style={styles.title}>Avisos Importantes</Text>
 
           {/* Seção para mostrar os avisos enviados */}
           {avisos.length > 0 ? (
             avisos.map((aviso, index) => (
-              <View style={styles.row2} key={index}>
-                <TouchableOpacity style={styles.item}>
-                  <Icon name="exclamation-circle" size={28} color="#1A478A" style={styles.icon} />
-                  <Text style={styles.subtitle}>{aviso.avTitulo}</Text>
+              <View style={styles.avisoCard} key={index}>
+                <TouchableOpacity style={styles.avisoHeader}>
+                  <Icon name="exclamation-circle" size={28} color="#FAB428" style={styles.icon} />
+                  <Text style={styles.avisoTitle}>{aviso.avTitulo}</Text>
                 </TouchableOpacity>
-                <Text style={styles.paragraph}>{aviso.avAss}</Text>
-                <Text style={styles.paragraphh}>{aviso.avData}</Text>
+                <Text style={styles.avisoBody}>{aviso.avAss}</Text>
+                <Text style={styles.avisoDate}>{aviso.avData}</Text>
               </View>
             ))
           ) : (
-            <Text style={styles.title}>Não há avisos enviados </Text>
+            <Text style={styles.noAvisos}>Não há avisos enviados</Text>
           )}
         </View>
       </ScrollView>
@@ -76,65 +76,63 @@ export default Tela;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ffff'
+    backgroundColor: '#F9F9F9',
+    padding: 15,
   },
-  mgS: {
-    marginBottom: 100
+  scroll: {
+    width: '100%',
+  },
+  innerContainer: {
+    alignItems: 'center',
   },
   title: {
-    fontSize: 25,
-    color: '#FAB428',
-    fontWeight: "bold",
-    marginTop: 20,
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 18,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-  },
-  icon: {
-    marginRight: 15,
-  },
-  subtitle: {
-    fontSize: 18,
+    fontSize: 28,
     color: '#1A478A',
-    fontWeight: "bold",
-    textAlign: 'center',
+    fontWeight: 'bold',
+    marginVertical: 20,
   },
-  paragraph: {
-    fontSize: 15,
-    color: '#333',
-    lineHeight: 20,
-    textAlign: 'justify',
-    marginVertical: 5,
-    fontWeight: "bold",
-  },
-  paragraphh: {
-    fontSize: 12,
-    color: '#1A478A',
-    fontWeight: "bold",
-    textAlign: 'right',
-  },
-  row2: {
-    display: "flex",
-    flexDirection: "column",
+  avisoCard: {
+    backgroundColor: '#FFF',
     padding: 20,
     borderRadius: 10,
-    top: 20,
-    width: "95%",
-    minheight: 120,
-    maxHeight: 250,
-    backgroundColor: '#FFFFFF',
+    marginVertical: 10,
+    width: '90%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowSpread: 5,
-    elevation: 10,
-    marginBottom: 30,
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 8,
+    marginBottom: 20,
+  },
+  avisoHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  icon: {
+    marginRight: 10,
+  },
+  avisoTitle: {
+    fontSize: 20,
+    color: '#1A478A',
+    fontWeight: 'bold',
+  },
+  avisoBody: {
+    fontSize: 16,
+    color: '#333',
+    lineHeight: 24,
+    textAlign: 'justify',
+    marginVertical: 10,
+  },
+  avisoDate: {
+    fontSize: 14,
+    color: '#888',
+    textAlign: 'right',
+  },
+  noAvisos: {
+    fontSize: 18,
+    color: '#999',
+    fontStyle: 'italic',
+    marginTop: 20,
   },
 });
