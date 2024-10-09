@@ -1,28 +1,35 @@
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import * as Location from 'expo-location';
 import { useEffect, useState, useRef } from "react";
-import GooglePlacesInput from "./googlePlacesAutocomplete";
+import MapViewDirections from 'react-native-maps-directions';
 
 export default function GoogleMapsScreen() {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    const [loading, setLoading] = useState(true); // Para controlar o carregamento do mapa
+    const [loading, setLoading] = useState(true); 
     const mapRef = useRef(null);
+
+    // Destino teste
+    const [destino, setDestino] = useState({
+        latitude: -22.80068662,
+        longitude: -45.20045729
+    });
+
+    const GOOGLE_MAPS_APIKEY = "";
 
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
                 setErrorMsg('Permissão para acessar a localização negada!');
-                setLoading(false); // Para parar o loading caso a permissão seja negada
+                setLoading(false);
                 return;
             }
 
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
-            setLoading(false); // Parar o loading quando a localização for obtida
-            // console.log(location); //Fala a localização atual no console log
+            setLoading(false);
         })();
     }, []);
 
@@ -32,11 +39,10 @@ export default function GoogleMapsScreen() {
             timeInterval: 1000,
             distanceInterval: 1,
         }, (response) => {
-            // console.log('Nova localização: ', response); // Mostra a localização após o movimento/ ou atualiza a localização
             setLocation(response);
             mapRef.current?.animateCamera({
                 center: response.coords
-            })
+            });
         });
     }, []);
 
@@ -59,7 +65,6 @@ export default function GoogleMapsScreen() {
 
     return (
         <View style={styles.container}>
-            
             <MapView
                 ref={mapRef}
                 provider={PROVIDER_GOOGLE}
@@ -67,8 +72,8 @@ export default function GoogleMapsScreen() {
                 initialRegion={{
                     latitude: location.coords.latitude,
                     longitude: location.coords.longitude,
-                    latitudeDelta: 0.001,
-                    longitudeDelta: 0.002,
+                    latitudeDelta: 0.1,
+                    longitudeDelta: 0.1,
                 }}
             >
                 <Marker
@@ -77,10 +82,17 @@ export default function GoogleMapsScreen() {
                         longitude: location.coords.longitude,
                     }}
                 />
+                <Marker coordinate={destino} pinColor="blue" />
+
+                {/* Rota entre os dois destinos */}
+                <MapViewDirections
+                    origin={location.coords}
+                    destination={destino}
+                    apikey={GOOGLE_MAPS_APIKEY}
+                    strokeWidth={5}
+                    strokeColor="blue"
+                />
             </MapView>
-            {/* <View style={{ width: "100%", height: 200 }}>
-                <GooglePlacesInput />
-            </View> */}
         </View>
     );
 }
