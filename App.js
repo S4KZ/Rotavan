@@ -1,75 +1,85 @@
-import React, { useEffect, useState } from 'react';
-import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { Image, Text, View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
-import AppLoading from 'expo-app-loading'; // Importar o AppLoading
-
-import RouterUser from './componentes/router-User/index';
-import RouterMotor from './componentes/router-Motor/index';
+import AppIntroSlider from 'react-native-app-intro-slider';
 
 import Login from "./pages/log/login";
 import Cadastro from "./pages/log/cadastro";
-import Sair from "./pages/log/Sair";
+import RouterUser from './componentes/router-User/index';
+import RouterMotor from './componentes/router-Motor/index';
 
-const icon = require('./assets/icons/welcome-ilustra.png'); // Verifique o caminho do ícone
+// Definição dos slides
+const slides = [
+  {
+    key: '1',
+    title: "Seja bem-vindo",
+    text: " Seja bem-vindo ao RotaVan, cadastre-se ou efetue seu login com os dados existentes",
+    image: require('./assets/icons/welcome-ilustra.png')
+  },
+  {
+    key: '2',
+    title: "Facilidade no uso",
+    text: " Cadastre-se e comece a usar o aplicativo para gerenciar seu transporte de forma eficiente",
+    image: require('./assets/icons/yellow.png')
+  },
+  {
+    key: '3',
+    title: "Acompanhe seu trajeto",
+    text: " Veja o status dos seus trajetos e planeje seus horários de forma prática!",
+    image: require('./assets/icons/map.png')
+  }
+];
 
 function Welcome() {
   const navigation = useNavigation();
-  const [isReady, setIsReady] = useState(false);
+  const [showHome, setShowHome] = useState(false);
 
-  // Simula o carregamento de recursos
-  useEffect(() => {
-    setTimeout(() => {
-      setIsReady(true);
-    }, 6000); // Simula 3 segundos de carregamento
-  }, []);
-
-  if (!isReady) {
+  // Renderiza cada slide
+  const renderSlide = ({ item }) => {
     return (
-      <View style={styles.loadingContainer}>
-        <Image 
-          source={require('./assets/icons/entradaRotavan.gif')} // Verifique se o caminho está correto
-          style={styles.gif}
-        />
+      <View style={styles.slide}>
+        <Image source={item.image} style={styles.image} />
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.text}>{item.text}</Text>
       </View>
     );
-  }
+  };
+
+  // O que acontece após o último slide (quando o slider acaba)
+  const onDone = () => {
+    setShowHome(true);
+  };
 
   return (
-    <View style={styles.container}>
-      <Animatable.Image 
-        animation={"flipInY"}
-        delay={500}
-        source={icon}
-        style={styles.image} 
-      />
+    <SafeAreaView style={styles.container}>
+      {/* Slider com os slides */}
+      <View style={styles.sliderContainer}>
+        <AppIntroSlider
+          renderItem={renderSlide}
+          data={slides}
+          onDone={onDone}
+          showSkipButton={false} // Remove o botão de pular
+          dotStyle={styles.dotStyle} // Estilo das bolinhas inativas
+          activeDotStyle={styles.activeDotStyle} // Estilo das bolinhas ativas
+          showDoneButton={false} // Remove o botão "Done" para manter os botões de login/cadastro
+        />
+      </View>
 
-      <Animatable.Text animation={"fadeInLeft"} delay={500}  style={styles.title}>
-        Seja bem-vindo!
-      </Animatable.Text>
+      {/* Botões de Cadastro e Login */}
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('Cadastro')} style={styles.button}>
+          <Text style={styles.buttonText}>Cadastrar</Text>
+        </TouchableOpacity>
 
-      <Animatable.Text animation={"fadeInLeft"}  delay={500} style={styles.text3}>
-        Seja bem-vindo ao RotaVan, cadastre-se ou
-      </Animatable.Text>
-      <Animatable.Text animation={"fadeInLeft"} delay={500} style={styles.text4}>
-        efetue seu login com os dados existentes!
-      </Animatable.Text>
-
-      <TouchableOpacity   onPress={() => navigation.navigate('Cadastro')} style={styles.button}>
-        <Animatable.Text animation={"flipInY"} delay={500}style={styles.buttonText}>
-          Cadastrar
-        </Animatable.Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.button2}>
-        <Animatable.Text animation={"flipInY"} delay={500} style={styles.buttonText2}>
-          Login
-        </Animatable.Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.button2}>
+          <Text style={styles.buttonText2}>Login</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -79,29 +89,29 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen 
-          name="Welcome" 
-          component={Welcome} 
+        <Stack.Screen
+          name="Welcome"
+          component={Welcome}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="Login" 
+        <Stack.Screen
+          name="Login"
           component={Login}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="Cadastro" 
+        <Stack.Screen
+          name="Cadastro"
           component={Cadastro}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="RouterMotor" 
-          component={RouterMotor} 
+        <Stack.Screen
+          name="RouterMotor"
+          component={RouterMotor}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="RouterUser" 
-          component={RouterUser}  
+        <Stack.Screen
+          name="RouterUser"
+          component={RouterUser}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
@@ -112,28 +122,40 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+  },
+  sliderContainer: {
+    flex: 4, // Área dedicada ao slider (parte superior da tela)
+  },
+  buttonsContainer: {
+    flex: 1, // Área para os botões (parte inferior)
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'#fff',
+    bottom:20
   },
-  loadingContainer: { // Novo estilo para a tela de loading com o GIF
+  slide: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
   },
-  gif: {
-    width: 500,
-    height: 500,
-    resizeMode: 'contain',
-  },
   image: {
     height: 350,
     width: 350,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 25,
+    padding: 10,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#1A478A',
   },
   text: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
+    marginHorizontal: 20,
+    color: '#333',
   },
   button: {
     padding: 10,
@@ -148,12 +170,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: 250,
     backgroundColor: '#F6B628',
-  },
-  buttonText2: {
-    color: '#1A478A',
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
+  
   },
   buttonText: {
     color: '#F6B628',
@@ -161,19 +178,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  title: {
-    fontSize: 25,
-    padding: 10,
+  buttonText2: {
+    color: '#1A478A',
     textAlign: 'center',
+    fontSize: 18,
     fontWeight: 'bold',
   },
-  text3: {
-    fontSize: 16,
-    textAlign: 'left',
+  dotStyle: {
+    backgroundColor: '#C4C4C4', // Bolinhas inativas (cinza claro)
   },
-  text4: {
-    fontSize: 16,
-    marginBottom: 40,
-    textAlign: 'left',
+  activeDotStyle: {
+    backgroundColor: '#1A478A', // Bolinhas ativas (azul escuro)
   },
 });
