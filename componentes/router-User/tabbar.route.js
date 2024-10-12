@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useRoute } from '@react-navigation/native';
 import{FontAwesome} from 'react-native-vector-icons';
+import{FontAwesome5} from 'react-native-vector-icons';
 
 // Importando as páginas
 import Home from '../../pages/user/home';
@@ -40,7 +41,7 @@ export default function TabButton() {
                     shadowOpacity: 0.75,
                     shadowRadius: 5,
                     justifyContent: 'space-between',
-                    paddingHorizontal:20,
+                    paddingHorizontal:10,
                     paddingVertical:10,
                 }
             }}
@@ -153,7 +154,7 @@ export default function TabButton() {
                                 // <View style={styles.box}>
                                      <View style={styles.highlighWrapper}>
                                      <TouchableOpacity style={styles.highlighted}>
-                                      <FontAwesome name="check-square-o" size={30} color="#1A478A"/>
+                                     <FontAwesome5 name="user-check" size={27} color="#1A478A"/>
                                     {/* <Image source={HIcon2} style={styles.icon} /> */}
                                     </TouchableOpacity>
                                 </View>
@@ -163,7 +164,7 @@ export default function TabButton() {
                         // se n tiver interação
                         return (
                             <View style={styles.box}>
-                             <FontAwesome name="check-square-o" size={30} color="#1A478A"/>
+                              <FontAwesome5 name="user-check" size={27} color="#1A478A"/>
                                 {/* <Image source={HIcon} style={styles.icon} /> */}
                                 <Text style={styles.title}>Presença</Text>
                                
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
     },
 
     highlighted:{
-        backgroundColor: '#FAB428',
+        backgroundColor: '#F6B628',
         borderRadius: 50,
         padding:15,
     },

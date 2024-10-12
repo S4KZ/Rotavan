@@ -1,15 +1,45 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Picker } from '@react-native-picker/picker'; // Importa o Picker
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const ilusEqui = require("../../../assets/icons/ilustra-presenConf.png");
+const ilusEqui = require("../../../assets/icons/ilustra-presen.png");
 
 export default function Equipes() {
+const [selectedTurno, setSelectedTurno] = useState(''); 
+const [equipes, setEquipes] = useState([]);
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <SafeAreaView style={styles.container}>
         <Image source={ilusEqui} style={styles.ilustra} />
         <View style={styles.box3}>
+
+        <View style={styles.card}>
+                        <TouchableOpacity>
+                            <Text style={styles.title1}>Meus turnos</Text>
+                            <Text style={styles.subtitle}>Consulte aqui seus turnos!</Text>
+                            <Icon name="clock-o" size={50} color="#1A478A" style={styles.item1} />
+                        </TouchableOpacity>
+                        {/* Picker adicionado aqui */}
+                        <Picker
+                            selectedValue={selectedTurno}
+                            style={styles.picker}
+                            onValueChange={(itemValue) => setSelectedTurno(itemValue)}
+                        >
+                            <Picker.Item label="Turno manhã" value="turno1" />
+                            <Picker.Item label="Turno tarde " value="turno2" />
+                            <Picker.Item label="Turno noite" value="turno3" />
+                         
+                        </Picker>
+
+                    </View>
+
+
+
+
+
           <View style={styles.box}>
             <Text style={styles.title}>Veja quem irá hoje na ida</Text>
             <Text style={styles.label}>Usuário                    Horário</Text>
@@ -121,4 +151,41 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
+  card: {
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+    marginBottom: 10,
+    top:20,
+    width: '100%', // Ajustado para ser responsivo
+},
+title1: {
+  fontSize: 20, // Reduzido
+  left: 70,
+  top: 20,
+  color: '#F6B628',
+  fontWeight: "bold",
+  textAlign: 'left',
+},
+subtitle: {
+  fontSize: 14, // Reduzido
+  top: 20,
+  left: 70,
+  color: '#1A478A',
+  fontWeight: "bold",
+  textAlign: 'left',
+},
+item1: {
+  flexDirection: 'row',
+  bottom: 30,
+  marginHorizontal: 10,
+},
+icon: {
+  marginRight: 10,
+},
 });

@@ -9,7 +9,7 @@ import Adicionar from './adicionar';
 import Excluir from './excluir';
 import Turnos from './turnos';
 
-const ilusEqui = require("../../../assets/icons/ilustra-Equipes.png");
+const ilusEqui = require("../../../assets/icons/globo.png");
 
 const { width, height } = Dimensions.get('window');
 

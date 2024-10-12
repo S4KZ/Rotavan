@@ -1,8 +1,10 @@
 // tabbar.route.js
 import * as React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useRoute } from '@react-navigation/native';
+import{FontAwesome} from 'react-native-vector-icons';
+import{FontAwesome5} from 'react-native-vector-icons';
 
 import Home from '../../pages/motor/home';
 import Avisos from '../../pages/motor/avisos';
@@ -42,6 +44,8 @@ export default function TabButton(){
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.75,
           shadowRadius: 5,
+          paddingHorizontal:10,
+          paddingVertical:10,
         }
       }}
     >
@@ -54,16 +58,18 @@ export default function TabButton(){
           tabBarIcon: ({ focused }) => {
             if (focused) {
               return (
-                <View style={styles.box}>
-                  <Image source={HomeIconY} style={styles.img} />
-                  <Text style={styles.txtFocus}>HOME</Text>
+                <View style={styles.highlighWrapper}>
+                 <TouchableOpacity style={styles.highlighted}>
+                <FontAwesome name="home" size={30} color="#1A478A"/>
+                </TouchableOpacity>
+                 
                 </View>
               );
             }
             return (
               <View style={styles.box}>
-                <Image source={HomeIcon} style={styles.img} name="home"/>
-                <Text style={styles.txt}>HOME</Text>
+               <FontAwesome name="home" size={30} color="#1A478A"/>
+                <Text style={styles.title}>Home</Text>
               </View>
             );
           }
@@ -80,16 +86,18 @@ export default function TabButton(){
           tabBarIcon: ({focused}) =>{ 
             if(focused){
               return(
-                <View style={styles.box}>
-                  <Image source={EquipeIconY} style={styles.imgg} name="equipe"/>
-                  <Text style={styles.txtFocus}>EQUIPES</Text>
-                </View>
+                <View style={styles.highlighWrapper}>
+                <TouchableOpacity style={styles.highlighted}>
+               <FontAwesome name="users" size={30} color="#1A478A"/>
+               </TouchableOpacity>
+                
+               </View>
               );
             }
             return(
               <View style={styles.box}>
-                <Image source={EquipeIcon} style={styles.imgg} name="equipe"/>
-                <Text style={styles.txt}>EQUIPES</Text>
+                <FontAwesome5 name="users" size={30} color="#1A478A"/>
+                <Text style={styles.title}>Equipes</Text>
               </View>
             );
           }
@@ -108,16 +116,18 @@ export default function TabButton(){
           tabBarIcon: ({focused}) =>{
             if(focused){
               return(
-                <View style={styles.box}>
-                  <Image source={PresIconY} style={styles.img} name="presença"/>
-                  <Text style={styles.txtFocus}>PRESENÇA</Text>
-                </View>
+                <View style={styles.highlighWrapper}>
+                <TouchableOpacity style={styles.highlighted}>
+               <FontAwesome5 name="user-check" size={27} color="#1A478A"/>
+               </TouchableOpacity>
+                
+               </View>
               );
             }
             return(
               <View style={styles.box}>
-                <Image source={PresIcon} style={styles.img} name="presença"/>
-                <Text style={styles.txt}>PRESENÇA</Text>
+                  <FontAwesome5 name="user-check" size={27} color="#1A478A"/>
+                <Text style={styles.title}>Presença</Text>
               </View>
             );
           }
@@ -138,16 +148,18 @@ export default function TabButton(){
           tabBarIcon: ({ focused }) => {
             if(focused){
               return(
-                <View style={styles.box}>
-                  <Image source={AvisosIconY} style={styles.img} name="avisos"/>
-                  <Text style={styles.txtFocus}>AVISOS</Text>
-                </View>
+                <View style={styles.highlighWrapper}>
+                <TouchableOpacity style={styles.highlighted}>
+               <FontAwesome name="bell" size={30} color="#1A478A"/>
+               </TouchableOpacity>
+                
+               </View>
               );
             }
             return(
               <View style={styles.box}>
-                <Image source={AvisosIcon} style={styles.img} name="avisos"/>
-                <Text style={styles.txt}>AVISOS</Text>
+                <FontAwesome name="bell" size={30} color="#1A478A"/>
+                <Text style={styles.title}>Avisos</Text>
               </View>
             );
           }
@@ -186,5 +198,25 @@ const styles = StyleSheet.create({
     width: 45,
     height: 25,
   },
+  highlighWrapper: {
+    position: 'absolute',
+    top: -10,
+    alignSelf:'center',
+    borderRadius: 50,
+    padding:10,
+    backgroundColor: '#fff',
+},
 
+highlighted:{
+    backgroundColor: '#F6B628',
+    borderRadius: 50,
+    padding:15,
+},
+title:{
+  fontSize: 14,
+  marginBottom: 5,
+  color:"#1A478A",
+  bottom:4,
+  top:4,
+}
 });
