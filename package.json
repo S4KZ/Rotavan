@@ -41,6 +41,7 @@
     "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-google-places-autocomplete": "^2.5.6",
+    "react-native-image-picker": "^7.1.2",
     "react-native-maps": "^1.17.3",
     "react-native-maps-directions": "^1.9.0",
     "react-native-masked-text": "^1.12.5",

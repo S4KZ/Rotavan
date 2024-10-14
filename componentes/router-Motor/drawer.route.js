@@ -7,6 +7,7 @@ import{FontAwesome} from 'react-native-vector-icons';
 import TabButton from './tabbar.route';
 import Ajuda from '../../pages/motor/ajuda';
 import Perfil from '../../pages/motor/perfil';
+import CadastroVan from '../../pages/motor/cadastroVan';
 import Sair from '../../pages/log/Sair';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -60,6 +61,21 @@ export default function DrawerTab() {
           </View>
         )
       }} />
+
+        <Drawer.Screen name='CadastroVan' component={CadastroVan} options={{
+        drawerIcon: () => (
+          <View style={styles.box}>
+             <FontAwesome name="bus" size={30} color="#1A478A"/>
+            {/* <Image source={AjudaIcon} style={styles.img} /> */}
+            <Text style={styles.txt}>Cadastro Van</Text>
+          </View>
+        )
+      }} />
+
+
+
+
+
     </Drawer.Navigator>
   );
 }
