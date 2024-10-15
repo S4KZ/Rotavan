@@ -8,7 +8,7 @@ import config from '../../../../config/config.json';
 export default function Enviar() {
   const route = useRoute();
   const { userId } = route.params || {};
-  console.log(userId);
+  // console.log(userId);
 
   const [avTitulo, setAvTitulo] = useState(''); // Armazena o valor do título
   const [avAss, setAvAss] = useState(''); // Armazena o valor do assunto

@@ -36,7 +36,7 @@ function Tela() {
         },
         body: JSON.stringify({ useId: userId }),
       });
-      
+
       if (!response.ok) {
         throw new Error(`Erro: ${response.status}`); // Se o status não for OK, lançar erro
       }
@@ -54,42 +54,24 @@ function Tela() {
 
   // Função para excluir um aviso
   const deleteAviso = async (avisoId) => {
-    try {
-      const response = await fetch(config.urlRootNode + '/deleteAviso', {
-        method: 'DELETE',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ avisoId }),
-      });
-
-      // Verifica se o status da resposta é OK
-      if (!response.ok) {
-        console.log('Status da resposta:', response.status);
-        throw new Error(`Erro: ${response.status}`);
-      }
-
-      const responseText = await response.text();
-      console.log('Raw response:', responseText);
-
-      // Tenta fazer o parse do JSON
-      try {
-        const data = JSON.parse(responseText);
-        if (data.success) {
-          Alert.alert('Sucesso', 'Aviso excluído com sucesso!');
-          handleAvisos(userId); // Recarregar avisos após a exclusão
-        } else {
-          Alert.alert('Erro', 'Não foi possível excluir o aviso.');
-        }
-      } catch (jsonError) {
-        console.error('Erro ao parsear JSON:', jsonError);
-        Alert.alert('Erro', 'Ocorreu um erro inesperado.');
-      }
-    } catch (error) {
-      console.error('Erro ao excluir aviso:', error);
-      Alert.alert('Erro', 'Ocorreu um erro ao tentar excluir o aviso.');
+    console.log(avisoId);
+    const res = await fetch(config.urlRootNode + '/delAvisos', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ avisoId }),
+    });
+    // console.log(res.status);
+    const data = await res.json(); // pega a resposta e vira em json
+    console.log(data.tipo);
+    
+    if(data){
+      alert(data.tipo);
+      handleAvisos(userId); // Atualiza a lista de avisos após a exclusão
     }
+
   };
 
   // Confirmar exclusão
@@ -102,6 +84,7 @@ function Tela() {
         { text: 'Excluir', onPress: () => deleteAviso(avisoId) },
       ]
     );
+    handleAvisos(userId);
   };
 
   return (
