@@ -9,15 +9,17 @@ export default function Excluir() {
   const [emails, setEmails] = useState([]);
   const [pasId, setPasId] = useState([]);
   const route = useRoute();
-  const { userId } = route.params || {}; // Garante que userId é acessado de forma segura
+  // Garante que userId e o itemValue(turno) é acessado de forma segura
+  const { userId, selectedTurno } = route.params || {}; 
+  // console.log(selectedTurno);
 
   useEffect(() => {
-    if (userId) {
-      fetchEmails(userId);
+    if (selectedTurno) {
+      fetchEmails(selectedTurno); // passando o id do turno
     }
-  }, [userId]);
+  }, [selectedTurno]);
 
-  async function fetchEmails(userId) {
+  async function fetchEmails(userId) { // passando para o função o id do turno
     try {
       const response = await fetch(config.urlRootNode + '/equipe', {
         method: 'POST',
@@ -26,7 +28,7 @@ export default function Excluir() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          pasIdEquipe: userId,
+          pasIdEquipe: userId, //tá passando o id do turno
         }),
       });
 
@@ -36,8 +38,8 @@ export default function Excluir() {
 
       const data = await response.json();
       const results = data.results || [];
-      setEmails(results.map(item => item.useEmail)); // Atualiza o estado com os e-mails
-      setPasId(results.map(item => item.useId)); // Armazena os IDs dos usuários
+      setEmails(results.map(item => item.email)); // Atualiza o estado com os e-mails
+      setPasId(results.map(item => item.id)); // Armazena os IDs dos usuários
     } catch (error) {
       console.error('Erro ao buscar e-mails:', error);
     }

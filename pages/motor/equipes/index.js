@@ -17,21 +17,50 @@ function EquipesTela() {
     const navigation = useNavigation();
     const route = useRoute();
     const { userId } = route.params || {};
+
     const [equipes, setEquipes] = useState([]);
     const [selectedTurno, setSelectedTurno] = useState(''); // Estado para o valor selecionado do Picker
+    const [turnos, setTurnos] = useState([]);
 
     useEffect(() => {
         if (userId) {
-            handleEquipe(userId);
+            HandleTurno(userId);
         }
-
         const unsubscribe = navigation.addListener('focus', () => {
-            handleEquipe(userId);
+            HandleTurno(userId);
         });
 
         return unsubscribe;
     }, [userId, navigation]);
 
+ 
+
+    // Função para buscar os turnos
+    const HandleTurno = async (userId) => {
+        try {
+            const ress = await fetch(config.urlRootNode + '/turno', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: userId }),
+            });
+            const data = await ress.json();
+            const turnos = data.turnos;
+            if (Array.isArray(turnos)) {
+                setTurnos(turnos);
+            } else {
+                console.error('A resposta não contém uma array de resultados.');
+            }
+        } catch (error) {
+            console.error('Erro ao buscar turnos:', error);
+        }
+    };
+
+
+
+    //função para buscar as lista dos alunos do turno
     const handleEquipe = async (userId) => {
         try {
             const response = await fetch(config.urlRootNode + '/equipe', {
@@ -55,6 +84,16 @@ function EquipesTela() {
             console.error('Erro ao buscar dados da equipe:', error);
         }
     };
+    //vai fazer aparecer a lista de passageiro de acordo com o id do turno
+    const onTurnoChange = (itemValue) => {
+        setSelectedTurno(itemValue);
+        if (itemValue) {
+            console.log('Turno selecionado:', itemValue); // Adicione esse console.log para imprimir o valor de itemValue
+            handleEquipe(itemValue);
+           
+            //OBS: LEMBRAR-SE QUE itemValue é o id do turno selecionado
+        }
+    };
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -67,20 +106,24 @@ function EquipesTela() {
                             <Text style={styles.subtitle}>Consulte aqui seus turnos!</Text>
                             <Icon name="clock-o" size={50} color="#1A478A" style={styles.item1} />
                         </TouchableOpacity>
-                        {/* Picker adicionado aqui */}
+                        {/* Picker para selecionar o turno */}
                         <Picker
                             selectedValue={selectedTurno}
                             style={styles.picker}
-                            onValueChange={(itemValue) => setSelectedTurno(itemValue)}
+                            onValueChange={(itemValue) => onTurnoChange(itemValue)} // Chama a função quando um turno é selecionado
                         >
-                            <Picker.Item label="Turno manhã" value="turno1" />
-                            <Picker.Item label="Turno tarde " value="turno2" />
-                            <Picker.Item label="Turno noite" value="turno3" />
-                         
+                            <Picker.Item label='Nenhum turno selecionado' value='' />
+                            {turnos.length > 0 ? (
+                                turnos.map((turno, index) => (
+                                    <Picker.Item key={index} label={turno.turPeriodo} value={turno.turId} />
+                                ))
+                            ) : (
+                                <Picker.Item label='Nenhum turno disponível' value='' />
+                            )}
                         </Picker>
 
                         {/* Botão de editar adicionado */}
-                        <TouchableOpacity style={styles.editButton}  onPress={() => navigation.navigate('Turnos')}>
+                        <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Turnos')}>
                             <Text style={styles.editButtonText}>Editar</Text>
                         </TouchableOpacity>
                     </View>
@@ -95,8 +138,8 @@ function EquipesTela() {
                             {equipes.length > 0 ? (
                                 equipes.map((item, index) => (
                                     <View key={index} style={styles.infobox}>
-                                        <Text style={styles.label}>{item.useNome}</Text>
-                                        <Text style={styles.info}>{item.useEmail}</Text>
+                                        <Text style={styles.label}>{item.nome}</Text>
+                                        <Text style={styles.info}>{item.email}</Text>
                                     </View>
                                 ))
                             ) : (
@@ -105,7 +148,7 @@ function EquipesTela() {
                         </View>
                     </View>
 
-                    <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('Menu')}>
+                    <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('Menu', { userId, selectedTurno })}>
                         <Text style={styles.texto}>Editar Equipes</Text>
                     </TouchableOpacity>
                 </View>
@@ -116,20 +159,24 @@ function EquipesTela() {
 
 function Menu() {
     const navigation = useNavigation();
+    const route = useRoute();
+  // Garante que userId e o itemValue(turno) é acessado de forma segura
+  const { userId, selectedTurno } = route.params || {}; 
+  console.log(selectedTurno);
     return (
         <View style={styles.container}>
             <ScrollView>
                 <SafeAreaView>
-                    <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Adicionar')}>
+                    <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Adicionar', { userId, selectedTurno })}>
                         <Text style={styles.text}>Adicionar integrante</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Excluir')}>
+                    <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Excluir', { userId, selectedTurno })}>
                         <Text style={styles.text}>Excluir integrante</Text>
                     </TouchableOpacity>
                 </SafeAreaView>
             </ScrollView>
-            <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('EquipesTela')}>
+            <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('EquipesTela', { userId, selectedTurno })}>
                 <Text style={styles.texto}>Voltar para Equipes</Text>
             </TouchableOpacity>
         </View>

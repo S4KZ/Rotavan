@@ -1,17 +1,100 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Alert, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import { useNavigation, useRoute } from '@react-navigation/native';
 const ilusConfi = require("../../../assets/icons/presen.png");
+import config from '../../../config/config.json';
 
 export default function ConfirmacaoVan() {
-  const handleCardPress = (title) => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { userId } = route.params || {};
+  console.log(userId);
+
+  const handleCase = async (useId, Case) => {
+    // console.log(useId, Case);
+    switch (Case) {
+      case 1:
+        // console.log("n vo");
+        try {
+          const faltas = await fetch(config.urlRootNode + '/faltaIda', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ useId: useId }),
+          });
+          const data = await faltas.json();
+          if (data) {
+            Alert.alert('Sucesso!', 'Já avisamos ao motorista que você não irá na ida!');
+          } else {
+            Alert.alert('Erro!', 'Não conseguimos avisar ao motorista');
+          }
+        } catch (error) {
+          Alert.alert('Erro!', 'houve algum problema na comunição');
+        }
+
+
+        break;
+      case 2:
+        // console.log("n volto");
+        try {
+          const faltas = await fetch(config.urlRootNode + '/faltaVolta', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ useId: useId }),
+          });
+          const data = await faltas.json();
+          if (data) {
+            Alert.alert('Sucesso!', 'Já avisamos ao motorista que você não irá na volta!');
+          } else {
+            Alert.alert('Erro!', 'Não conseguimos avisar ao motorista');
+          }
+        } catch (error) {
+          Alert.alert('Erro!', 'houve algum problema na comunição');
+        }
+
+
+
+        break;
+      case 3:
+        // console.log("vo sumi");
+        try {
+          const faltas = await fetch(config.urlRootNode + '/faltas', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ useId: useId }),
+          });
+          const data = await faltas.json();
+          if (data) {
+            Alert.alert('Sucesso!', 'Já avisamos ao motorista que você não irá por um tempo...');
+          } else {
+            Alert.alert('Erro!', 'Não conseguimos avisar ao motorista');
+          }
+        } catch (error) {
+          Alert.alert('Erro!', 'houve algum problema na comunição');
+        }
+        break;
+      case 4:
+        // console.log("voltou a escola");
+        break;
+    }
+  }
+
+  const handleCardPress = (title, Case) => {
     Alert.alert(
       'Confirmação',
       `Você tem certeza que deseja selecionar: ${title}?`,
       [
         { text: 'Cancelar', style: 'cancel' },
-        { text: 'Confirmar', onPress: () => console.log(`${title} selecionado`) },
+        { text: 'Confirmar', onPress: () => handleCase(userId, Case) },
       ]
     );
   };
@@ -21,18 +104,18 @@ export default function ConfirmacaoVan() {
       <View style={styles.container}>
         <Image source={ilusConfi} style={styles.ilustra} />
         <View style={styles.box}>
-        <Text style={styles.title1}>Confirme sua presença conforme as opções abaixo!</Text>
+          <Text style={styles.title1}>Confirme sua presença conforme as opções abaixo!</Text>
           <Text style={styles.title}>🚨 ATENÇÃO!</Text>
           <Text style={styles.subtitle}>
-            Se você não irá na ida e nem na volta, selecione as opções 
-            <Text style={styles.highlight}> "Não vou" </Text> e 
+            Se você não irá na ida e nem na volta, selecione as opções
+            <Text style={styles.highlight}> "Não vou" </Text> e
             <Text style={styles.highlight}> "Não volto"!</Text>
           </Text>
 
           {/* Card 1 */}
-          <TouchableOpacity 
-            style={[styles.card, styles.card1]} 
-            onPress={() => handleCardPress("Não vou")}
+          <TouchableOpacity
+            style={[styles.card, styles.card1]}
+            onPress={() => handleCardPress("Não vou", 1)}
           >
             <FontAwesome name="thumbs-down" size={40} color="#fff" style={styles.cardIcon} />
             <View style={styles.cardTextContainer}>
@@ -42,9 +125,9 @@ export default function ConfirmacaoVan() {
           </TouchableOpacity>
 
           {/* Card 2 */}
-          <TouchableOpacity 
-            style={[styles.card, styles.card2]} 
-            onPress={() => handleCardPress("Não volto")}
+          <TouchableOpacity
+            style={[styles.card, styles.card2]}
+            onPress={() => handleCardPress("Não volto", 2)}
           >
             <FontAwesome name="bullhorn" size={40} color="#fff" style={styles.cardIcon} />
             <View style={styles.cardTextContainer}>
@@ -54,9 +137,9 @@ export default function ConfirmacaoVan() {
           </TouchableOpacity>
 
           {/* Card 3 */}
-          <TouchableOpacity 
-            style={[styles.card, styles.card3]} 
-            onPress={() => handleCardPress("Vou sumir")}
+          <TouchableOpacity
+            style={[styles.card, styles.card3]}
+            onPress={() => handleCardPress("Vou sumir", 3)}
           >
             <FontAwesome name="times" size={40} color="#fff" style={styles.cardIcon} />
             <View style={styles.cardTextContainer}>
@@ -115,7 +198,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     textAlign: 'center',
     lineHeight: 24,
-    bottom:15,
+    bottom: 15,
   },
   highlight: {
     color: '#F6B628',
