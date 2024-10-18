@@ -21,8 +21,7 @@ const App = () => {
       </TouchableOpacity>
 
       {/* Card para excluir um turno */}
-      <TouchableOpacity
-        style={styles.card}
+      <TouchableOpacity style={styles.card}
         onPress={() => handleCardPress('Excluir Turno')}
       >
         <Icon name="trash" size={30} color="#1A478A" style={styles.icon} />

@@ -168,19 +168,23 @@ function Menu() {
         <View style={styles.container}>
             <ScrollView>
                 <SafeAreaView>
-                    <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Adicionar', { userId, selectedTurno })}>
-                        <Text style={styles.text}>Adicionar integrante</Text>
+                    <TouchableOpacity style={styles.cardd} onPress={() => navigation.navigate('Adicionar', { userId, selectedTurno })}>
+                    <Icon name="plus-circle" size={30} color="#1A478A" style={styles.icon} />
+                        <Text style={styles.cardText}>Adicionar integrante</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Excluir', { userId, selectedTurno })}>
-                        <Text style={styles.text}>Excluir integrante</Text>
+                    <TouchableOpacity style={styles.cardd} onPress={() => navigation.navigate('Excluir', { userId, selectedTurno })}>
+                    <Icon name="trash" size={30} color="#1A478A" style={styles.icon} />
+                        <Text style={styles.cardText}>Excluir integrante</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Cadastrar', { userId, selectedTurno })}>
-                        <Text style={styles.text}>Cadastrar equipe</Text>
+                    <TouchableOpacity style={styles.cardd} onPress={() => navigation.navigate('Cadastrar', { userId, selectedTurno })}>
+                    <Icon name="users" size={30} color="#1A478A" style={styles.icon} />
+                        <Text style={styles.cardText}>Cadastrar equipe</Text>
                     </TouchableOpacity>
                 </SafeAreaView>
             </ScrollView>
+            
             <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('EquipesTela', { userId, selectedTurno })}>
                 <Text style={styles.texto}>Voltar para Equipes</Text>
             </TouchableOpacity>
@@ -227,6 +231,30 @@ const styles = StyleSheet.create({
         width: '98%', // Ajustado para ser responsivo
         maxWidth: 400, // Limite máximo
     },
+    
+    cardText: {
+        fontSize: 18,
+        color: '#1A478A',
+        fontWeight: "bold",
+      },
+
+    cardd: {
+        backgroundColor: '#f9f9f9',
+        padding: 50,
+        marginVertical: 10,
+        borderRadius: 10,
+        elevation: 4, // Para Android
+        shadowColor: '#000', // Para iOS
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '90%',
+      },
+      icon: {
+        marginRight: 10,
+      },
     ilustra: {
         width: '100%',
         height: height * 0.35, // Altura relativa à tela
