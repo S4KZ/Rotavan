@@ -1,14 +1,19 @@
 import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import Geocoder from "react-native-geocoding";
 import * as Location from 'expo-location';
 import { useEffect, useState, useRef } from "react";
 import MapViewDirections from 'react-native-maps-directions';
+import { useRoute } from '@react-navigation/native';
 
 export default function GoogleMapsScreen() {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
     const mapRef = useRef(null);
+    const route = useRoute();
+    const { userId } = route.params;
+    
 
     // Destino teste
     const [destino, setDestino] = useState({
@@ -16,7 +21,26 @@ export default function GoogleMapsScreen() {
         longitude: -45.20045729
     });
 
+    const handleAddressToCoordinates = async (address) => {
+        try {
+            const json = await Geocoder.from(address);
+            const location = json.results[0].geometry.location;
+            setDestino({
+                latitude: location.lat,
+                longitude: location.lng
+            });
+        } catch (error) {
+            console.warn(error);
+        }
+    };
+
+    useEffect(() => {
+        handleAddressToCoordinates("Rua José Elache 160, São Paulo, Brasil");
+    }, []);
+
     const GOOGLE_MAPS_APIKEY = "";
+
+    Geocoder.init(GOOGLE_MAPS_APIKEY);
 
     useEffect(() => {
         (async () => {
@@ -78,20 +102,20 @@ export default function GoogleMapsScreen() {
             >
                 <Marker
                     coordinate={{
-                        latitude: location.coords.latitude,
-                        longitude: location.coords.longitude,
+                        latitude: location?.coords.latitude || 0,
+                        longitude: location?.coords.longitude || 0,
                     }}
                 />
                 <Marker coordinate={destino} pinColor="blue" />
 
                 {/* Rota entre os dois destinos */}
-                <MapViewDirections
+                {/* <MapViewDirections
                     origin={location.coords}
                     destination={destino}
                     apikey={GOOGLE_MAPS_APIKEY}
                     strokeWidth={5}
                     strokeColor="blue"
-                />
+                /> */}
             </MapView>
         </View>
     );
