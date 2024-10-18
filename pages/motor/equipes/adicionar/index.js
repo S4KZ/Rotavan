@@ -3,14 +3,15 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput } from 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute } from '@react-navigation/native';
 import config from '../../../../config/config.json';
+import { Picker } from '@react-native-picker/picker'; // Importa o Picker
 
 export default function Adicionar() {
   const route = useRoute();
   const [email, setEmail] = useState(''); // Estado para armazenar o e-mail
+  const [selectedSchool, setSelectedSchool] = useState(''); // Estado para a escola e turno
 
   async function handleAdicionar() {
     const { userId } = route.params || {}; // Garante que userId é acessado de forma segura
-    //console.log(userId);
 
     try {
       let reqs = await fetch(config.urlRootNode + '/add', {
@@ -22,13 +23,13 @@ export default function Adicionar() {
         body: JSON.stringify({
           motId: userId, // id do motorista
           email: email, // Adiciona o e-mail ao corpo da requisição
+          schoolTurno: selectedSchool, // Adiciona a escola e o turno selecionado
         }),
       });
       let ress = await reqs.json();
-     // console.log(ress);
-      if(ress.msg === 'carregou'){
+      if (ress.msg === 'carregou') {
         alert('Adicionado com sucesso!');
-      }else{
+      } else {
         alert('Erro ao adicionar!');
       }
     } catch (error) {
@@ -39,12 +40,28 @@ export default function Adicionar() {
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
-
         <Text style={[styles.title, { color: '#1A478A' }]}>Adicionar um novo integrante</Text>
+
+        {/* Envolve o Picker dentro de uma View com borda */}
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={selectedSchool}
+            style={styles.picker}
+            onValueChange={(itemValue) => setSelectedSchool(itemValue)}
+          >
+            <Picker.Item label="Selecione o endereço e turno" value="" />
+            <Picker.Item label="Escola 1 - Turno Manhã" value="escola1-manhã" />
+            <Picker.Item label="Escola 1 - Turno Tarde" value="escola1-tarde" />
+            <Picker.Item label="Escola 1 - Turno Noite" value="escola1-noite" />
+            <Picker.Item label="Escola 2 - Turno Manhã" value="escola2-manhã" />
+            <Picker.Item label="Escola 2 - Turno Tarde" value="escola2-tarde" />
+            <Picker.Item label="Escola 2 - Turno Noite" value="escola2-noite" />
+          </Picker>
+        </View>
 
         <TextInput
           style={styles.input}
-          placeholder=" Email do integrante:"
+          placeholder="Email do integrante:"
           value={email} // Valor do TextInput
           onChangeText={setEmail} // Atualiza o estado com o valor inserido
         />
@@ -76,22 +93,34 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     borderRadius: 8,
-    height: 40,
+  
     width: 350,
     top: 200,
     marginBottom: 60,
   },
+  // Estilo da View ao redor do Picker para adicionar borda
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: '#1A478A',
+    borderRadius: 8,
+    marginBottom: 20,
+    width: 350,
+    top: 200,
+  },
+  picker: {
+    height: 50,
+    width: '100%',
+  },
   botaoConf: {
-    width: 290, // largura do botão quadrado
-    height: 50, // altura do botão quadrado
-    backgroundColor: '#1A478A', // cor de fundo do botão
+    width: 290,
+    height: 50,
+    backgroundColor: '#1A478A',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    marginHorizontal: 25, // bordas arredondadas
-    // colocar sombras
+    marginHorizontal: 25,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 15 },
     shadowOpacity: 0.8,
@@ -102,8 +131,8 @@ const styles = StyleSheet.create({
     top: 170,
   },
   texto: {
-    color: '#F6B628', // cor do texto
-    fontSize: 20, // tamanho do texto
-    fontWeight: 'bold', // negrito do texto
+    color: '#F6B628',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });

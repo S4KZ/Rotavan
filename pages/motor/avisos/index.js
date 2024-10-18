@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert,Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import config from '../../../config/config.json';
 
 import Enviar from './enviar';
+
+const ilustra = require('../../../assets/icons/aviso.png');
 
 function Tela() {
   const navigation = useNavigation();
@@ -25,7 +27,6 @@ function Tela() {
     return unsubscribe;
   }, [userId, navigation]);
 
-  // Função para buscar os avisos do servidor
   const handleAvisos = async (userId) => {
     try {
       const response = await fetch(config.urlRootNode + '/avisos', {
@@ -38,7 +39,7 @@ function Tela() {
       });
 
       if (!response.ok) {
-        throw new Error(`Erro: ${response.status}`); // Se o status não for OK, lançar erro
+        throw new Error(`Erro: ${response.status}`);
       }
 
       const data = await response.json();
@@ -52,7 +53,6 @@ function Tela() {
     }
   };
 
-  // Função para excluir um aviso
   const deleteAviso = async (avisoId) => {
     console.log(avisoId);
     const res = await fetch(config.urlRootNode + '/delAvisos', {
@@ -63,18 +63,15 @@ function Tela() {
       },
       body: JSON.stringify({ avisoId }),
     });
-    // console.log(res.status);
-    const data = await res.json(); // pega a resposta e vira em json
+    const data = await res.json();
     console.log(data.tipo);
-    
-    if(data){
-      alert(data.tipo);
-      handleAvisos(userId); // Atualiza a lista de avisos após a exclusão
-    }
 
+    if (data) {
+      alert(data.tipo);
+      handleAvisos(userId);
+    }
   };
 
-  // Confirmar exclusão
   const confirmDelete = (avisoId) => {
     Alert.alert(
       'Excluir aviso',
@@ -89,29 +86,33 @@ function Tela() {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.mgS}>
-        <View style={styles.container}>
-          <Text style={styles.title}>Avisos</Text>
-          <View style={styles.row2}>
-            <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('Enviar')}>
-              <Icon name="file-text-o" size={35} color="#1A478A" style={styles.icon} />
-              <Text style={styles.subtitle}>Digite aqui</Text>
-            </TouchableOpacity>
-          </View>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        
+        <Image source={ilustra} style={styles.ilustra} />
 
-          <Text style={styles.title}>Já enviados</Text>
+
+        <View style={styles.box3}>
+          <Text style={styles.title}>Avisos</Text>
+
+          <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('Enviar')}>
+            <Icon name="file-text-o" size={35} color="#FFF" />
+            <Text style={styles.addButtonText}>Digite aqui um novo aviso</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.subtitle}>Já enviados</Text>
 
           {avisos.length > 0 ? (
             avisos.map((aviso, index) => (
-              <View style={styles.row2} key={index}>
-                <TouchableOpacity style={styles.item}>
+              <View style={styles.card} key={index}>
+                <View style={styles.cardContent}>
                   <Icon name="exclamation-circle" size={28} color="#1A478A" style={styles.icon} />
-                  <Text style={styles.subtitle}>{aviso.avTitulo}</Text>
-                </TouchableOpacity>
-                <Text style={styles.paragraph}>{aviso.avAss}</Text>
-                <Text style={styles.paragraphh}>{aviso.avData}</Text>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.cardTitle}>{aviso.avTitulo}</Text>
+                    <Text style={styles.cardDescription}>{aviso.avAss}</Text>
+                    <Text style={styles.cardDate}>{aviso.avData}</Text>
+                  </View>
+                </View>
 
-                {/* Botão de excluir */}
                 <TouchableOpacity style={styles.deleteButton} onPress={() => confirmDelete(aviso.avId)}>
                   <Icon name="trash" size={28} color="#FF0000" />
                   <Text style={styles.deleteText}>Excluir</Text>
@@ -119,7 +120,7 @@ function Tela() {
               </View>
             ))
           ) : (
-            <Text style={styles.title}>Não há avisos enviados</Text>
+            <Text style={styles.noAvisos}>Não há avisos enviados</Text>
           )}
         </View>
       </ScrollView>
@@ -136,13 +137,13 @@ export default function EnviarNav() {
     <Stack.Navigator>
       <Stack.Screen
         initialParams={{ userId }}
-        name='Tela'
+        name="Tela"
         component={Tela}
         options={{ headerShown: false }}
       />
       <Stack.Screen
         initialParams={{ userId }}
-        name='Enviar'
+        name="Enviar"
         component={Enviar}
         options={{ headerShown: false }}
       />
@@ -153,73 +154,124 @@ export default function EnviarNav() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ffff',
-  },
-  mgS: {
-    marginBottom: 100,
-  },
-  title: {
-    fontSize: 25,
-    color: '#FAB428',
-    fontWeight: 'bold',
-    marginTop: 20,
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 18,
     backgroundColor: '#fff',
-    borderRadius: 5,
   },
-  icon: {
-    marginRight: 15,
+  scrollContainer: {
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 10, // Adicionei para espaçar lateralmente
   },
-  subtitle: {
-    fontSize: 18,
-    color: '#1A478A',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  paragraph: {
-    fontSize: 15,
-    color: '#333',
-    lineHeight: 20,
-    textAlign: 'justify',
-    marginVertical: 5,
-    fontWeight: 'bold',
-  },
-  paragraphh: {
-    fontSize: 12,
-    color: '#1A478A',
-    fontWeight: 'bold',
-    textAlign: 'right',
-  },
-  row2: {
+  box3: {
     flexDirection: 'column',
     padding: 20,
-    borderRadius: 10,
+    backgroundColor: '#FFF',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowRadius: 1.3,
+    elevation: 25,
+    marginBottom: 30,
     top: 20,
-    width: '95%',
-    minHeight: 120,
-    maxHeight: 250,
-    backgroundColor: '#FFFFFF',
+    width: '100%',
+    maxWidth: 400,
+    alignItems: 'center', // Centraliza o conteúdo dentro do box
+  },
+  title: {
+    fontSize: 26,
+    color: '#FAB428',
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 20,
+    color: '#1A478A',
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  ilustra: {
+    width: '100%',
+    height: 290,
+    resizeMode: 'contain',
+    marginBottom: 10,
+  },
+  addButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1A478A',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 20,
+    width: '100%',
+    justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    elevation: 10,
-    marginBottom: 30,
+    elevation: 5,
+  },
+  addButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  card: {
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 50,
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+    alignItems: 'center', // Centraliza o conteúdo dentro do card
+  },
+  cardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  icon: {
+    marginRight: 15,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  cardTitle: {
+    fontSize: 18,
+    color: '#1A478A',
+    fontWeight: 'bold',
+  },
+  cardDescription: {
+    fontSize: 16,
+    color: '#333',
+    marginVertical: 5,
+  },
+  cardDate: {
+    fontSize: 14,
+    color: '#888',
+    textAlign: 'right',
   },
   deleteButton: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center', // Centraliza o botão excluir
     marginTop: 10,
   },
   deleteText: {
     marginLeft: 10,
     color: '#FF0000',
     fontWeight: 'bold',
+  },
+  noAvisos: {
+    fontSize: 16,
+    color: '#888',
+    marginTop: 20,
+    textAlign: 'center',
   },
 });

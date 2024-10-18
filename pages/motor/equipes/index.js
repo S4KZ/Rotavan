@@ -8,6 +8,7 @@ import config from '../../../config/config.json';
 import Adicionar from './adicionar';
 import Excluir from './excluir';
 import Turnos from './turnos';
+import Cadastrar from './cadastrar';
 
 const ilusEqui = require("../../../assets/icons/globo.png");
 
@@ -174,6 +175,10 @@ function Menu() {
                     <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Excluir', { userId, selectedTurno })}>
                         <Text style={styles.text}>Excluir integrante</Text>
                     </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('Cadastrar', { userId, selectedTurno })}>
+                        <Text style={styles.text}>Cadastrar equipe</Text>
+                    </TouchableOpacity>
                 </SafeAreaView>
             </ScrollView>
             <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.navigate('EquipesTela', { userId, selectedTurno })}>
@@ -194,6 +199,7 @@ export default function Equipes() {
             <Stack.Screen name="Menu" initialParams={{ userId }} component={Menu} options={{ headerShown: false }} />
             <Stack.Screen name='Adicionar' initialParams={{ userId }} component={Adicionar} options={{ headerShown: false }} />
             <Stack.Screen name='Excluir' initialParams={{ userId }} component={Excluir} options={{ headerShown: false }} />
+            <Stack.Screen name='Cadastrar' initialParams={{ userId }} component={Cadastrar} options={{ headerShown: false }} />
             <Stack.Screen name='Turnos' initialParams={{ userId }} component={Turnos} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
@@ -326,7 +332,7 @@ const styles = StyleSheet.create({
         marginBottom: 110,
     },
     botao: {
-        width: '80%', // Ajustado para ser responsivo
+        width: 250, // Ajustado para ser responsivo
         height: 50,
         backgroundColor: '#F6B628',
         justifyContent: 'center',
