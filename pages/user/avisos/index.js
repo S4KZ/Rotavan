@@ -3,14 +3,18 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'rea
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import config from '../../../config/config.json';
+import io from 'socket.io-client';
+
+
 
 function Tela() {
   const navigation = useNavigation();
   const route = useRoute();
   const { userId } = route.params || {};
-  console.log(userId);
+  // console.log(userId);
 
   const [avisos, setAvisos] = useState([]);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     if (userId) {
@@ -19,9 +23,33 @@ function Tela() {
     const unsubscribe = navigation.addListener('focus', () => {
       handleAvisos(userId);
     });
+  
+    // Conectar ao Socket.IO
+    const socketConnection = io(config.urlRootNode); // Substitua pelo seu servidor e porta
+    socketConnection.on('connect', () => {
+      console.log('Conectado ao servidor Socket.IO');
+    });
+  
+    // Captura do evento novoAviso
+    socketConnection.on('novoAviso', (novoAviso) => {
+      console.log('Novo aviso recebido:', novoAviso); // Adicione isto para depuração
+      setAvisos((prevAvisos) => [novoAviso, ...prevAvisos]); // Adiciona o novo aviso ao início da lista
+    });
+  
+     // Captura do evento avisoRemovido
+     socketConnection.on('avisoRemovido', (data) => {
+      console.log('Aviso removido:', data.avisoId);
+      setAvisos((prevAvisos) => prevAvisos.filter(aviso => aviso.avId !== data.avisoId)); // Remove o aviso da lista
+    });
 
-    return unsubscribe;
+    setSocket(socketConnection);
+
+    return () => {
+      socketConnection.disconnect(); // Desconecta ao desmontar o componente
+      unsubscribe();
+    };
   }, [userId, navigation]);
+  
 
   const handleAvisos = async (userId) => {
     try {
@@ -31,7 +59,7 @@ function Tela() {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ useId: userId }),
+        body: JSON.stringify({ useId: userId }), // Corrigir: useId para userId
       });
       const data = await response.json();
       if (data.results) {
@@ -43,6 +71,8 @@ function Tela() {
       console.error('Erro ao buscar avisos:', error);
     }
   };
+  
+  
 
   return (
     <View style={styles.container}>
