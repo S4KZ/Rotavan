@@ -1,31 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker'; // Importa o Picker
 import Icon from 'react-native-vector-icons/FontAwesome';
 import config from '../../../config/config.json';
+import io from 'socket.io-client'; // Importa o Socket.IO
+
 const ilusEqui = require("../../../assets/icons/ilustra-presen.png");
 
+
 export default function Equipes() {
-  const [selectedTurno, setSelectedTurno] = useState('');
-  const [turnos, setTurnos] = useState([]);
+  const [selectedTurno, setSelectedTurno] = useState('');//turno selecionado
+  const [turnos, setTurnos] = useState([]); //lista dos turnos
   const [pasIda, setPasIda] = useState([]); // Lista de quem vai na ida
   const [pasVolta, setPasVolta] = useState([]); // Lista de quem vai na volta
   const navigation = useNavigation();
   const route = useRoute();
   const { userId } = route.params || {};
+  const [socket, setSocket] = useState(null); // Estado para gerenciar o socket
+
 
   useEffect(() => {
-    if (userId) {
-      HandleTurno(userId);
-    }
-    const unsubscribe = navigation.addListener('focus', () => {
-      HandleTurno(userId);
+    const socketConnection = io(config.urlRootNode); 
+
+    HandleTurno(userId);
+
+    socketConnection.on('faltaida', () => {
+      console.log("Atualizando dados de ida devido a faltaida");
+      if (selectedTurno) {
+        HandleIda(selectedTurno);
+      }
     });
 
-    return unsubscribe;
-  }, [userId, navigation]);
+    socketConnection.on('faltavolta', () => {
+      console.log("Atualizando dados de volta devido a faltavolta");
+      if (selectedTurno) {
+        HandleVolta(selectedTurno);
+      }
+    });
+
+    socketConnection.on('Faltas', () => {
+      console.log("Atualizando dados de volta devido a faltavolta");
+      if (selectedTurno) {
+        HandleIda(selectedTurno);
+        HandleVolta(selectedTurno);
+      }
+    });
+
+    setSocket(socketConnection);
+
+    return () => {
+      socketConnection.disconnect();
+    };
+  }, [selectedTurno]);
+
+  
+
+
 
   // Função para buscar os turnos
   const HandleTurno = async (userId) => {
@@ -86,7 +118,6 @@ export default function Equipes() {
       });
       const data = await ress.json();
       const resultado = data.resultado;
-      //console.log('Dados da volta:', resultado); // Adicione esse console.log para imprimir os dados retornados pela API
       if (Array.isArray(resultado)) {
         setPasVolta(resultado);
       } else {
@@ -96,22 +127,29 @@ export default function Equipes() {
       console.error('Erro ao buscar dados da volta:', error);
     }
   };
-  
+
   const onTurnoChange = (itemValue) => {
     setSelectedTurno(itemValue);
     if (itemValue) {
-      HandleIda(itemValue);   // Atualiza a lista de ida
-      HandleVolta(itemValue); // Atualiza a lista de volta
-     // console.log('Turno selecionado:', itemValue); // Adicione esse console.log para imprimir o valor de itemValue
+      HandleIda(itemValue);
+      HandleVolta(itemValue);
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (userId && selectedTurno) {
+        HandleIda(selectedTurno);
+        HandleVolta(selectedTurno);
+      }
+    }, [userId, selectedTurno])
+  );
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <SafeAreaView style={styles.container}>
         <Image source={ilusEqui} style={styles.ilustra} />
         <View style={styles.box3}>
-
           <View style={styles.card}>
             <TouchableOpacity>
               <Text style={styles.title1}>Meus turnos</Text>
@@ -134,7 +172,6 @@ export default function Equipes() {
                 <Picker.Item label='Nenhum turno disponível' value='' />
               )}
             </Picker>
-
           </View>
 
           <View style={styles.box}>
@@ -173,6 +210,7 @@ export default function Equipes() {
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
@@ -184,9 +222,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFF',
   },
   ilustra: {
-    width: '80%', // ajuste para ser mais responsivo
+    width: '80%', 
     height: undefined,
-    aspectRatio: 1, // mantém a proporção da imagem
+    aspectRatio: 1, 
     resizeMode: 'contain',
     marginBottom: 10,
   },
@@ -202,7 +240,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1.3,
     elevation: 20,
     marginBottom: 30,
-    width: '97%', // ajuste para se adequar à tela
+    width: '97%',
   },
   box: {
     top: 25,
@@ -216,7 +254,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     marginBottom: 20,
-    width: '100%', // para preencher a largura do box3
+    width: '100%',
   },
   title: {
     fontSize: 22,
@@ -236,7 +274,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   botaoConf: {
-    width: '100%', // largura total do botão
+    width: '100%',
     height: 50,
     backgroundColor: '#1A478A',
     justifyContent: 'center',
@@ -266,10 +304,10 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginBottom: 10,
     top: 20,
-    width: '100%', // Ajustado para ser responsivo
+    width: '100%',
   },
   title1: {
-    fontSize: 20, // Reduzido
+    fontSize: 20, 
     left: 70,
     top: 20,
     color: '#F6B628',
@@ -277,7 +315,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   subtitle: {
-    fontSize: 14, // Reduzido
+    fontSize: 14, 
     top: 20,
     left: 70,
     color: '#1A478A',
