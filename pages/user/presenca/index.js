@@ -147,6 +147,18 @@ export default function ConfirmacaoVan() {
               <Text style={styles.cardText}>Você avisará o motorista que não irá com a van durante um tempo.</Text>
             </View>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.card, styles.card4]}
+            onPress={() => handleCardPress("Vou sumir", 3)}
+          >
+            <FontAwesome name="check" size={40} color="#fff" style={styles.cardIcon} />
+            <View style={styles.cardTextContainer}>
+              <Text style={styles.cardTitle}>Irei voltar</Text>
+              <Text style={styles.cardText}>Você avisará o motorista que  irá com a van durante um tempo.</Text>
+            </View>
+          </TouchableOpacity>
+
         </View>
       </View>
     </ScrollView>
@@ -224,6 +236,9 @@ const styles = StyleSheet.create({
   },
   card3: {
     backgroundColor: '#c22614',
+  },
+  card4: {
+    backgroundColor: '#1C8701',
     marginBottom: 100,
   },
   cardIcon: {

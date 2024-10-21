@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
-        marginHorizontal: 25,
+        marginHorizontal: 40,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.5,

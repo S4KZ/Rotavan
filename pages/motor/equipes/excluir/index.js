@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import config from '../../../../config/config.json'; // Ajuste o caminho conforme necessário
-
 
 export default function Excluir() {
   const [emails, setEmails] = useState([]);
   const [pasId, setPasId] = useState([]);
   const route = useRoute();
-  // Garante que userId e o itemValue(turno) é acessado de forma segura
-  const { userId, selectedTurno } = route.params || {}; 
-  // console.log(selectedTurno);
+  const navigation = useNavigation(); // Hook para navegação
+  const { userId, selectedTurno } = route.params || {};
 
   useEffect(() => {
     if (selectedTurno) {
-      fetchEmails(selectedTurno); // passando o id do turno
+      fetchEmails(selectedTurno);
     }
   }, [selectedTurno]);
 
-  async function fetchEmails(userId) { // passando para o função o id do turno
+  async function fetchEmails(userId) {
     try {
       const response = await fetch(config.urlRootNode + '/equipe', {
         method: 'POST',
@@ -28,7 +26,7 @@ export default function Excluir() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          pasIdEquipe: userId, //tá passando o id do turno
+          pasIdEquipe: userId,
         }),
       });
 
@@ -38,14 +36,13 @@ export default function Excluir() {
 
       const data = await response.json();
       const results = data.results || [];
-      setEmails(results.map(item => item.email)); // Atualiza o estado com os e-mails
-      setPasId(results.map(item => item.id)); // Armazena os IDs dos usuários
+      setEmails(results.map(item => item.email));
+      setPasId(results.map(item => item.id));
     } catch (error) {
       console.error('Erro ao buscar e-mails:', error);
     }
   }
 
-  // Função para mostrar o alerta de confirmação
   async function HandleExcluir(index) {
     Alert.alert(
       'Confirmação',
@@ -77,7 +74,6 @@ export default function Excluir() {
   
               if (ress.msg === 'removido') {
                 alert('Removido com sucesso!');
-                // Atualiza a lista de emails
                 const updatedEmails = emails.filter((_, i) => i !== index);
                 const updatedPasId = pasId.filter((_, i) => i !== index);
                 setEmails(updatedEmails);
@@ -94,10 +90,9 @@ export default function Excluir() {
       ],
     );
   }
-  
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <SafeAreaView style={styles.container}>
         <Text style={[styles.title, { color: '#1A478A' }]}>Excluir integrante</Text>
 
@@ -112,8 +107,8 @@ export default function Excluir() {
               emails.map((email, index) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={() => HandleExcluir(index)}  // Passa o índice correto
-                  style={[styles.item, { backgroundColor: '#FFFF' }]}
+                  onPress={() => HandleExcluir(index)}
+                  style={[styles.item, { backgroundColor: '#FFF' }]}
                 >
                   <View style={styles.infobox}>
                     <Text style={styles.info}>{email}</Text>
@@ -127,7 +122,7 @@ export default function Excluir() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.botaoConf}>
+        <TouchableOpacity style={styles.botaoConf} onPress={() => navigation.goBack()}>
           <Text style={styles.texto}>Voltar</Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -135,13 +130,17 @@ export default function Excluir() {
   );
 }
 
-
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    backgroundColor: '#FFF',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffff',
+    backgroundColor: '#FFF',
+    paddingBottom: 20, // Adiciona espaço inferior
   },
   row2: {
     flexDirection: 'column',

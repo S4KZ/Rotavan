@@ -60,7 +60,7 @@ export default function TabButton(){
               return (
                 <View style={styles.highlighWrapper}>
                  <TouchableOpacity style={styles.highlighted}>
-                <FontAwesome name="home" size={30} color="#1A478A"/>
+                <FontAwesome5 name="home" size={30} color="#1A478A"/>
                 </TouchableOpacity>
                  
                 </View>
@@ -68,7 +68,7 @@ export default function TabButton(){
             }
             return (
               <View style={styles.box}>
-               <FontAwesome name="home" size={30} color="#1A478A"/>
+               <FontAwesome5 name="home" size={30} color="#1A478A"/>
                 <Text style={styles.title}>Home</Text>
               </View>
             );
@@ -88,7 +88,7 @@ export default function TabButton(){
               return(
                 <View style={styles.highlighWrapper}>
                 <TouchableOpacity style={styles.highlighted}>
-               <FontAwesome name="users" size={30} color="#1A478A"/>
+               <FontAwesome5 name="users" size={30} color="#1A478A"/>
                </TouchableOpacity>
                 
                </View>
