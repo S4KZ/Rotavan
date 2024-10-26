@@ -84,6 +84,24 @@ export default function ConfirmacaoVan() {
         break;
       case 4:
         // console.log("voltou a escola");
+        try {
+          const faltas = await fetch(config.urlRootNode + '/retorno', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ useId: useId }),
+          });
+          const data = await faltas.json();
+          if (data) {
+            Alert.alert('Sucesso!', 'Já avisamos ao motorista que você voltou!');
+          } else {
+            Alert.alert('Erro!', 'Não conseguimos avisar ao motorista');
+          }
+        } catch (error) {
+          Alert.alert('Erro!', 'houve algum problema na comunição');
+        }
         break;
     }
   }
@@ -150,7 +168,7 @@ export default function ConfirmacaoVan() {
 
           <TouchableOpacity
             style={[styles.card, styles.card4]}
-            onPress={() => handleCardPress("Vou sumir", 3)}
+            onPress={() => handleCardPress("irei voltar", 4)}
           >
             <FontAwesome name="check" size={40} color="#fff" style={styles.cardIcon} />
             <View style={styles.cardTextContainer}>
