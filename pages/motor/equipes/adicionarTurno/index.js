@@ -1,14 +1,34 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const AdicionarTurno = () => {
   const [selectedTurno, setSelectedTurno] = useState('');
   const [horarioIda, setHorarioIda] = useState('');
   const [horarioVolta, setHorarioVolta] = useState('');
+  const [showIdaPicker, setShowIdaPicker] = useState(false);
+  const [showVoltaPicker, setShowVoltaPicker] = useState(false);
 
   const handleTurnoSelect = (turno) => {
     setSelectedTurno(turno);
+  };
+
+  // Função para exibir o DateTimePicker e atualizar o horário selecionado
+  const onChangeIda = (event, selectedDate) => {
+    setShowIdaPicker(false);
+    if (selectedDate) {
+      const formattedTime = selectedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setHorarioIda(formattedTime);
+    }
+  };
+
+  const onChangeVolta = (event, selectedDate) => {
+    setShowVoltaPicker(false);
+    if (selectedDate) {
+      const formattedTime = selectedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setHorarioVolta(formattedTime);
+    }
   };
 
   return (
@@ -52,22 +72,38 @@ const AdicionarTurno = () => {
       </View>
 
       {/* Inputs de Horários */}
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Horário de Ida"
-          placeholderTextColor="#999"
-          value={horarioIda}
-          onChangeText={setHorarioIda}
+      <Text style={styles.title}>Selecione o Horário do Turno</Text>
+
+      {/* Input para Horário de Ida */}
+      <TouchableOpacity onPress={() => setShowIdaPicker(true)} style={styles.input}>
+        <Text style={styles.inputText}>{horarioIda || 'Horário de Ida'}</Text>
+      </TouchableOpacity>
+
+      {/* Input para Horário de Volta */}
+      <TouchableOpacity onPress={() => setShowVoltaPicker(true)} style={styles.input}>
+        <Text style={styles.inputText}>{horarioVolta || 'Horário de Volta'}</Text>
+      </TouchableOpacity>
+
+      {/* DateTimePickers */}
+      {showIdaPicker && (
+        <DateTimePicker
+          mode="time"
+          is24Hour={true}
+          display="default"
+          value={new Date()}
+          onChange={onChangeIda}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Horário de Volta"
-          placeholderTextColor="#999"
-          value={horarioVolta}
-          onChangeText={setHorarioVolta}
+      )}
+
+      {showVoltaPicker && (
+        <DateTimePicker
+          mode="time"
+          is24Hour={true}
+          display="default"
+          value={new Date()}
+          onChange={onChangeVolta}
         />
-      </View>
+      )}
 
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.saveButtonText}>Salvar Turno</Text>

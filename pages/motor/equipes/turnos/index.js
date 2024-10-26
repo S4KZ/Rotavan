@@ -1,16 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import config from '../../../../config/config.json';
 import AdicionarTurno from '../adicionarTurno';
 import ExcluirTurno from '../excluirTurno';
 
 
 function Tela() {
   const navigation = useNavigation(); // Obtém o objeto de navegação
+  const route = useRoute();
+  const { userId } = route.params || {};
+  // console.log(userId);
+  const [turnos, setTurnos] = useState([]);
 
+  useEffect(() => {
+    if (userId) {
+      HandleTurno(userId);
+    }
+    const unsubscribe = navigation.addListener('focus', () => {
+      HandleTurno(userId);
+    });
+
+    return unsubscribe;
+  }, [userId, navigation]);
+
+
+
+  // Função para buscar os turnos
+  const HandleTurno = async (userId) => {
+    try {
+      const ress = await fetch(config.urlRootNode + '/turno', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: userId }),
+      });
+      const data = await ress.json();
+      const turnos = data.turnos;
+      if (Array.isArray(turnos)) {
+        setTurnos(turnos);
+      } else {
+        console.error('A resposta não contém uma array de resultados.');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar turnos:', error);
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Adicione ou exclua seu turno</Text>
@@ -18,7 +57,7 @@ function Tela() {
       {/* Card para adicionar um novo turno */}
       <TouchableOpacity
         style={styles.card}
-        onPress={() => navigation.navigate('AdicionarTurno')} 
+        onPress={() => navigation.navigate('AdicionarTurno')}
       >
         <Icon name="plus-circle" size={30} color="#1A478A" style={styles.icon} />
         <Text style={styles.cardText}>Adicionar Novo Turno</Text>
@@ -27,7 +66,7 @@ function Tela() {
       {/* Card para excluir um turno */}
       <TouchableOpacity
         style={styles.card}
-        onPress={() => navigation.navigate('ExcluirTurno')} 
+        onPress={() => navigation.navigate('ExcluirTurno')}
       >
         <Icon name="trash" size={30} color="#1A478A" style={styles.icon} />
         <Text style={styles.cardText}>Excluir Turno</Text>
@@ -36,7 +75,30 @@ function Tela() {
       <Text style={styles.title1}>Turnos já adicionados</Text>
 
       {/* Cards para os turnos já adicionados */}
-      <TouchableOpacity
+      {turnos.length > 0 ? (
+        turnos.map((turno, index) => {
+          // Escolha o ícone com base no valor do turPeriodo
+          const iconName = turno.turPeriodo === "Manhã" ? "sun-o" :
+            turno.turPeriodo === "Tarde" ? "cloud" :
+              turno.turPeriodo === "Noite" ? "moon-o" : "question"; // Ícone padrão caso o período seja desconhecido
+
+          return (
+            <TouchableOpacity
+              key={index}
+              style={styles.card}
+              onPress={() => console.log(`${turno.turPeriodo} clicado`)}
+            >
+              <Icon name={iconName} size={30} color="#FFC107" style={styles.icon} />
+              <Text style={styles.cardText}>{turno.turPeriodo}</Text>
+            </TouchableOpacity>
+          );
+        })
+      ) : (
+        <Text style={styles.cardText}>Nada encontrado</Text>
+      )}
+
+
+      {/* <TouchableOpacity
         style={styles.card}
         onPress={() => console.log('Manhã clicado')}
       >
@@ -58,7 +120,7 @@ function Tela() {
       >
         <Icon name="moon-o" size={30} color="#3F51B5" style={styles.icon} />
         <Text style={styles.cardText}>Turno Noite</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -69,11 +131,11 @@ export default function Turnos() {
   const { userId } = route.params || {};
 
   return (
-      <Stack.Navigator>
-        <Stack.Screen initialParams={{ userId }} name="Tela" component={Tela}options={{ headerShown: false }}/>
-          <Stack.Screen name='AdicionarTurno' initialParams={{ userId }} component={AdicionarTurno} options={{ headerShown: false }} />
-          <Stack.Screen name='ExcluirTurno' initialParams={{ userId }} component={ExcluirTurno} options={{ headerShown: false }} />
-      </Stack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen initialParams={{ userId }} name="Tela" component={Tela} options={{ headerShown: false }} />
+      <Stack.Screen name='AdicionarTurno' initialParams={{ userId }} component={AdicionarTurno} options={{ headerShown: false }} />
+      <Stack.Screen name='ExcluirTurno' initialParams={{ userId }} component={ExcluirTurno} options={{ headerShown: false }} />
+    </Stack.Navigator>
   );
 }
 

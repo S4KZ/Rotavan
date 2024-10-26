@@ -1,9 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import config from '../../../../config/config.json';
 
 const ExcluirTurno = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { userId } = route.params || {};
   const [selectedTurno, setSelectedTurno] = useState(null);
+  const [turnos, setTurnos] = useState([]);
+
+  useEffect(() => {
+    if (userId) {
+      HandleTurno(userId);
+    }
+  }, [userId]);
+
+  // Função para buscar os turnos
+  const HandleTurno = async (userId) => {
+    try {
+      const ress = await fetch(config.urlRootNode + '/turno', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: userId }),
+      });
+      const data = await ress.json();
+      const turnos = data.turnos;
+      if (Array.isArray(turnos)) {
+        setTurnos(turnos);
+      } else {
+        console.error('A resposta não contém uma array de resultados.');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar turnos:', error);
+    }
+  };
 
   const handleExcluirTurno = () => {
     if (!selectedTurno) {
@@ -25,41 +60,33 @@ const ExcluirTurno = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Excluir Turno</Text>
 
-      {/* Botões para selecionar o turno */}
-      <TouchableOpacity
-        style={[
-          styles.card,
-          selectedTurno === 'Manhã' && styles.selectedCard
-        ]}
-        onPress={() => setSelectedTurno('Manhã')}
-      >
-        <Icon name="sun-o" size={30} color="#FFC107" style={styles.icon} />
-        <Text style={styles.cardText}>Turno Manhã</Text>
-      </TouchableOpacity>
+      {/* Renderizando os turnos com ícones */}
+      {turnos.length > 0 ? (
+        turnos.map((turno, index) => {
+          // Escolhendo o ícone com base no valor do turPeriodo
+          const iconName = turno.turPeriodo === "Manhã" ? "sun-o" :
+            turno.turPeriodo === "Tarde" ? "cloud" :
+            turno.turPeriodo === "Noite" ? "moon-o" : "question"; // Ícone padrão caso o período seja desconhecido
 
-      <TouchableOpacity
-        style={[
-          styles.card,
-          selectedTurno === 'Tarde' && styles.selectedCard
-        ]}
-        onPress={() => setSelectedTurno('Tarde')}
-      >
-        <Icon name="cloud" size={30} color="#FF9800" style={styles.icon} />
-        <Text style={styles.cardText}>Turno Tarde</Text>
-      </TouchableOpacity>
+          return (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.card,
+                selectedTurno === turno.turPeriodo && styles.selectedCard // Aplica estilo de seleção
+              ]}
+              onPress={() => setSelectedTurno(turno.turPeriodo)}
+            >
+              <Icon name={iconName} size={30} color="#FFC107" style={styles.icon} />
+              <Text style={styles.cardText}>{turno.turPeriodo}</Text>
+            </TouchableOpacity>
+          );
+        })
+      ) : (
+        <Text style={styles.cardText}>Nada encontrado</Text>
+      )}
 
-      <TouchableOpacity
-        style={[
-          styles.card,
-          selectedTurno === 'Noite' && styles.selectedCard
-        ]}
-        onPress={() => setSelectedTurno('Noite')}
-      >
-        <Icon name="moon-o" size={30} color="#3F51B5" style={styles.icon} />
-        <Text style={styles.cardText}>Turno Noite</Text>
-      </TouchableOpacity>
-
-      {/* Botão para excluir o turno */}
+      {/* Botão para excluir o turno selecionado */}
       <TouchableOpacity
         style={styles.excluirButton}
         onPress={handleExcluirTurno}
