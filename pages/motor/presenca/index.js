@@ -15,6 +15,8 @@ export default function Equipes() {
   const [turnos, setTurnos] = useState([]); //lista dos turnos
   const [pasIda, setPasIda] = useState([]); // Lista de quem vai na ida
   const [pasVolta, setPasVolta] = useState([]); // Lista de quem vai na volta
+  const [embarque, setEmbarque] = useState([]);
+  const [desembarque, setDesembarque] = useState([]);
   const navigation = useNavigation();
   const route = useRoute();
   const { userId } = route.params || {};
@@ -56,9 +58,6 @@ export default function Equipes() {
   }, [selectedTurno]);
 
 
-
-
-
   // Função para buscar os turnos
   const HandleTurno = async (userId) => {
     try {
@@ -98,14 +97,14 @@ export default function Equipes() {
       if (Array.isArray(resultado)) {
         setPasIda(resultado);
 
-        const embarque = resultado.map((item) => ({
+        const embarqueData = resultado.map((item) => ({
           endereco: item.EnderecoEmbarque,
           cep: item.CepEmbarque,
           bairro: item.BairroEmbarque,
           cidade: item.CidadeEmbarque,
           uf: item.UfEmbarque,
         }));
-
+        setEmbarque(embarqueData);
         // Acessando as informações
         // embarque.forEach((local) => {
         //   console.log(`Endereço: ${local.endereco}`);
@@ -140,16 +139,14 @@ export default function Equipes() {
         setPasVolta(resultado);
         // console.log("TODOS QUE VÃO VOLTAR");
 
-
-
-       
-        const desembarque = resultado.map((item) => ({
+        const desembarqueData = resultado.map((item) => ({
           endereco: item.EnderecoDesembarque,
           cep: item.CepDesembarque,
           bairro: item.BairroDesembarque,
           cidade: item.CidadeDesembarque,
           uf: item.UfDesembarque,
         }));
+        setDesembarque(desembarqueData);
 
         // Acessando as informações
         // desembarque.forEach((local) => {
@@ -165,6 +162,53 @@ export default function Equipes() {
       }
     } catch (error) {
       console.error('Erro ao buscar dados da volta:', error);
+    }
+  };
+
+  const StartRotaIda = async () => {
+    console.log('Dados de embarque enviados:', embarque);
+    if (embarque.length === 0) {
+        console.error('Nenhum dado de embarque para enviar');
+        return;
+    }
+
+    try {
+        const response = await fetch(config.urlRootNode + '/getida', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ embarque }),
+        });
+
+        // Verifique o status da resposta
+        if (!response.ok) {
+            const errorText = await response.text(); // Pega o texto da resposta
+            console.error('Erro na resposta do servidor:', errorText);
+            return; // Retorna caso a resposta não seja OK
+        }
+
+        const responseData = await response.json();
+        console.log('Resposta do servidor:', responseData);
+    } catch (error) {
+        console.error('Erro ao iniciar rota:', error);
+    }
+};
+
+
+  const StartRotaVolta = async () => {
+    try {
+      const pegaEndVolta = await fetch(config.urlRootNode + '/getvolta', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ desembarque: desembarque }) // Aqui `embarque` estará acessível
+      });
+    } catch (error) {
+      console.error('Erro ao iniciar rota:', error);
     }
   };
 
@@ -242,7 +286,7 @@ export default function Equipes() {
             )}
           </View>
 
-          <TouchableOpacity style={styles.botaoConf}>
+          <TouchableOpacity style={styles.botaoConf} onPress={StartRotaIda}>
             <Text style={styles.texto}>Iniciar rota</Text>
           </TouchableOpacity>
         </View>
