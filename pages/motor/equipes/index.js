@@ -158,6 +158,7 @@ function EquipesTela() {
     );
 }
 
+
 function Menu() {
     const navigation = useNavigation();
     const route = useRoute();

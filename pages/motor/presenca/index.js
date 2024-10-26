@@ -1,259 +1,375 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useNavigation, useRoute } from '@react-navigation/native';
-const ilusConfi = require("../../../assets/icons/presen.png");
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker'; // Importa o Picker
+import Icon from 'react-native-vector-icons/FontAwesome';
 import config from '../../../config/config.json';
+import io from 'socket.io-client'; // Importa o Socket.IO
 
-export default function ConfirmacaoVan() {
+const ilusEqui = require("../../../assets/icons/ilustra-presen.png");
+
+
+export default function Equipes() {
+  const [selectedTurno, setSelectedTurno] = useState('');//turno selecionado
+  const [turnos, setTurnos] = useState([]); //lista dos turnos
+  const [pasIda, setPasIda] = useState([]); // Lista de quem vai na ida
+  const [pasVolta, setPasVolta] = useState([]); // Lista de quem vai na volta
   const navigation = useNavigation();
   const route = useRoute();
   const { userId } = route.params || {};
-  console.log(userId);
-
-  const handleCase = async (useId, Case) => {
-    // console.log(useId, Case);
-    switch (Case) {
-      case 1:
-        // console.log("n vo");
-        try {
-          const faltas = await fetch(config.urlRootNode + '/faltaIda', {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ useId: useId }),
-          });
-          const data = await faltas.json();
-          if (data) {
-            Alert.alert('Sucesso!', 'Já avisamos ao motorista que você não irá na ida!');
-          } else {
-            Alert.alert('Erro!', 'Não conseguimos avisar ao motorista');
-          }
-        } catch (error) {
-          Alert.alert('Erro!', 'houve algum problema na comunição');
-        }
+  const [socket, setSocket] = useState(null); // Estado para gerenciar o socket
 
 
-        break;
-      case 2:
-        // console.log("n volto");
-        try {
-          const faltas = await fetch(config.urlRootNode + '/faltaVolta', {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ useId: useId }),
-          });
-          const data = await faltas.json();
-          if (data) {
-            Alert.alert('Sucesso!', 'Já avisamos ao motorista que você não irá na volta!');
-          } else {
-            Alert.alert('Erro!', 'Não conseguimos avisar ao motorista');
-          }
-        } catch (error) {
-          Alert.alert('Erro!', 'houve algum problema na comunição');
-        }
+  useEffect(() => {
+    const socketConnection = io(config.urlRootNode);
+
+    HandleTurno(userId);
+
+    socketConnection.on('faltaida', () => {
+      console.log("Atualizando dados de ida devido a faltaida");
+      if (selectedTurno) {
+        HandleIda(selectedTurno);
+      }
+    });
+
+    socketConnection.on('faltavolta', () => {
+      console.log("Atualizando dados de volta devido a faltavolta");
+      if (selectedTurno) {
+        HandleVolta(selectedTurno);
+      }
+    });
+
+    socketConnection.on('Faltas', () => {
+      console.log("Atualizando dados de volta devido a faltavolta");
+      if (selectedTurno) {
+        HandleIda(selectedTurno);
+        HandleVolta(selectedTurno);
+      }
+    });
+
+    setSocket(socketConnection);
+
+    return () => {
+      socketConnection.disconnect();
+    };
+  }, [selectedTurno]);
 
 
 
-        break;
-      case 3:
-        // console.log("vo sumi");
-        try {
-          const faltas = await fetch(config.urlRootNode + '/faltas', {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ useId: useId }),
-          });
-          const data = await faltas.json();
-          if (data) {
-            Alert.alert('Sucesso!', 'Já avisamos ao motorista que você não irá por um tempo...');
-          } else {
-            Alert.alert('Erro!', 'Não conseguimos avisar ao motorista');
-          }
-        } catch (error) {
-          Alert.alert('Erro!', 'houve algum problema na comunição');
-        }
-        break;
-      case 4:
-        // console.log("voltou a escola");
-        break;
+
+
+  // Função para buscar os turnos
+  const HandleTurno = async (userId) => {
+    try {
+      const ress = await fetch(config.urlRootNode + '/turno', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: userId }),
+      });
+      const data = await ress.json();
+      const turnos = data.turnos;
+      if (Array.isArray(turnos)) {
+        setTurnos(turnos);
+      } else {
+        console.error('A resposta não contém uma array de resultados.');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar turnos:', error);
     }
-  }
-
-  const handleCardPress = (title, Case) => {
-    Alert.alert(
-      'Confirmação',
-      `Você tem certeza que deseja selecionar: ${title}?`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Confirmar', onPress: () => handleCase(userId, Case) },
-      ]
-    );
   };
 
+  // Função para buscar os alunos da ida com base no turno selecionado
+  const HandleIda = async (idTurno) => {
+    try {
+      const ress = await fetch(config.urlRootNode + '/ida', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ idturno: idTurno }),
+      });
+      const data = await ress.json();
+      const resultado = data.resultado;
+      if (Array.isArray(resultado)) {
+        setPasIda(resultado);
+
+        const embarque = resultado.map((item) => ({
+          endereco: item.EnderecoEmbarque,
+          cep: item.CepEmbarque,
+          bairro: item.BairroEmbarque,
+          cidade: item.CidadeEmbarque,
+          uf: item.UfEmbarque,
+        }));
+
+        // Acessando as informações
+        // embarque.forEach((local) => {
+        //   console.log(`Endereço: ${local.endereco}`);
+        //   console.log(`CEP: ${local.cep}`);
+        //   console.log(`Bairro: ${local.bairro}`);
+        //   console.log(`Cidade: ${local.cidade}`);
+        //   console.log(`UF: ${local.uf}`);
+        // });
+
+      } else {
+        console.error('A resposta não contém uma array de resultados.');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados da ida:', error);
+    }
+  };
+
+  // Função para buscar os alunos da volta com base no turno selecionado
+  const HandleVolta = async (idTurno) => {
+    try {
+      const ress = await fetch(config.urlRootNode + '/volta', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ idturno: idTurno }),
+      });
+      const data = await ress.json();
+      const resultado = data.resultado;
+      if (Array.isArray(resultado)) {
+        setPasVolta(resultado);
+        // console.log("TODOS QUE VÃO VOLTAR");
+
+
+
+       
+        const desembarque = resultado.map((item) => ({
+          endereco: item.EnderecoDesembarque,
+          cep: item.CepDesembarque,
+          bairro: item.BairroDesembarque,
+          cidade: item.CidadeDesembarque,
+          uf: item.UfDesembarque,
+        }));
+
+        // Acessando as informações
+        // desembarque.forEach((local) => {
+        //   console.log(`Endereço: ${local.endereco}`);
+        //   console.log(`CEP: ${local.cep}`);
+        //   console.log(`Bairro: ${local.bairro}`);
+        //   console.log(`Cidade: ${local.cidade}`);
+        //   console.log(`UF: ${local.uf}`);
+        // });
+
+      } else {
+        console.error('A resposta não contém uma array de resultados.');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados da volta:', error);
+    }
+  };
+
+  const onTurnoChange = (itemValue) => {
+    setSelectedTurno(itemValue);
+    if (itemValue) {
+      HandleIda(itemValue);
+      HandleVolta(itemValue);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (userId && selectedTurno) {
+        HandleIda(selectedTurno);
+        HandleVolta(selectedTurno);
+      }
+    }, [userId, selectedTurno])
+  );
+
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Image source={ilusConfi} style={styles.ilustra} />
-        <View style={styles.box}>
-          <Text style={styles.title1}>Confirme sua presença conforme as opções abaixo!</Text>
-          <Text style={styles.title}>🚨 ATENÇÃO!</Text>
-          <Text style={styles.subtitle}>
-            Se você não irá na ida e nem na volta, selecione as opções
-            <Text style={styles.highlight}> "Não vou" </Text> e
-            <Text style={styles.highlight}> "Não volto"!</Text>
-          </Text>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <SafeAreaView style={styles.container}>
+        <Image source={ilusEqui} style={styles.ilustra} />
+        <View style={styles.box3}>
+          <View style={styles.card}>
+            <TouchableOpacity>
+              <Text style={styles.title1}>Meus turnos</Text>
+              <Text style={styles.subtitle}>Consulte aqui seus turnos!</Text>
+              <Icon name="clock-o" size={50} color="#1A478A" style={styles.item1} />
+            </TouchableOpacity>
 
-          {/* Card 1 */}
-          <TouchableOpacity
-            style={[styles.card, styles.card1]}
-            onPress={() => handleCardPress("Não vou", 1)}
-          >
-            <FontAwesome name="thumbs-down" size={40} color="#fff" style={styles.cardIcon} />
-            <View style={styles.cardTextContainer}>
-              <Text style={styles.cardTitle}>Não vou</Text>
-              <Text style={styles.cardText}>Você avisará o motorista que não irá com a van na ida.</Text>
-            </View>
+            {/* Picker para selecionar o turno */}
+            <Picker
+              selectedValue={selectedTurno}
+              style={styles.picker}
+              onValueChange={(itemValue) => onTurnoChange(itemValue)} // Chama a função quando um turno é selecionado
+            >
+              <Picker.Item label='Nenhum turno selecionado' value='' />
+              {turnos.length > 0 ? (
+                turnos.map((turno, index) => (
+                  <Picker.Item key={index} label={turno.turPeriodo} value={turno.turId} />
+                ))
+              ) : (
+                <Picker.Item label='Nenhum turno disponível' value='' />
+              )}
+            </Picker>
+          </View>
+
+          <View style={styles.box}>
+            <Text style={styles.title}>Veja quem irá hoje na ida</Text>
+            <Text style={styles.label}>Usuário</Text>
+            {pasIda.length > 0 ? (
+              pasIda.map((pas, index) => (
+                <TouchableOpacity key={index}>
+                  <Text style={styles.info}>{pas.useNome}</Text>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={styles.info}>Nenhum passageiro na ida.</Text>
+            )}
+          </View>
+
+          <View style={styles.box}>
+            <Text style={styles.title}>Veja quem irá voltar hoje</Text>
+            <Text style={styles.label}>Usuário</Text>
+            {pasVolta.length > 0 ? (
+              pasVolta.map((pas, index) => (
+                <TouchableOpacity key={index}>
+                  <Text style={styles.info}>{pas.useNome}</Text>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={styles.info}>Nenhum passageiro na volta.</Text>
+            )}
+          </View>
+
+          <TouchableOpacity style={styles.botaoConf}>
+            <Text style={styles.texto}>Iniciar rota</Text>
           </TouchableOpacity>
-
-          {/* Card 2 */}
-          <TouchableOpacity
-            style={[styles.card, styles.card2]}
-            onPress={() => handleCardPress("Não volto", 2)}
-          >
-            <FontAwesome name="bullhorn" size={40} color="#fff" style={styles.cardIcon} />
-            <View style={styles.cardTextContainer}>
-              <Text style={styles.cardTitle}>Não volto</Text>
-              <Text style={styles.cardText}>Você avisará o motorista que não irá com a van na volta.</Text>
-            </View>
-          </TouchableOpacity>
-
-          {/* Card 3 */}
-          <TouchableOpacity
-            style={[styles.card, styles.card3]}
-            onPress={() => handleCardPress("Vou sumir", 3)}
-          >
-            <FontAwesome name="times" size={40} color="#fff" style={styles.cardIcon} />
-            <View style={styles.cardTextContainer}>
-              <Text style={styles.cardTitle}>Faltas consecutivas</Text>
-              <Text style={styles.cardText}>Você avisará o motorista que não irá com a van durante um tempo.</Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.card, styles.card4]}
-            onPress={() => handleCardPress("Vou sumir", 3)}
-          >
-            <FontAwesome name="check" size={40} color="#fff" style={styles.cardIcon} />
-            <View style={styles.cardTextContainer}>
-              <Text style={styles.cardTitle}>Irei voltar</Text>
-              <Text style={styles.cardText}>Você avisará o motorista que  irá com a van durante um tempo.</Text>
-            </View>
-          </TouchableOpacity>
-
         </View>
-      </View>
+      </SafeAreaView>
     </ScrollView>
   );
 }
 
+
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
   },
-  ilustra: {
-    width: 280,
-    height: 280,
-    resizeMode: 'contain',
-    alignSelf: 'center',
-    marginVertical: 20,
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#FFFF',
   },
-  box: {
-    padding: 40,
+  ilustra: {
+    width: '80%',
+    height: undefined,
+    aspectRatio: 1,
+    resizeMode: 'contain',
+    marginBottom: 10,
+  },
+  box3: {
+    flexDirection: 'column',
+    padding: 20,
+    borderRadius: 10,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     backgroundColor: '#FFF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowRadius: 1.3,
-    elevation: 25,
+    elevation: 20,
     marginBottom: 30,
+    width: '97%',
+  },
+  box: {
+    top: 25,
+    backgroundColor: "#FFF",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    marginBottom: 20,
+    width: '100%',
   },
   title: {
-    fontSize: 18,
-    color: '#c2272d',
-    fontWeight: 'bold',
-    padding: 10,
-    textAlign: 'center',
-  },
-  title1: {
-    fontSize: 18,
+    fontSize: 22,
     color: '#F6B628',
-    fontWeight: 'bold',
-    padding: 10,
+    fontWeight: "bold",
+    paddingBottom: 10,
     textAlign: 'center',
-    letterSpacing: 1,
   },
-  subtitle: {
+  label: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#1A478A',
+  },
+  info: {
     fontSize: 16,
-    color: '#333',
-    paddingVertical: 10,
-    textAlign: 'center',
-    lineHeight: 24,
-    bottom: 15,
+    marginBottom: 10,
   },
-  highlight: {
+  botaoConf: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#1A478A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5,
+    marginBottom: 100,
+  },
+  texto: {
     color: '#F6B628',
+    fontSize: 20,
     fontWeight: 'bold',
   },
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 16,
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 5,
+    elevation: 5,
+    marginBottom: 10,
+    top: 20,
+    width: '100%',
   },
-  card1: {
-    backgroundColor: '#F6B628',
+  title1: {
+    fontSize: 20,
+    left: 70,
+    top: 20,
+    color: '#F6B628',
+    fontWeight: "bold",
+    textAlign: 'left',
   },
-  card2: {
-    backgroundColor: '#1A478A',
-  },
-  card3: {
-    backgroundColor: '#c22614',
-  },
-  card4: {
-    backgroundColor: '#1C8701',
-    marginBottom: 100,
-  },
-  cardIcon: {
-    marginRight: 16,
-  },
-  cardTextContainer: {
-    flex: 1,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  cardText: {
+  subtitle: {
     fontSize: 14,
-    color: '#fff',
+    top: 20,
+    left: 70,
+    color: '#1A478A',
+    fontWeight: "bold",
+    textAlign: 'left',
+  },
+  item1: {
+    flexDirection: 'row',
+    bottom: 30,
+    marginHorizontal: 10,
+  },
+  icon: {
+    marginRight: 10,
   },
 });
