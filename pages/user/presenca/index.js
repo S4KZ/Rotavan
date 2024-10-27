@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Alert, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 const ilusConfi = require("../../../assets/icons/presen.png");
 import config from '../../../config/config.json';
 import io from 'socket.io-client';
@@ -19,7 +19,11 @@ export default function ConfirmacaoVan() {
   // console.log("volta " + (status.pass ? status.pass.volta : "indefinido"));
   // console.log("chave " + (status.pass ? status.pass.chave : "indefinido"));
 
-
+  useFocusEffect(
+    React.useCallback(() => {
+      handleStatus(userId);
+    }, [userId])
+  );
   
 
   const handleStatus = async (userId) => {
