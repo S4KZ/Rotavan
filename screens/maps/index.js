@@ -6,13 +6,16 @@ import { useEffect, useState, useRef } from "react";
 import MapViewDirections from 'react-native-maps-directions';
 import { useRoute } from '@react-navigation/native';
 
-export default function GoogleMapsScreen() {
+export default function GoogleMapsScreen( pasIda, pasVolta) {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [loading, setLoading] = useState(true);
     const mapRef = useRef(null);
     const route = useRoute();
-    const { userId } = route.params;
+
+    console.log(pasIda);
+    console.log(pasVolta);
+
     
 
     // Destino teste
