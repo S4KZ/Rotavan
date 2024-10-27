@@ -1,14 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import config from '../../../../config/config.json';
 import { Picker } from '@react-native-picker/picker'; // Importa o Picker
 
 export default function Adicionar() {
+  const navigation = useNavigation();
   const route = useRoute();
+  const { userId } = route.params || {};
+  // console.log(userId);
   const [email, setEmail] = useState(''); // Estado para armazenar o e-mail
-  const [selectedSchool, setSelectedSchool] = useState(''); // Estado para a escola e turno
+  const [equipe, setEquipes] = useState('');
+  const [escola, setEscola] = useState('');
+
+  useEffect(() => {
+    if (userId) {
+        handleEquipe(userId);
+    }
+    const unsubscribe = navigation.addListener('focus', () => {
+        handleEquipe(userId);
+    });
+
+    return unsubscribe;
+}, [userId, navigation]);
+
+
+const handleEquipe = async (userId) => {
+  try {
+    const ress = await fetch(config.urlRootNode+'/selEquipe', {
+      method: 'POST',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',},
+          body: JSON.stringify({ id: userId }),
+    });
+    const data = await ress.json();
+    const equipes = data.results;
+     console.log(data);
+    if(Array.isArray(equipes)){
+      setEquipes(equipes);
+    }else {
+      console.error('A resposta não contém uma array de resultados.');
+  }
+
+  } catch (error) {
+    console.error('Erro ao buscar equipes:', error);
+  }
+}
+
+
+
+
 
   async function handleAdicionar() {
     const { userId } = route.params || {}; // Garante que userId é acessado de forma segura
@@ -21,9 +64,8 @@ export default function Adicionar() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          motId: userId, // id do motorista
           email: email, // Adiciona o e-mail ao corpo da requisição
-          schoolTurno: selectedSchool, // Adiciona a escola e o turno selecionado
+          equipe: escola, // Adiciona a escola e o turno selecionado
         }),
       });
       let ress = await reqs.json();
@@ -44,19 +86,26 @@ export default function Adicionar() {
 
         {/* Envolve o Picker dentro de uma View com borda */}
         <View style={styles.pickerContainer}>
+
+
           <Picker
-            selectedValue={selectedSchool}
+            selectedValue={escola}
             style={styles.picker}
-            onValueChange={(itemValue) => setSelectedSchool(itemValue)}
+            onValueChange={(itemValue) => setEscola(itemValue)}
           >
             <Picker.Item label="Selecione o endereço e turno" value="" />
-            <Picker.Item label="Escola 1 - Turno Manhã" value="escola1-manhã" />
-            <Picker.Item label="Escola 1 - Turno Tarde" value="escola1-tarde" />
-            <Picker.Item label="Escola 1 - Turno Noite" value="escola1-noite" />
-            <Picker.Item label="Escola 2 - Turno Manhã" value="escola2-manhã" />
-            <Picker.Item label="Escola 2 - Turno Tarde" value="escola2-tarde" />
-            <Picker.Item label="Escola 2 - Turno Noite" value="escola2-noite" />
+            {equipe.length > 0 ? (
+              equipe.map((item) => (
+                <Picker.Item label={item.nome_equipe + " - " + item.nome_turno} value={item.equipe_id} key={item.equipe_id} />
+              ))
+            ): (
+              <Picker.Item label="Carregando..." value="" />
+            )
+          }
+            
+
           </Picker>
+
         </View>
 
         <TextInput
