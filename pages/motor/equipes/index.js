@@ -116,7 +116,7 @@ function EquipesTela() {
                             <Picker.Item label='Nenhum turno selecionado' value='' />
                             {turnos.length > 0 ? (
                                 turnos.map((turno, index) => (
-                                    <Picker.Item key={index} label={turno.turPeriodo} value={turno.turId} />
+                                    <Picker.Item key={index} label={turno.turPeriodo + " - " + turno.turId} value={turno.turId} />
                                 ))
                             ) : (
                                 <Picker.Item label='Nenhum turno disponível' value='' />

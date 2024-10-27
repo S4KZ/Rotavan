@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import config from '../../../../config/config.json';
 
 const AdicionarTurno = () => {
+  
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { userId } = route.params || {};
+
   const [selectedTurno, setSelectedTurno] = useState('');
   const [horarioIda, setHorarioIda] = useState('');
   const [horarioVolta, setHorarioVolta] = useState('');
@@ -14,7 +21,6 @@ const AdicionarTurno = () => {
     setSelectedTurno(turno);
   };
 
-  // Função para exibir o DateTimePicker e atualizar o horário selecionado
   const onChangeIda = (event, selectedDate) => {
     setShowIdaPicker(false);
     if (selectedDate) {
@@ -28,6 +34,41 @@ const AdicionarTurno = () => {
     if (selectedDate) {
       const formattedTime = selectedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       setHorarioVolta(formattedTime);
+    }
+  };
+
+  const handleSaveTurno = async () => {
+    if (!selectedTurno || !horarioIda || !horarioVolta) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${config.urlRootNode}/cadastrar-turno`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          motId: userId, // ID do motorista
+          turPeriodo: selectedTurno,
+          turHoraPartida: horarioIda,
+          turHoraVolta: horarioVolta
+        }),
+      });
+      // console.log(selectedTurno);
+      const data = await response.json();
+
+      if (data.success) {
+        Alert.alert('Sucesso', 'Turno cadastrado com sucesso!');
+        navigation.goBack(); // Volta para a tela anterior
+      } else {
+        Alert.alert('Erro', data.message);
+      }
+    } catch (error) {
+      console.error('Erro ao cadastrar turno:', error);
+      Alert.alert('Erro', 'Ocorreu um erro ao cadastrar o turno.');
     }
   };
 
@@ -105,7 +146,7 @@ const AdicionarTurno = () => {
         />
       )}
 
-      <TouchableOpacity style={styles.saveButton}>
+      <TouchableOpacity style={styles.saveButton} onPress={handleSaveTurno}>
         <Text style={styles.saveButtonText}>Salvar Turno</Text>
       </TouchableOpacity>
     </View>

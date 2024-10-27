@@ -14,8 +14,13 @@ const ExcluirTurno = () => {
   useEffect(() => {
     if (userId) {
       HandleTurno(userId);
-    }
-  }, [userId]);
+    } 
+    const unsubscribe = navigation.addListener('focus', () => {
+    HandleTurno(userId);
+  });
+
+  return unsubscribe;
+}, [userId, navigation]);
 
   // Função para buscar os turnos
   const HandleTurno = async (userId) => {
@@ -40,21 +45,47 @@ const ExcluirTurno = () => {
     }
   };
 
-  const handleExcluirTurno = () => {
+  const handleExcluirTurno = async () => {
     if (!selectedTurno) {
       Alert.alert('Selecione um turno para excluir.');
       return;
     }
 
     Alert.alert(
-      'Confirmar Exclusão',
       `Tem certeza que deseja excluir o turno ${selectedTurno}?`,
+      `ISSO IRÁ APAGARÁ TODAS AS EQUIPES DESSE TURNO`,
       [
         { text: 'Cancelar', style: 'cancel' },
-        { text: 'Excluir', onPress: () => Alert.alert(`Turno ${selectedTurno} excluído com sucesso!`) }
+        { text: 'Excluir', onPress: async () => await excluirTurno(selectedTurno) }
       ]
     );
   };
+
+  const excluirTurno = async (turId) => {
+    try {
+      const response = await fetch(`${config.urlRootNode}/excluir-turno`, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ turId }),  // Aqui mandamos o JSON corretamente
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        Alert.alert('Sucesso', 'Turno excluído com sucesso!');
+        HandleTurno(userId);  // Atualiza a lista de turnos após a exclusão
+      } else {
+        Alert.alert('Erro', data.message || 'Erro ao excluir turno.');
+      }
+    } catch (error) {
+      console.error('Erro ao excluir turno:', error);
+      Alert.alert('Erro', 'Ocorreu um erro ao excluir o turno.');
+    }
+};
+
 
   return (
     <View style={styles.container}>
@@ -73,13 +104,13 @@ const ExcluirTurno = () => {
               key={index}
               style={[
                 styles.card,
-                selectedTurno === turno.turPeriodo && styles.selectedCard // Aplica estilo de seleção
+                selectedTurno === turno.turId && styles.selectedCard // Aplica estilo de seleção
               ]}
-              onPress={() => setSelectedTurno(turno.turPeriodo)}
+              onPress={() => setSelectedTurno(turno.turId)} // Muda para o ID do turno
             >
               <Icon name={iconName} size={30} color="#FFC107" style={styles.icon} />
-              <Text style={styles.cardText}>{turno.turPeriodo}</Text>
-            </TouchableOpacity>
+              <Text style={styles.cardText}>{turno.turPeriodo + " - id: " + turno.turId}</Text>
+ </TouchableOpacity>
           );
         })
       ) : (
