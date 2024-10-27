@@ -1,49 +1,56 @@
-import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import Geocoder from "react-native-geocoding";
 import * as Location from 'expo-location';
 import { useEffect, useState, useRef } from "react";
-import MapViewDirections from 'react-native-maps-directions';
+import MapViewDirections from 'react-native-maps-directions'
 import { useRoute } from '@react-navigation/native';
 
-export default function GoogleMapsScreen( pasIda, pasVolta) {
+export default function GoogleMapsScreen({ pasIda, pasVolta }) {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [markers, setMarkers] = useState([]);
     const mapRef = useRef(null);
     const route = useRoute();
 
-    console.log(pasIda);
-    console.log(pasVolta);
+    // console.log(pasIda);
+    // console.log(pasVolta);
 
-    
+    const GOOGLE_MAPS_APIKEY = ""; // Sua chave da API Google Maps
+    Geocoder.init(GOOGLE_MAPS_APIKEY);
 
-    // Destino teste
-    const [destino, setDestino] = useState({
-        latitude: -22.80068662,
-        longitude: -45.20045729
-    });
-
+    // Função para converter endereços em coordenadas
     const handleAddressToCoordinates = async (address) => {
         try {
             const json = await Geocoder.from(address);
             const location = json.results[0].geometry.location;
-            setDestino({
+            return {
                 latitude: location.lat,
                 longitude: location.lng
-            });
+            };
         } catch (error) {
             console.warn(error);
+            return null;
         }
     };
 
+    // Carregar localizações dos passageiros de ida
     useEffect(() => {
-        handleAddressToCoordinates("Rua José Elache 160, São Paulo, Brasil");
-    }, []);
+        const loadMarkers = async () => {
+            const newMarkers = await Promise.all(
+                pasIda.map(async (passenger) => {
+                    const address = `${passenger.EnderecoEmbarque}, ${passenger.BairroEmbarque}, ${passenger.CidadeEmbarque}, ${passenger.UfEmbarque}, Brasil`;
+                    console.log('O ENDERECO AQUI', address);
+                    const coordinates = await handleAddressToCoordinates(address);
+                    return coordinates ? { ...coordinates, title: passenger.useNome } : null;
+                })
+            );
+            setMarkers(newMarkers.filter(marker => marker !== null));
+        };
+        loadMarkers();
+    }, [pasIda]);
 
-    const GOOGLE_MAPS_APIKEY = "";
-
-    Geocoder.init(GOOGLE_MAPS_APIKEY);
 
     useEffect(() => {
         (async () => {
@@ -108,17 +115,35 @@ export default function GoogleMapsScreen( pasIda, pasVolta) {
                         latitude: location?.coords.latitude || 0,
                         longitude: location?.coords.longitude || 0,
                     }}
+                    title="Sua localização"
                 />
-                <Marker coordinate={destino} pinColor="blue" />
 
-                {/* Rota entre os dois destinos */}
-                {/* <MapViewDirections
-                    origin={location.coords}
-                    destination={destino}
-                    apikey={GOOGLE_MAPS_APIKEY}
-                    strokeWidth={5}
-                    strokeColor="blue"
-                /> */}
+                {markers.map((marker, index) => (
+                    <Marker
+                        key={`marker-${index}`}
+                        coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+                        title={marker.title}
+                        pinColor="blue"
+                    />
+                ))}
+
+                {/* Rota entre a localização e os passageiros */}
+                {/* {markers.map((marker, index) => (
+                    <MapViewDirections
+                        key={`direction-${index}`}
+                        origin={{
+                            latitude: location.coords.latitude,
+                            longitude: location.coords.longitude
+                        }}
+                        destination={{
+                            latitude: marker.latitude,
+                            longitude: marker.longitude
+                        }}
+                        apikey={GOOGLE_MAPS_APIKEY}
+                        strokeWidth={3}
+                        strokeColor="blue"
+                    />
+                ))} */}
             </MapView>
         </View>
     );
