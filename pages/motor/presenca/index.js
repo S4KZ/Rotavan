@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker'; // Importa o Picker
@@ -17,6 +17,7 @@ export default function Equipes() {
   const [turnos, setTurnos] = useState([]); //lista dos turnos
   const [pasIda, setPasIda] = useState([]); // Lista de quem vai na ida
   const [pasVolta, setPasVolta] = useState([]); // Lista de quem vai na volta
+  const [loading, setLoading] = useState(false); //mensagem de carregamento
   const navigation = useNavigation();
   const route = useRoute();
   const { userId } = route.params || {};
@@ -166,11 +167,12 @@ export default function Equipes() {
  
 
   const rota = async () => {
-    // console.log(pasIda);
-    // console.log(pasVolta);
-    
-    navigation.navigate('Home', {pasIda, pasVolta});
-   }
+    setLoading(true); // Exibe o popup
+    setTimeout(() => {
+      setLoading(false); // Oculta o popup após 3 segundos
+      navigation.navigate('Home', { pasIda, pasVolta });
+    }, 3000);
+  };
   
 
   const onTurnoChange = (itemValue) => {
@@ -197,6 +199,20 @@ export default function Equipes() {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <SafeAreaView style={styles.container}>
+
+      <Modal
+          transparent={true}
+          visible={loading}
+          animationType="fade"
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.popup}>
+              <Image source={require("../../../assets/icons/rot.gif")} style={styles.gif} />
+              <Text style={styles.loadingText}>Carregando rotas...</Text>
+            </View>
+          </View>
+        </Modal>
+
         <Image source={ilusEqui} style={styles.ilustra} />
         <View style={styles.box3}>
           <View style={styles.card}>
@@ -273,6 +289,31 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#FFFF',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo semi-transparente
+  },
+  popup: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  gif: {
+    width: 150,
+    height : 150,
+    resizeMode: 'contain'
+  },
+  loadingText: {
+    color: '#000000',
+    marginTop: 0,
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#1A478A',
+    fontWeight: "bold",
   },
   ilustra: {
     width: '80%',
