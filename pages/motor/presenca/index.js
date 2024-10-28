@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Modal, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker'; // Importa o Picker
@@ -167,6 +167,18 @@ export default function Equipes() {
  
 
   const rota = async () => {
+    if (!selectedTurno) {
+      // Alert.alert("Por favor, selecione um turno antes de iniciar a rota.");
+      Alert.alert(
+        '',
+        'Por favor, selecione um turno antes de iniciar a rota.',
+        [
+          { text: 'OK', style: 'cancel' },
+        ]
+      );
+      return; // Não prossegue se não houver turno selecionado
+    }
+  
     setLoading(true); // Exibe o popup
     setTimeout(() => {
       setLoading(false); // Oculta o popup após 3 segundos
