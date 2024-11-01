@@ -3,21 +3,18 @@ import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import Geocoder from "react-native-geocoding";
 import * as Location from 'expo-location';
 import { useEffect, useState, useRef } from "react";
-import MapViewDirections from 'react-native-maps-directions'
 import { useRoute } from '@react-navigation/native';
 
 export default function GoogleMapsScreen({ pasIda, pasVolta }) {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [markers, setMarkers] = useState([]);
+    const [embarkMarkers, setEmbarkMarkers] = useState([]);
+    const [destinationMarkers, setDestinationMarkers] = useState([]);
     const mapRef = useRef(null);
     const route = useRoute();
 
-    // console.log(pasIda);
-    // console.log(pasVolta);
-
-    const GOOGLE_MAPS_APIKEY = ""; // Sua chave da API Google Maps
+    const GOOGLE_MAPS_APIKEY = "";
     Geocoder.init(GOOGLE_MAPS_APIKEY);
 
     // Função para converter endereços em coordenadas
@@ -35,22 +32,55 @@ export default function GoogleMapsScreen({ pasIda, pasVolta }) {
         }
     };
 
-    // Carregar localizações dos passageiros de ida
+    // Carregar localizações dos pontos de embarque dos passageiros
     useEffect(() => {
-        const loadMarkers = async () => {
-            const newMarkers = await Promise.all(
+        const loadEmbarkMarkers = async () => {
+            const embarkMarkers = await Promise.all(
                 pasIda.map(async (passenger) => {
                     const address = `${passenger.EnderecoEmbarque}, ${passenger.BairroEmbarque}, ${passenger.CidadeEmbarque}, ${passenger.UfEmbarque}, Brasil`;
-                    console.log('O ENDERECO AQUI', address);
                     const coordinates = await handleAddressToCoordinates(address);
-                    return coordinates ? { ...coordinates, title: passenger.useNome } : null;
+                    return coordinates ? { ...coordinates, title: `Embarque: ${passenger.useNome}` } : null;
                 })
             );
-            setMarkers(newMarkers.filter(marker => marker !== null));
+            setEmbarkMarkers(embarkMarkers.filter(marker => marker !== null));
         };
-        loadMarkers();
+        loadEmbarkMarkers();
     }, [pasIda]);
 
+    // Carregar localizações dos destinos finais agrupados por escola
+    useEffect(() => {
+        const loadDestinationMarkers = async () => {
+            // Agrupa os passageiros por escola
+            const groupedBySchool = pasIda.reduce((acc, passenger) => {
+                const schoolAddress = `${passenger.EnderecoEscolaRua}, ${passenger.EnderecoEscolaBairro}, ${passenger.EnderecoEscolaCidade}, ${passenger.EnderecoEscolaUf}`;
+                const schoolName = passenger.NomeEscola;
+
+                if (!acc[schoolAddress]) acc[schoolAddress] = { schoolName, passengers: [] };
+                acc[schoolAddress].passengers.push(passenger.useNome);
+                
+                return acc;
+            }, {});
+
+            // Converte cada escola para coordenadas e cria um marker
+            const destinationMarkers = await Promise.all(
+                Object.entries(groupedBySchool).map(async ([schoolAddress, { schoolName, passengers }]) => {
+                    const coordinates = await handleAddressToCoordinates(`${schoolAddress}, Brasil`);
+                    if (coordinates) {
+                        return {
+                            ...coordinates,
+                            title: schoolName,
+                            description: `Passageiros: ${passengers.join(", ")}`
+                        };
+                    }
+                    return null;
+                })
+            );
+
+            setDestinationMarkers(destinationMarkers.filter(marker => marker !== null));
+        };
+
+        loadDestinationMarkers();
+    }, [pasIda]);
 
     useEffect(() => {
         (async () => {
@@ -118,32 +148,24 @@ export default function GoogleMapsScreen({ pasIda, pasVolta }) {
                     title="Sua localização"
                 />
 
-                {markers.map((marker, index) => (
+                {embarkMarkers.map((marker, index) => (
                     <Marker
-                        key={`marker-${index}`}
+                        key={`embark-marker-${index}`}
                         coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
                         title={marker.title}
-                        pinColor="blue"
+                        pinColor="green"
                     />
                 ))}
 
-                {/* Rota entre a localização e os passageiros */}
-                {/* {markers.map((marker, index) => (
-                    <MapViewDirections
-                        key={`direction-${index}`}
-                        origin={{
-                            latitude: location.coords.latitude,
-                            longitude: location.coords.longitude
-                        }}
-                        destination={{
-                            latitude: marker.latitude,
-                            longitude: marker.longitude
-                        }}
-                        apikey={GOOGLE_MAPS_APIKEY}
-                        strokeWidth={3}
-                        strokeColor="blue"
+                {destinationMarkers.map((marker, index) => (
+                    <Marker
+                        key={`destination-marker-${index}`}
+                        coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+                        title={marker.title}
+                        description={marker.description}
+                        pinColor="blue"
                     />
-                ))} */}
+                ))}
             </MapView>
         </View>
     );

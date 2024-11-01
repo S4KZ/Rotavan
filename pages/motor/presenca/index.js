@@ -98,7 +98,7 @@ export default function Equipes() {
       });
       const data = await ress.json();
       const resultado = data.resultado;
-
+      //console.log(resultado);
 
       if (Array.isArray(resultado)) {
         setPasIda(resultado);
