@@ -58,10 +58,6 @@ export default function Equipes() {
     };
   }, [selectedTurno]);
 
-
-
-
-
   // Função para buscar os turnos
   const HandleTurno = async (userId) => {
     try {
@@ -103,8 +99,8 @@ export default function Equipes() {
       if (Array.isArray(resultado)) {
         setPasIda(resultado);
 
-        
-        
+
+
 
         // Acessando as informações
         // embarque.forEach((local) => {
@@ -141,12 +137,6 @@ export default function Equipes() {
         setPasVolta(resultado);
         // console.log("TODOS QUE VÃO VOLTAR");
 
-
-
-       
-        
-       
-
         // Acessando as informações
         // desembarque.forEach((local) => {
         //   console.log(`Endereço: ${local.endereco}`);
@@ -164,9 +154,9 @@ export default function Equipes() {
     }
   };
 
- 
 
-  const rota = async () => {
+
+  const rotaida = async () => {
     if (!selectedTurno) {
       // Alert.alert("Por favor, selecione um turno antes de iniciar a rota.");
       Alert.alert(
@@ -178,14 +168,34 @@ export default function Equipes() {
       );
       return; // Não prossegue se não houver turno selecionado
     }
-  
+
     setLoading(true); // Exibe o popup
     setTimeout(() => {
       setLoading(false); // Oculta o popup após 3 segundos
-      navigation.navigate('Home', { pasIda, pasVolta });
+      navigation.navigate('Home', { pasIda });
     }, 3000);
   };
-  
+
+  const rotavolta = async () => {
+    if (!selectedTurno) {
+      // Alert.alert("Por favor, selecione um turno antes de iniciar a rota.");
+      Alert.alert(
+        '',
+        'Por favor, selecione um turno antes de iniciar a rota.',
+        [
+          { text: 'OK', style: 'cancel' },
+        ]
+      );
+      return; // Não prossegue se não houver turno selecionado
+    }
+
+    setLoading(true); // Exibe o popup
+    setTimeout(() => {
+      setLoading(false); // Oculta o popup após 3 segundos
+      navigation.navigate('Home', { pasVolta });
+    }, 3000);
+  };
+
 
   const onTurnoChange = (itemValue) => {
     setSelectedTurno(itemValue);
@@ -204,15 +214,11 @@ export default function Equipes() {
     }, [userId, selectedTurno])
   );
 
-
-
-  
-
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <SafeAreaView style={styles.container}>
 
-      <Modal
+        <Modal
           transparent={true}
           visible={loading}
           animationType="fade"
@@ -279,10 +285,15 @@ export default function Equipes() {
             )}
           </View>
 
-          <TouchableOpacity style={styles.botaoConf} 
-          onPress={rota}
+          <TouchableOpacity style={styles.botaoConf}
+            onPress={rotaida}
           >
-            <Text style={styles.texto} >Iniciar rota</Text>
+            <Text style={styles.texto} >Iniciar rota para ida</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.botaoConf2}
+            onPress={rotavolta}
+          >
+            <Text style={styles.texto} >Iniciar rota para retorno</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -316,7 +327,7 @@ const styles = StyleSheet.create({
   },
   gif: {
     width: 150,
-    height : 150,
+    height: 150,
     resizeMode: 'contain'
   },
   loadingText: {
@@ -380,6 +391,21 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   botaoConf: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#1A478A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5,
+    marginBottom: 10,
+  },
+  botaoConf2: {
     width: '100%',
     height: 50,
     backgroundColor: '#1A478A',

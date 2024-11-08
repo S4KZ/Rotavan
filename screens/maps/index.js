@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import Geocoder from "react-native-geocoding";
 import * as Location from 'expo-location';
 import { useEffect, useState, useRef } from "react";
-import { useRoute } from '@react-navigation/native';
 import { getDistance } from 'geolib';
 import MapViewDirections from 'react-native-maps-directions';
 
@@ -13,13 +12,13 @@ export default function GoogleMapsScreen({ pasIda, pasVolta }) {
     const [loading, setLoading] = useState(true);
     const [embarkMarkers, setEmbarkMarkers] = useState([]);
     const [destinationMarkers, setDestinationMarkers] = useState([]);
+    const [returnMarkers, setReturnMarkers] = useState([]);
+    const [schoolMarkers, setSchoolMarkers] = useState([]);
     const mapRef = useRef(null);
-    const route = useRoute();
 
-    const GOOGLE_MAPS_APIKEY = "";
+    const GOOGLE_MAPS_APIKEY = "AIzaSyCeMxhjNXwFVUsm5fjmwWE5rzxbBewq9pU";
     Geocoder.init(GOOGLE_MAPS_APIKEY);
 
-    // Função para converter endereços em coordenadas
     const handleAddressToCoordinates = async (address) => {
         try {
             const json = await Geocoder.from(address);
@@ -34,7 +33,6 @@ export default function GoogleMapsScreen({ pasIda, pasVolta }) {
         }
     };
 
-    // Carregar localizações dos pontos de embarque dos passageiros
     useEffect(() => {
         const loadEmbarkMarkers = async () => {
             const embarkMarkers = await Promise.all(
@@ -50,40 +48,7 @@ export default function GoogleMapsScreen({ pasIda, pasVolta }) {
     }, [pasIda]);
 
     useEffect(() => {
-        const subscription = Location.watchPositionAsync(
-            {
-                accuracy: Location.LocationAccuracy.Highest,
-                timeInterval: 1000,
-                distanceInterval: 1,
-            },
-            (response) => {
-                setLocation(response);
-                mapRef.current?.animateCamera({
-                    center: response.coords,
-                });
-    
-                // Atualize os marcadores de embarque ao se aproximar
-                setEmbarkMarkers((prevMarkers) =>
-                    prevMarkers.filter((marker) => {
-                        const distance = getDistance(
-                            { latitude: response.coords.latitude, longitude: response.coords.longitude },
-                            { latitude: marker.latitude, longitude: marker.longitude }
-                        );
-                        return distance > 10; // Mantém apenas marcadores fora de 10 metros
-                    })
-                );
-            }
-        );
-    
-        return () => subscription.remove();
-    }, []);
-    
-
-
-    // Carregar localizações dos destinos finais agrupados por escola
-    useEffect(() => {
         const loadDestinationMarkers = async () => {
-            // Agrupa os passageiros por escola
             const groupedBySchool = pasIda.reduce((acc, passenger) => {
                 const schoolAddress = `${passenger.EnderecoEscolaRua}, ${passenger.EnderecoEscolaBairro}, ${passenger.EnderecoEscolaCidade}, ${passenger.EnderecoEscolaUf}`;
                 const schoolName = passenger.NomeEscola;
@@ -94,26 +59,53 @@ export default function GoogleMapsScreen({ pasIda, pasVolta }) {
                 return acc;
             }, {});
 
-            // Converte cada escola para coordenadas e cria um marker
             const destinationMarkers = await Promise.all(
                 Object.entries(groupedBySchool).map(async ([schoolAddress, { schoolName, passengers }]) => {
                     const coordinates = await handleAddressToCoordinates(`${schoolAddress}, Brasil`);
-                    if (coordinates) {
-                        return {
-                            ...coordinates,
-                            title: schoolName,
-                            description: `Passageiros: ${passengers.join(", ")}`
-                        };
-                    }
-                    return null;
+                    return coordinates ? { ...coordinates, title: schoolName, description: `Passageiros: ${passengers.join(", ")}` } : null;
                 })
             );
-
             setDestinationMarkers(destinationMarkers.filter(marker => marker !== null));
         };
-
         loadDestinationMarkers();
     }, [pasIda]);
+
+    useEffect(() => {
+        const loadReturnMarkers = async () => {
+            const returnMarkers = await Promise.all(
+                pasVolta.map(async (passenger) => {
+                    const address = `${passenger.EnderecoDesembarque}, ${passenger.BairroDesembarque}, ${passenger.CidadeDesembarque}, ${passenger.UfDesembarque}, Brasil`;
+                    const coordinates = await handleAddressToCoordinates(address);
+                    return coordinates ? { ...coordinates, title: `Desembarque: ${passenger.useNome}` } : null;
+                })
+            );
+            setReturnMarkers(returnMarkers.filter(marker => marker !== null));
+        };
+        loadReturnMarkers();
+    }, [pasVolta]);
+
+    useEffect(() => {
+        const loadSchoolMarkers = async () => {
+            const groupedBySchool = pasVolta.reduce((acc, passenger) => {
+                const schoolAddress = `${passenger.EnderecoEscolaRua}, ${passenger.EnderecoEscolaBairro}, ${passenger.EnderecoEscolaCidade}, ${passenger.EnderecoEscolaUf}`;
+                const schoolName = passenger.NomeEscola;
+
+                if (!acc[schoolAddress]) acc[schoolAddress] = { schoolName, passengers: [] };
+                acc[schoolAddress].passengers.push(passenger.useNome);
+
+                return acc;
+            }, {});
+
+            const schoolMarkers = await Promise.all(
+                Object.entries(groupedBySchool).map(async ([schoolAddress, { schoolName, passengers }]) => {
+                    const coordinates = await handleAddressToCoordinates(`${schoolAddress}, Brasil`);
+                    return coordinates ? { ...coordinates, title: schoolName, description: `Passageiros: ${passengers.join(", ")}` } : null;
+                })
+            );
+            setSchoolMarkers(schoolMarkers.filter(marker => marker !== null));
+        };
+        loadSchoolMarkers();
+    }, [pasVolta]);
 
     useEffect(() => {
         (async () => {
@@ -123,24 +115,10 @@ export default function GoogleMapsScreen({ pasIda, pasVolta }) {
                 setLoading(false);
                 return;
             }
-
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
             setLoading(false);
         })();
-    }, []);
-
-    useEffect(() => {
-        Location.watchPositionAsync({
-            accuracy: Location.LocationAccuracy.Highest,
-            timeInterval: 1000,
-            distanceInterval: 1,
-        }, (response) => {
-            setLocation(response);
-            mapRef.current?.animateCamera({
-                center: response.coords
-            });
-        });
     }, []);
 
     if (loading) {
@@ -182,21 +160,12 @@ export default function GoogleMapsScreen({ pasIda, pasVolta }) {
                 />
 
                 {embarkMarkers.map((marker, index) => (
-                    <>
-                        <Marker
-                            key={`embark-marker-${index}`}
-                            coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-                            title={marker.title}
-                            pinColor="green"
-                        />
-                        <MapViewDirections
-                            origin={{ latitude: location.coords.latitude, longitude: location.coords.longitude }}
-                            destination={{ latitude: marker.latitude, longitude: marker.longitude }}
-                            apikey={GOOGLE_MAPS_APIKEY}
-                            strokeWidth={3}
-                            strokeColor="hotpink"
-                        />
-                    </>
+                    <Marker
+                        key={`embark-marker-${index}`}
+                        coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+                        title={marker.title}
+                        pinColor="orange"
+                    />
                 ))}
 
                 {destinationMarkers.map((marker, index) => (
@@ -208,8 +177,26 @@ export default function GoogleMapsScreen({ pasIda, pasVolta }) {
                         pinColor="blue"
                     />
                 ))}
-            </MapView>
 
+                {returnMarkers.map((marker, index) => (
+                    <Marker
+                        key={`return-marker-${index}`}
+                        coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+                        title={marker.title}
+                        pinColor="orange"
+                    />
+                ))}
+
+                {schoolMarkers.map((marker, index) => (
+                    <Marker
+                        key={`school-marker-${index}`}
+                        coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+                        title={marker.title}
+                        description={marker.description}
+                        pinColor="blue"
+                    />
+                ))}
+            </MapView>
         </View>
     );
 }

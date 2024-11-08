@@ -59,7 +59,10 @@
     "socket.io-client": "^4.8.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.0.1",
+    "jest": "^29.7.0"
   },
   "private": true
 }
