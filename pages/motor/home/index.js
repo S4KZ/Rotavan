@@ -11,22 +11,22 @@ const Icon = require("../../../assets/icons/clock.png");
 export default function Home() {
   const route = useRoute();
   const { userId, pasIda, pasVolta } = route.params;
-  
+
   // console.log(pasIda);
-// Verificando se pasIda e pasVolta são arrays e têm pelo menos um elemento
-const validPasIda = Array.isArray(pasIda) && pasIda.length > 0 ? pasIda : null;
-const validPasVolta = Array.isArray(pasVolta) && pasVolta.length > 0 ? pasVolta : null;
+  // Verificando se pasIda e pasVolta são arrays e têm pelo menos um elemento
+  const validPasIda = Array.isArray(pasIda) && pasIda.length > 0 ? pasIda : null;
+  const validPasVolta = Array.isArray(pasVolta) && pasVolta.length > 0 ? pasVolta : null;
 
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["20%", "50%"], []);
 
   return (
     <View style={styles.container}>
-      <GoogleMapsScreen 
-       pasIda={validPasIda} 
-       pasVolta={validPasVolta}
+      <GoogleMapsScreen
+        role="motor"
+        pasIda={validPasIda}
+        pasVolta={validPasVolta}
       />
-
 
       {/* <Image source={mapIcon} style={styles.map} />
 

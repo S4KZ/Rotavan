@@ -13,7 +13,9 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <GoogleMapsScreen/>
+      <GoogleMapsScreen
+      role="user"
+      />
       {/* <Image source={mapIcon} style={styles.map} /> */}
 
       {/* <GestureHandlerRootView style={StyleSheet.absoluteFillObject}>

@@ -6,7 +6,7 @@ import { useEffect, useState, useRef } from "react";
 import { getDistance } from 'geolib';
 import MapViewDirections from 'react-native-maps-directions';
 
-export default function GoogleMapsScreen({ pasIda, pasVolta }) {
+export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -18,6 +18,86 @@ export default function GoogleMapsScreen({ pasIda, pasVolta }) {
 
     const GOOGLE_MAPS_APIKEY = "AIzaSyCeMxhjNXwFVUsm5fjmwWE5rzxbBewq9pU";
     Geocoder.init(GOOGLE_MAPS_APIKEY);
+
+    if (role === "motor") {
+        useEffect(() => {
+            const loadEmbarkMarkers = async () => {
+                const embarkMarkers = await Promise.all(
+                    pasIda.map(async (passenger) => {
+                        const address = `${passenger.EnderecoEmbarque}, ${passenger.BairroEmbarque}, ${passenger.CidadeEmbarque}, ${passenger.UfEmbarque}, Brasil`;
+                        const coordinates = await handleAddressToCoordinates(address);
+                        return coordinates ? { ...coordinates, title: `Embarque: ${passenger.useNome}` } : null;
+                    })
+                );
+                setEmbarkMarkers(embarkMarkers.filter(marker => marker !== null));
+            };
+            loadEmbarkMarkers();
+        }, [pasIda]);
+
+        useEffect(() => {
+            const loadDestinationMarkers = async () => {
+                const groupedBySchool = pasIda.reduce((acc, passenger) => {
+                    const schoolAddress = `${passenger.EnderecoEscolaRua}, ${passenger.EnderecoEscolaBairro}, ${passenger.EnderecoEscolaCidade}, ${passenger.EnderecoEscolaUf}`;
+                    const schoolName = passenger.NomeEscola;
+
+                    if (!acc[schoolAddress]) acc[schoolAddress] = { schoolName, passengers: [] };
+                    acc[schoolAddress].passengers.push(passenger.useNome);
+
+                    return acc;
+                }, {});
+
+                const destinationMarkers = await Promise.all(
+                    Object.entries(groupedBySchool).map(async ([schoolAddress, { schoolName, passengers }]) => {
+                        const coordinates = await handleAddressToCoordinates(`${schoolAddress}, Brasil`);
+                        return coordinates ? { ...coordinates, title: schoolName, description: `Passageiros: ${passengers.join(", ")}` } : null;
+                    })
+                );
+                setDestinationMarkers(destinationMarkers.filter(marker => marker !== null));
+            };
+            loadDestinationMarkers();
+        }, [pasIda]);
+
+        useEffect(() => {
+            const loadReturnMarkers = async () => {
+                const returnMarkers = await Promise.all(
+                    pasVolta.map(async (passenger) => {
+                        const address = `${passenger.EnderecoDesembarque}, ${passenger.BairroDesembarque}, ${passenger.CidadeDesembarque}, ${passenger.UfDesembarque}, Brasil`;
+                        const coordinates = await handleAddressToCoordinates(address);
+                        return coordinates ? { ...coordinates, title: `Desembarque: ${passenger.useNome}` } : null;
+                    })
+                );
+                setReturnMarkers(returnMarkers.filter(marker => marker !== null));
+            };
+            loadReturnMarkers();
+        }, [pasVolta]);
+
+        useEffect(() => {
+            const loadSchoolMarkers = async () => {
+                const groupedBySchool = pasVolta.reduce((acc, passenger) => {
+                    const schoolAddress = `${passenger.EnderecoEscolaRua}, ${passenger.EnderecoEscolaBairro}, ${passenger.EnderecoEscolaCidade}, ${passenger.EnderecoEscolaUf}`;
+                    const schoolName = passenger.NomeEscola;
+
+                    if (!acc[schoolAddress]) acc[schoolAddress] = { schoolName, passengers: [] };
+                    acc[schoolAddress].passengers.push(passenger.useNome);
+
+                    return acc;
+                }, {});
+
+                const schoolMarkers = await Promise.all(
+                    Object.entries(groupedBySchool).map(async ([schoolAddress, { schoolName, passengers }]) => {
+                        const coordinates = await handleAddressToCoordinates(`${schoolAddress}, Brasil`);
+                        return coordinates ? { ...coordinates, title: schoolName, description: `Passageiros: ${passengers.join(", ")}` } : null;
+                    })
+                );
+                setSchoolMarkers(schoolMarkers.filter(marker => marker !== null));
+            };
+            loadSchoolMarkers();
+        }, [pasVolta]);
+        console.log("Motor view with pasIda:", pasIda, "and pasVolta:", pasVolta);
+    } else if (role === "user") {
+        // User-specific functions
+        console.log("User view, only basic map features enabled");
+    }
 
     const handleAddressToCoordinates = async (address) => {
         try {
@@ -32,80 +112,6 @@ export default function GoogleMapsScreen({ pasIda, pasVolta }) {
             return null;
         }
     };
-
-    useEffect(() => {
-        const loadEmbarkMarkers = async () => {
-            const embarkMarkers = await Promise.all(
-                pasIda.map(async (passenger) => {
-                    const address = `${passenger.EnderecoEmbarque}, ${passenger.BairroEmbarque}, ${passenger.CidadeEmbarque}, ${passenger.UfEmbarque}, Brasil`;
-                    const coordinates = await handleAddressToCoordinates(address);
-                    return coordinates ? { ...coordinates, title: `Embarque: ${passenger.useNome}` } : null;
-                })
-            );
-            setEmbarkMarkers(embarkMarkers.filter(marker => marker !== null));
-        };
-        loadEmbarkMarkers();
-    }, [pasIda]);
-
-    useEffect(() => {
-        const loadDestinationMarkers = async () => {
-            const groupedBySchool = pasIda.reduce((acc, passenger) => {
-                const schoolAddress = `${passenger.EnderecoEscolaRua}, ${passenger.EnderecoEscolaBairro}, ${passenger.EnderecoEscolaCidade}, ${passenger.EnderecoEscolaUf}`;
-                const schoolName = passenger.NomeEscola;
-
-                if (!acc[schoolAddress]) acc[schoolAddress] = { schoolName, passengers: [] };
-                acc[schoolAddress].passengers.push(passenger.useNome);
-
-                return acc;
-            }, {});
-
-            const destinationMarkers = await Promise.all(
-                Object.entries(groupedBySchool).map(async ([schoolAddress, { schoolName, passengers }]) => {
-                    const coordinates = await handleAddressToCoordinates(`${schoolAddress}, Brasil`);
-                    return coordinates ? { ...coordinates, title: schoolName, description: `Passageiros: ${passengers.join(", ")}` } : null;
-                })
-            );
-            setDestinationMarkers(destinationMarkers.filter(marker => marker !== null));
-        };
-        loadDestinationMarkers();
-    }, [pasIda]);
-
-    useEffect(() => {
-        const loadReturnMarkers = async () => {
-            const returnMarkers = await Promise.all(
-                pasVolta.map(async (passenger) => {
-                    const address = `${passenger.EnderecoDesembarque}, ${passenger.BairroDesembarque}, ${passenger.CidadeDesembarque}, ${passenger.UfDesembarque}, Brasil`;
-                    const coordinates = await handleAddressToCoordinates(address);
-                    return coordinates ? { ...coordinates, title: `Desembarque: ${passenger.useNome}` } : null;
-                })
-            );
-            setReturnMarkers(returnMarkers.filter(marker => marker !== null));
-        };
-        loadReturnMarkers();
-    }, [pasVolta]);
-
-    useEffect(() => {
-        const loadSchoolMarkers = async () => {
-            const groupedBySchool = pasVolta.reduce((acc, passenger) => {
-                const schoolAddress = `${passenger.EnderecoEscolaRua}, ${passenger.EnderecoEscolaBairro}, ${passenger.EnderecoEscolaCidade}, ${passenger.EnderecoEscolaUf}`;
-                const schoolName = passenger.NomeEscola;
-
-                if (!acc[schoolAddress]) acc[schoolAddress] = { schoolName, passengers: [] };
-                acc[schoolAddress].passengers.push(passenger.useNome);
-
-                return acc;
-            }, {});
-
-            const schoolMarkers = await Promise.all(
-                Object.entries(groupedBySchool).map(async ([schoolAddress, { schoolName, passengers }]) => {
-                    const coordinates = await handleAddressToCoordinates(`${schoolAddress}, Brasil`);
-                    return coordinates ? { ...coordinates, title: schoolName, description: `Passageiros: ${passengers.join(", ")}` } : null;
-                })
-            );
-            setSchoolMarkers(schoolMarkers.filter(marker => marker !== null));
-        };
-        loadSchoolMarkers();
-    }, [pasVolta]);
 
     useEffect(() => {
         (async () => {
