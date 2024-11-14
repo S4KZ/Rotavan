@@ -23,6 +23,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
       // Verifica se o CEP tem 8 caracteres antes de fazer a requisição
       if (cep.length === 8) {
         (async () => {
+          // console.log(cep);
           try {
             const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await response.json();

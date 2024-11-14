@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useRoute } from '@react-navigation/native';
-import{FontAwesome} from 'react-native-vector-icons';
-import{FontAwesome5} from 'react-native-vector-icons';
+import { FontAwesome } from 'react-native-vector-icons';
+import { FontAwesome5 } from 'react-native-vector-icons';
 
 // Importando as páginas
 import Home from '../../pages/user/home';
@@ -22,6 +22,7 @@ const AvisosIcon = require('../../assets/icons/icon-avisos-azul.png');
 const AvisosIconY = require('../../assets/icons/icon-avisos.png');
 
 const Tab = createBottomTabNavigator();
+const { width } = Dimensions.get('window'); // Obter a largura da tela
 
 export default function TabButton() {
     const route = useRoute();
@@ -32,6 +33,7 @@ export default function TabButton() {
         <Tab.Navigator
             screenOptions={{
                 tabBarShowLabel: false,
+                headerShown: false,
                 tabBarStyle: {
                     position: 'absolute',
                     borderRadius: 4,
@@ -40,203 +42,132 @@ export default function TabButton() {
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.75,
                     shadowRadius: 5,
-                    justifyContent: 'space-between',
-                    paddingHorizontal:10,
-                    paddingVertical:10,
+                    paddingHorizontal: 10,
+                    paddingVertical: 5,
                 }
             }}
         >
-            <Tab.Screen name="Home" component={Home}
-            initialParams={{ userId }}
+            <Tab.Screen
+                name='Home'
+                component={Home}
+                initialParams={{ userId }}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => {
-
-                        if (focused) { // se ele estiver focado
+                        if (focused) {
                             return (
-                                // <View style={styles.box}>
-                                     <View style={styles.highlighWrapper}>
-                                     <TouchableOpacity style={styles.highlighted}>
-                                      <FontAwesome name="home" size={30} color="#1A478A"/>
-                                    {/* <Image source={HIcon2} style={styles.icon} /> */}
+                                <View style={styles.highlighWrapper}>
+                                    <TouchableOpacity style={styles.highlighted}>
+                                        <FontAwesome5 name="home" size={30} color="#1A478A" />
                                     </TouchableOpacity>
+
                                 </View>
-                                // </View>
                             );
                         }
-                        // se n tiver interação
                         return (
                             <View style={styles.box}>
-                             <FontAwesome name="home" size={30} color="#1A478A"/>
-                                {/* <Image source={HIcon} style={styles.icon} /> */}
+                                <FontAwesome5 name="home" size={30} color="#1A478A" />
                                 <Text style={styles.title}>Home</Text>
-                               
-                          
                             </View>
-                        )
-
+                        );
                     }
-                }} />
+                }}
+            />
 
 
-            {/* <Tab.Screen
-                name="Perfil"
+            <Tab.Screen
+                name='Perfil'
                 component={Perfil}
                 initialParams={{ userId }}
                 options={{
                     headerShown: false,
-                    tabBarIcon: ({ focused }) => (
-                        <View style={styles.box}>
-                            <Image source={focused ? PerfilIconY : PerfilIcon} style={styles.imgg} />
-                            <Text style={focused ? styles.txtFocus : styles.txt}>PERFIL</Text>
-                        </View>
-                    ),
-                }}
-            /> */}
-    
-
-    <Tab.Screen name="Perfil" component={Perfil}
-     initialParams={{ userId }}
-                options={{
-                    headerShown: false,
                     tabBarIcon: ({ focused }) => {
-
-                        if (focused) { // se ele estiver focado
+                        if (focused) {
                             return (
-                                // <View style={styles.box}>
-                                     <View style={styles.highlighWrapper}>
-                                     <TouchableOpacity style={styles.highlighted}>
-                                      <FontAwesome name="user-circle-o" size={30} color="#1A478A"/>
-                                    {/* <Image source={HIcon2} style={styles.icon} /> */}
+                                <View style={styles.highlighWrapper}>
+                                    <TouchableOpacity style={styles.highlighted}>
+                                        <FontAwesome5 name="user-circle" size={35} color="#1A478A" />
                                     </TouchableOpacity>
+
                                 </View>
-                                // </View>
                             );
                         }
-                        // se n tiver interação
                         return (
                             <View style={styles.box}>
-                             <FontAwesome name="user-circle-o" size={30} color="#1A478A"/>
-                                {/* <Image source={HIcon} style={styles.icon} /> */}
+                                <FontAwesome5 name="user-circle" size={35} color="#1A478A" />
                                 <Text style={styles.title}>Perfil</Text>
-                               
-                          
                             </View>
-                        )
-
+                        );
                     }
-                }} />
+                }}
+            />
 
 
-            {/* <Tab.Screen
-                name="Presença"
+            <Tab.Screen
+                name='Presenca'
                 component={Presenca}
-                options={{
-                    headerShown: false,
-                    tabBarIcon: ({ focused }) => (
-                        <View style={styles.box}>
-                            <Image source={focused ? PresIconY : PresIcon} style={styles.imgP} />
-                            <Text style={focused ? styles.txtFocus : styles.txt}>PRESENÇA</Text>
-                        </View>
-                    ),
-                }}
-            /> */}
-
-            
-    <Tab.Screen name="Presença" component={Presenca}
-    initialParams={{ userId }}
+                initialParams={{ userId }}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => {
-
-                        if (focused) { // se ele estiver focado
+                        if (focused) {
                             return (
-                                // <View style={styles.box}>
-                                     <View style={styles.highlighWrapper}>
-                                     <TouchableOpacity style={styles.highlighted}>
-                                     <FontAwesome5 name="user-check" size={27} color="#1A478A"/>
-                                    {/* <Image source={HIcon2} style={styles.icon} /> */}
+                                <View style={styles.highlighWrapper}>
+                                    <TouchableOpacity style={styles.highlighted}>
+                                        <FontAwesome5 name="user-check" size={30} color="#1A478A" />
                                     </TouchableOpacity>
+
                                 </View>
-                                // </View>
                             );
                         }
-                        // se n tiver interação
                         return (
                             <View style={styles.box}>
-                              <FontAwesome5 name="user-check" size={27} color="#1A478A"/>
-                                {/* <Image source={HIcon} style={styles.icon} /> */}
+                                <FontAwesome5 name="user-check" size={30} color="#1A478A" />
                                 <Text style={styles.title}>Presença</Text>
-                               
                             </View>
-                        )
-
+                        );
                     }
-                }} />
+                }}
+            />
 
-                          
-    <Tab.Screen name="Avisos" component={Avisos}
-    initialParams={{ userId }}
+
+            <Tab.Screen
+                name='Avisos'
+                component={Avisos}
+                initialParams={{ userId }}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => {
-
-                        if (focused) { // se ele estiver focado
+                        if (focused) {
                             return (
-                                // <View style={styles.box}>
-                                     <View style={styles.highlighWrapper}>
-                                     <TouchableOpacity style={styles.highlighted}>
-                                      <FontAwesome name="bell" size={30} color="#1A478A"/>
-                                    {/* <Image source={HIcon2} style={styles.icon} /> */}
+                                <View style={styles.highlighWrapper}>
+                                    <TouchableOpacity style={styles.highlighted}>
+                                        <FontAwesome name="bell" size={30} color="#1A478A" />
                                     </TouchableOpacity>
+
                                 </View>
-                                // </View>
                             );
                         }
-                        // se n tiver interação
                         return (
                             <View style={styles.box}>
-                             <FontAwesome name="bell" size={30} color="#1A478A"/>
-                                {/* <Image source={HIcon} style={styles.icon} /> */}
+                                <FontAwesome name="bell" size={30} color="#1A478A" />
                                 <Text style={styles.title}>Avisos</Text>
-                               
                             </View>
-                        )
-
+                        );
                     }
-                }} />
-
-
-
-            {/* <Tab.Screen
-                name="Avisos"
-                component={Avisos}
-                options={{
-                    headerShown: false,
-                    tabBarIcon: ({ focused }) => (
-                        <View style={styles.box}>
-                            <Image source={focused ? AvisosIconY : AvisosIcon} style={styles.img} />
-                            <Text style={focused ? styles.txtFocus : styles.txt}>AVISOS</Text>
-                        </View>
-                    ),
                 }}
-            /> */}
+            />
+
         </Tab.Navigator>
     );
 }
 
 const styles = StyleSheet.create({
     box: {
-        flexDirection: "column",
-        alignItems: "center",
-    },
-    img: {
-        width: 28,
-        height: 27,
-    },
-    imgP: {
-        width: 32,
-        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 0.25 * width, //
+        top: 0.08 * width
     },
     txt: {
         fontSize: 12,
@@ -246,29 +177,28 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#FAB428',
     },
-    imgg: {
-        width: 43,
-        height: 32,
-    },
     highlighWrapper: {
         position: 'absolute',
-        top: -10,
-        alignSelf:'center',
-        borderRadius: 50,
-        padding:10,
+        top: -5,
+        width: 90,
+        alignSelf: 'center',
+        borderRadius: 60,
+        padding: 10,
         backgroundColor: '#fff',
     },
 
-    highlighted:{
+    highlighted: {
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: '#F6B628',
         borderRadius: 50,
-        padding:15,
+        padding: 15,
     },
-    title:{
+    title: {
         fontSize: 14,
         marginBottom: 5,
-        color:"#1A478A",
-        bottom:4,
-        top:4,
+        color: "#1A478A",
+        bottom: 4,
+        top: 4,
     }
 });

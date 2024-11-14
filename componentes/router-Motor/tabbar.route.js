@@ -1,6 +1,6 @@
 // tabbar.route.js
 import * as React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity  } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useRoute } from '@react-navigation/native';
 import{FontAwesome} from 'react-native-vector-icons';
@@ -24,6 +24,7 @@ const AvisosIcon = require('../../assets/icons/icon-avisos-azul.png');
 const AvisosIconY = require('../../assets/icons/icon-avisos.png')
 
 const Tab = createBottomTabNavigator();
+const { width } = Dimensions.get('window'); // Obter a largura da tela
 
 export default function TabButton(){
   const route = useRoute();
@@ -45,7 +46,7 @@ export default function TabButton(){
           shadowOpacity: 0.75,
           shadowRadius: 5,
           paddingHorizontal:10,
-          paddingVertical:10,
+          paddingVertical: 5,
         }
       }}
     >
@@ -167,8 +168,6 @@ export default function TabButton(){
       />
 
 
-
-
       
     
 
@@ -178,14 +177,12 @@ export default function TabButton(){
 
 const styles = StyleSheet.create({
   box: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    width: 0.25 * width, //
+    top: 0.08 * width
   },
-  img: {
-    width: 28,
-    height: 26,
-  },
+  
   txt: {
     fontSize: 12,
     color: '#333',
@@ -194,13 +191,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#FAB428',
   },
-  imgg: {
-    width: 45,
-    height: 25,
-  },
+ 
   highlighWrapper: {
     position: 'absolute',
-    top: -10,
+    top: -5,
+    width: 90,
     alignSelf:'center',
     borderRadius: 50,
     padding:10,
@@ -208,6 +203,8 @@ const styles = StyleSheet.create({
 },
 
 highlighted:{
+  alignItems: 'center',
+  justifyContent: 'center',
     backgroundColor: '#F6B628',
     borderRadius: 50,
     padding:15,
