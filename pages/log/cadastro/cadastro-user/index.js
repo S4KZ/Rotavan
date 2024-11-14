@@ -11,6 +11,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
   const User = () => {
+    const navigation = useNavigation();
     const [cep, setCep] = useState('');
     const [endereco, setEndereco] = useState({
       logradouro: '',
@@ -40,7 +41,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
             }
   
             setEndereco({
-              logradouro: data.logradouro,
+              rua: data.logradouro,
               bairro: data.bairro,
               cidade: data.localidade,
               uf: data.uf
@@ -104,7 +105,7 @@ style={styles.box}>
        </View>
 
       <View style={styles.form}>
-        <Text style={styles.input2}  >Logradouro: {endereco.logradouro}</Text>
+        <Text style={styles.input2}  >Rua: {endereco.rua}</Text>
         </View>
         <View style={styles.form}>
         <Text  style={styles.input2}>Bairro: {endereco.bairro}</Text>
@@ -117,7 +118,7 @@ style={styles.box}>
       </View>
 
       <View style={styles.form}>
-          <TouchableOpacity style={styles.button}  onPress={() => navigation.navigate('Login') }>
+          <TouchableOpacity style={styles.button}  onPress={() => navigation.navigate('RouterUser') }>
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
         </View>
