@@ -6,54 +6,54 @@ import * as Animatable from 'react-native-animatable';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Login from '../../login';
-import {  useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
-  const User = () => {
-    const navigation = useNavigation();
-    const [cep, setCep] = useState('');
-    const [endereco, setEndereco] = useState({
-      logradouro: '',
-      bairro: '',
-      cidade: '',
-      uf: ''
-    });
+const User = () => {
+  const navigation = useNavigation();
+  const [cep, setCep] = useState('');
+  const [endereco, setEndereco] = useState({
+    logradouro: '',
+    bairro: '',
+    cidade: '',
+    uf: ''
+  });
 
-    useEffect(() => {
-      // Verifica se o CEP tem 8 caracteres antes de fazer a requisição
-      if (cep.length === 8) {
-        (async () => {
-          // console.log(cep);
-          try {
-            const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-            const data = await response.json();
-            
-            if (data.erro) {
-              // Se o CEP for inválido, você pode querer limpar os campos ou exibir uma mensagem
-              setEndereco({
-                logradouro: '',
-                bairro: '',
-                cidade: '',
-                uf: ''
-              });
-              return;
-            }
-  
+  useEffect(() => {
+    // Verifica se o CEP tem 8 caracteres antes de fazer a requisição
+    if (cep.length === 8) {
+      (async () => {
+        // console.log(cep);
+        try {
+          const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+          const data = await response.json();
+
+          if (data.erro) {
+            // Se o CEP for inválido, você pode querer limpar os campos ou exibir uma mensagem
             setEndereco({
-              rua: data.logradouro,
-              bairro: data.bairro,
-              cidade: data.localidade,
-              uf: data.uf
+              logradouro: '',
+              bairro: '',
+              cidade: '',
+              uf: ''
             });
-          } catch (error) {
-            // Lide com erros de rede ou outros problemas
-            console.error('Erro ao buscar endereço:', error);
+            return;
           }
-        })();
-      }
-    }, [cep]);
-  
+
+          setEndereco({
+            rua: data.logradouro,
+            bairro: data.bairro,
+            cidade: data.localidade,
+            uf: data.uf
+          });
+        } catch (error) {
+          // Lide com erros de rede ou outros problemas
+          console.error('Erro ao buscar endereço:', error);
+        }
+      })();
+    }
+  }, [cep]);
+
 
   const [tipoUsuario, setTipoUsuario] = useState('passageiro');
   const [cell, setCell] = useState('');
@@ -62,79 +62,79 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 
-return(
+  return (
 
-<View style={styles.container}>
+    <View style={styles.container}>
 
-<Text style={styles.title} >Cadastro Passageiro </Text>
+      <Text style={styles.title} >Cadastro Passageiro </Text>
 
-<Animatable.View 
- animation={"fadeInUp"}
- delay={500}
+      <Animatable.View
+        animation={"fadeInUp"}
+        delay={500}
 
-style={styles.box}>
+        style={styles.box}>
 
 
- <View style={styles.form}> 
+        <View style={styles.form}>
           <TextInputMask style={styles.input}
-          placeholder="Telefone"
-          type={'cel-phone'}
+            placeholder="Telefone"
+            type={'cel-phone'}
             options={{
               maskType: 'BRL',
               withDDD: true,
               dddMask: '(99) '
             }}
             value={cell}
-            onChangeText={text =>  setCell (text)}
+            onChangeText={text => setCell(text)}
           />
- </View>
+        </View>
 
-     <View style={styles.form}>
-     <TextInput
-        style={styles.input}
-        placeholder="Digite o CEP"
-        value={cep}
-        onChangeText={(text) => {
-          // Remove caracteres não numéricos
-          const cleanText = text.replace(/\D/g, '');
-          setCep(cleanText);
-        }}
-        keyboardType="numeric"
-        maxLength={8}
-      />
-       </View>
+        <View style={styles.form}>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite o CEP"
+            value={cep}
+            onChangeText={(text) => {
+              // Remove caracteres não numéricos
+              const cleanText = text.replace(/\D/g, '');
+              setCep(cleanText);
+            }}
+            keyboardType="numeric"
+            maxLength={8}
+          />
+        </View>
 
-      <View style={styles.form}>
-        <Text style={styles.input2}  >Rua: {endereco.rua}</Text>
+        <View style={styles.form}>
+          <Text style={styles.input2}  >Rua: {endereco.rua}</Text>
         </View>
         <View style={styles.form}>
-        <Text  style={styles.input2}>Bairro: {endereco.bairro}</Text>
+          <Text style={styles.input2}>Bairro: {endereco.bairro}</Text>
         </View>
         <View style={styles.form}>
-        <Text style={styles.input2}>Cidade: {endereco.cidade}</Text>
+          <Text style={styles.input2}>Cidade: {endereco.cidade}</Text>
         </View>
         <View style={styles.form}>
-        <Text style={styles.input2}>UF: {endereco.uf}</Text>
-      </View>
+          <Text style={styles.input2}>UF: {endereco.uf}</Text>
+        </View>
 
-      <View style={styles.form}>
-          <TouchableOpacity style={styles.button}  onPress={() => navigation.navigate('RouterUser') }>
+        <View style={styles.form}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RouterUser')}>
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
         </View>
-   
-  
-
-
-</Animatable.View>
 
 
 
 
-</View>
+      </Animatable.View>
 
 
-);
+
+
+    </View>
+
+
+  );
 }
 
 
@@ -151,13 +151,13 @@ const styles = {
     marginBottom: 10,
   },
   icon: {
-    position:'absolute',
-    left:22,
-    top:25,
-},
+    position: 'absolute',
+    left: 22,
+    top: 25,
+  },
 
   box: {
-    top:100,
+    top: 100,
     padding: 38,
     borderTopLeftRadius: 35,
     borderTopRightRadius: 35,
@@ -168,8 +168,8 @@ const styles = {
     shadowRadius: 5,
     shadowSpread: 5,
     elevation: 15,
-    flex:1,
-  
+    flex: 1,
+
   },
   image: {
     height: 250,
@@ -180,7 +180,7 @@ const styles = {
     padding: 10,
     borderRadius: 10,
     width: 250,
-    height:53,
+    height: 53,
     backgroundColor: '#1A478A',
     margin: 10
   },
@@ -196,7 +196,7 @@ const styles = {
     flexDirection: 'row',
     paddingLeft: 10,
     marginBottom: 10,
-  
+
   },
   title: { // estilização do text
     fontSize: 25,
@@ -205,22 +205,22 @@ const styles = {
     textAlign: 'center',
     fontVariant: 'bold',
     fontWeight: 'bold',
-    top:55,
-},
+    top: 55,
+  },
   selectContainer: {
     padding: 10,
     borderRadius: 20,
     height: 50,
-     width:300,
+    width: 300,
 
   },
-   form: {
+  form: {
     padding: 10
   },
   input: {
     height: 50,
-    width:300,
-    margin:1,
+    width: 300,
+    margin: 1,
     borderColor: '#CCCCCC',
     borderRadius: 7,
     paddingHorizontal: 20,
@@ -228,13 +228,13 @@ const styles = {
     fontSize: 14,
     color: '#000',
     backgroundColor: '#f4f4f4',
-  
+
   },
 
   input2: {
     height: 50,
-    width:300,
-    margin:1,
+    width: 300,
+    margin: 1,
     borderColor: '#CCCCCC',
     borderRadius: 7,
     paddingHorizontal: 20,
@@ -242,12 +242,12 @@ const styles = {
     fontSize: 14,
     color: '#696969',
     backgroundColor: '#f4f4f4',
-  
+
   },
 
-   picker: {
+  picker: {
     borderColor: '#021C58',
-    borderRadius:20,
+    borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 5,
     fontSize: 14,
@@ -256,15 +256,15 @@ const styles = {
     shadowOpacity: 0.2,
     shadowRadius: 10,
     elevation: 2,
-     backgroundColor: '#f4f4f4',
+    backgroundColor: '#f4f4f4',
   },
   button: {
     padding: 8,
     borderRadius: 10,
     backgroundColor: '#1A478A',
     width: 295,
-    height:45,
-    top:20,
+    height: 45,
+    top: 20,
 
   },
   buttonText: {
@@ -275,4 +275,4 @@ const styles = {
   },
 };
 
-export default  User;
+export default User;

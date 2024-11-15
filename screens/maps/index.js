@@ -1,5 +1,5 @@
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator, Image } from "react-native";
 import Geocoder from "react-native-geocoding";
 import * as Location from 'expo-location';
 import { useEffect, useState, useRef } from "react";
@@ -16,7 +16,7 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
     const [schoolMarkers, setSchoolMarkers] = useState([]);
     const mapRef = useRef(null);
 
-    const GOOGLE_MAPS_APIKEY = "AIzaSyCeMxhjNXwFVUsm5fjmwWE5rzxbBewq9pU";
+    const GOOGLE_MAPS_APIKEY = "";
     Geocoder.init(GOOGLE_MAPS_APIKEY);
 
     if (role === "motor") {
@@ -163,15 +163,26 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
                         longitude: location?.coords.longitude || 0,
                     }}
                     title="Sua localização"
-                />
+                >
+                    <Image
+                        source={require('../../assets/icons/van-icon.jpeg')}
+                        style={{ width: 30, height: 30, borderRadius: 15 }}
+                        resizeMode="contain"
+                    />
+                </Marker>
 
                 {embarkMarkers.map((marker, index) => (
                     <Marker
                         key={`embark-marker-${index}`}
                         coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
                         title={marker.title}
-                        pinColor="orange"
-                    />
+                    >
+                        <Image
+                            source={require('../../assets/icons/user-icon.jpeg')}
+                            style={{ width: 30, height: 30, borderRadius: 15 }}
+                            resizeMode="contain"
+                        />
+                    </Marker>
                 ))}
 
                 {destinationMarkers.map((marker, index) => (
@@ -180,8 +191,13 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
                         coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
                         title={marker.title}
                         description={marker.description}
-                        pinColor="blue"
-                    />
+                    >
+                        <Image
+                            source={require('../../assets/icons/escola-icon.jpeg')}
+                            style={{ width: 30, height: 30, borderRadius: 15 }}
+                            resizeMode="contain"
+                        />
+                    </Marker>
                 ))}
 
                 {returnMarkers.map((marker, index) => (
@@ -199,8 +215,13 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
                         coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
                         title={marker.title}
                         description={marker.description}
-                        pinColor="blue"
-                    />
+                    >
+                        <Image
+                            source={require('../../assets/icons/escola-icon.jpeg')}
+                            style={{ width: 30, height: 30, borderRadius: 15 }}
+                            resizeMode="contain"
+                        />
+                    </Marker>
                 ))}
             </MapView>
         </View>
