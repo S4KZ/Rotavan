@@ -14,9 +14,10 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
     const [destinationMarkers, setDestinationMarkers] = useState([]);
     const [returnMarkers, setReturnMarkers] = useState([]);
     const [schoolMarkers, setSchoolMarkers] = useState([]);
+    const [geoicon, setGeoicon] = useState(null);
     const mapRef = useRef(null);
 
-    const GOOGLE_MAPS_APIKEY = "";
+    const GOOGLE_MAPS_APIKEY = "AIzaSyCeMxhjNXwFVUsm5fjmwWE5rzxbBewq9pU";
     Geocoder.init(GOOGLE_MAPS_APIKEY);
 
     if (role === "motor") {
@@ -95,8 +96,7 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
         }, [pasVolta]);
         console.log("Motor view with pasIda:", pasIda, "and pasVolta:", pasVolta);
     } else if (role === "user") {
-        // User-specific functions
-        console.log("User view, only basic map features enabled");
+        //console.log("Apenas função do user");
     }
 
     const handleAddressToCoordinates = async (address) => {
@@ -112,6 +112,13 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
             return null;
         }
     };
+    useEffect(() => {
+        if (role === "motor") {
+            setGeoicon(require("../../assets/icons/van-icon.png"));
+        } else if (role === "user") {
+            setGeoicon(require("../../assets/icons/localizacao-icon.png"));
+        }
+    }, [role]);
 
     useEffect(() => {
         (async () => {
@@ -164,11 +171,16 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
                     }}
                     title="Sua localização"
                 >
-                    <Image
-                        source={require('../../assets/icons/van-icon.jpeg')}
-                        style={{ width: 30, height: 30, borderRadius: 15 }}
-                        resizeMode="contain"
-                    />
+                    <View style={{ alignItems: "center", justifyContent: "center" }}>
+                        <Image
+                            source={geoicon}
+                            style={{
+                                width: 40,
+                                height: 40,
+                                resizeMode: "contain",
+                            }}
+                        />
+                    </View>
                 </Marker>
 
                 {embarkMarkers.map((marker, index) => (
@@ -177,11 +189,13 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
                         coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
                         title={marker.title}
                     >
-                        <Image
-                            source={require('../../assets/icons/user-icon.jpeg')}
-                            style={{ width: 30, height: 30, borderRadius: 15 }}
-                            resizeMode="contain"
-                        />
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Image
+                                source={require('../../assets/icons/user-icon.png')}
+                                style={{ width: 35, height: 35 }}
+                                resizeMode="contain"
+                            />
+                        </View>
                     </Marker>
                 ))}
 
@@ -192,11 +206,13 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
                         title={marker.title}
                         description={marker.description}
                     >
-                        <Image
-                            source={require('../../assets/icons/escola-icon.jpeg')}
-                            style={{ width: 30, height: 30, borderRadius: 15 }}
-                            resizeMode="contain"
-                        />
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Image
+                                source={require('../../assets/icons/escola-icon.png')}
+                                style={{ width: 40, height: 40 }}
+                                resizeMode="contain"
+                            />
+                        </View>
                     </Marker>
                 ))}
 
@@ -205,8 +221,15 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
                         key={`return-marker-${index}`}
                         coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
                         title={marker.title}
-                        pinColor="orange"
-                    />
+                    >
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Image
+                                source={require('../../assets/icons/desembarque-icon.png')}
+                                style={{ width: 35, height: 35}}
+                                resizeMode="contain"
+                            />
+                        </View>
+                    </Marker>
                 ))}
 
                 {schoolMarkers.map((marker, index) => (
@@ -216,11 +239,13 @@ export default function GoogleMapsScreen({ pasIda, pasVolta, role }) {
                         title={marker.title}
                         description={marker.description}
                     >
-                        <Image
-                            source={require('../../assets/icons/escola-icon.jpeg')}
-                            style={{ width: 30, height: 30, borderRadius: 15 }}
-                            resizeMode="contain"
-                        />
+                        <View style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Image
+                                source={require('../../assets/icons/escola-icon.png')}
+                                style={{ width: 40, height: 40 }}
+                                resizeMode="contain"
+                            />
+                        </View>
                     </Marker>
                 ))}
             </MapView>

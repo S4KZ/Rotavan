@@ -2,96 +2,100 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { TextInputMask } from 'react-native-masked-text';
+import { useNavigation } from '@react-navigation/native';
+import config from '../../../../config/config.json';
 
-
-export default function User() {
+export default function DriverScreen({ route }) {
   const navigation = useNavigation();
   const [cell, setCell] = useState('');
-  const [tipoUsuario, setTipoUsuario] = useState('passageiro');
   const [cnh, setCnh] = useState('');
   const [cpf, setCpf] = useState('');
-  const [placa, setPlaca] = useState('');
-  return (
+  const cadastroInicial = route.params.cadastroInicial; // Dados do cadastro inicial
 
+
+  const limparCampos = (valor) => {
+    return valor.replace(/\D/g, ''); // Remove tudo que não for número
+  };
+  // console.log("Dados iniciais: ",cadastroInicial)
+  const tipoUsuario = "motorista"
+  const dadosIniciais = cadastroInicial
+  const handleSubmit = async () => {
+    const dadosEspecificos = {
+      cnh: limparCampos(cnh),
+      cpf: limparCampos(cpf),
+      telefone: limparCampos(cell)
+    };
+    console.log("dados especificos: ", dadosEspecificos); 
+    try {
+      const response = await fetch(config.urlRootNode + '/cadastrar-usuario', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({dadosEspecificos, dadosIniciais, tipoUsuario}),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Cadastro realizado com sucesso!');
+        navigation.navigate('Welcome');
+      } else {
+        navigation.navigate('Welcome');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Erro de conexão com o servidor.');
+    }
+  };
+
+  return (
     <View style={styles.container}>
-      <Text style={styles.title} >Cadastro Motorista </Text>
-      <Animatable.View animation={"fadeInUp"} style={styles.box}>
+      <Text style={styles.title}>Cadastro Motorista</Text>
+      <Animatable.View animation="fadeInUp" style={styles.box}>
         <View style={styles.form}>
-          <TextInputMask style={styles.textInput}
+          <TextInputMask
+            style={styles.textInput}
             placeholder="Telefone"
-            type={'cel-phone'}
+            type="cel-phone"
             options={{
               maskType: 'BRL',
               withDDD: true,
-              dddMask: '(99) '
+              dddMask: '(99) ',
             }}
             value={cell}
-            onChangeText={text => setCell(text)}
+            onChangeText={setCell}
           />
         </View>
         <View style={styles.form}>
           <TextInputMask
             style={styles.textInput}
             placeholder="CNH"
-            type={'custom'}
-            options={{
-              mask: '99999999999'  // Máscara para CNH (11 dígitos)
-            }}
+            type="custom"
+            options={{ mask: '999999999' }}
             value={cnh}
-            onChangeText={text => setCnh(text)}
+            onChangeText={setCnh}
           />
         </View>
-
         <View style={styles.form}>
           <TextInputMask
             style={styles.textInput}
             placeholder="CPF"
-            type={'cpf'}
+            type="cpf"
             value={cpf}
-            onChangeText={text => setCpf(text)}
+            onChangeText={setCpf}
           />
         </View>
-
-        {/* <Text style={styles.title} >Cadastro da van</Text>
-
-
-          <View style={styles.form}>
-            <TextInput style={styles.textInput} placeholder="Modelo"/>
-          </View>
-
-            <View style={styles.form}>
-            <TextInputMask
-        style={styles.textInput}
-        placeholder="Placa"
-        type={'custom'}
-        options={{
-          mask: 'AAA-9999', // Formato tradicional
-        }}
-        value={placa}
-        onChangeText={text => setPlaca(text)}
-      />
-          </View> */}
-
-
-
         <View style={styles.form}>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RouterMotor')}>
-            <Text style={styles.buttonText}>Entrar</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleSubmit}>
+            <Text style={styles.buttonText}>Cadastrar</Text>
           </TouchableOpacity>
         </View>
-
       </Animatable.View>
-
-
-
-
     </View>
-
-
   );
-
 }
-
 
 const styles = {
   container: {
@@ -102,7 +106,6 @@ const styles = {
     backgroundColor: '#fff',
     marginBottom: 10,
   },
-
   box: {
     top: 130,
     padding: 38,
@@ -115,41 +118,19 @@ const styles = {
     shadowSpread: 5,
     elevation: 15,
     flex: 1,
-
   },
-  image: {
-    height: 250,
-    width: 270,
-  },
-  text: {
-    fontSize: 20,
-    fontVariant: 'bold',
-    fontWeight: 'bold',
-  },
-  text2: {
-    fontSize: 17,
-    fontVariant: 'bold',
-    fontWeight: 'bold',
-    color: '#1a6d97',
-    textDecorationLine: 'underline'
-  },
-  button: {
-    padding: 10,
-    borderRadius: 10,
-    width: 280,
-    height: 43,
-    backgroundColor: '#1A478A',
-    margin: 10
-  },
-
-  buttonText: {
+  title: {
+    top: 70,
+    fontSize: 28,
     color: '#F6B628',
+    right: 40,
+    padding: 10,
     textAlign: 'center',
-    fontSize: 24,
+    fontVariant: 'bold',
     fontWeight: 'bold',
   },
   form: {
-    padding: 10
+    padding: 10,
   },
   textInput: {
     height: 50,
@@ -163,97 +144,18 @@ const styles = {
     color: '#000',
     backgroundColor: '#f4f4f4',
   },
-
-  title: { // estilização do text
-    top: 70,
-    fontSize: 28,
-    color: '#F6B628',
-    right: 40,
-    padding: 10,
-    textAlign: 'center',
-    fontVariant: 'bold',
-    fontWeight: 'bold',
-
-  },
-
-  selectContainer: {
+  button: {
     padding: 10,
     borderRadius: 10,
-    height: 60,
+    width: 280,
+    height: 50,
+    backgroundColor: '#1A478A',
+    margin: 10,
   },
-
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
-
-  },
-
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-
-
-  buttonText2: {
-    color: '#1A478A',
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-
   buttonText: {
     color: '#F6B628',
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
-
   },
-  form: {
-    padding: 10
-  },
-  // textInput: {
-  //   height: 40,
-  //   borderColor: '#CCCCCC',
-  //   borderWidth: 1,
-  //   borderRadius: 7,
-  //   paddingHorizontal: 10,
-  //   paddingVertical: 10,
-  //   fontSize: 16,
-  //   color: '#333',
-  // },
-
-  pickerBox: {
-    borderColor: '#021C58',
-    borderWidth: 1,
-    borderRadius: 50,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    fontSize: 16,
-    color: '#333',
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 2,
-  },
-
 };
